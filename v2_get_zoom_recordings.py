@@ -332,7 +332,7 @@ def check_db_and_download_gallery_view():
     for x in myresult:
         downloaded = x['downloaded']
         r_id = str(x['id'])
-        if downloaded < 1:
+        if downloaded is None:
             if check_time_diff(r_id):
                 continue
             download_url = str(x['download_url'])
