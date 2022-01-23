@@ -61,7 +61,7 @@ def update_recording_count(email):
                 select_sql = "update meetings set recording_count ='" \
                              + str(x['recording_count']) + "' where meeting_id ='" + meetings_uuid + "'"
                 mycursor.execute(select_sql)
-                print(recording_count + " " + x['recording_count'] + " " + select_sql)
+                print(recording_count + " " + str(x['recording_count']) + " " + select_sql)
                 mydb.commit()
 
 
