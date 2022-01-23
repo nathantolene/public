@@ -4,9 +4,6 @@ import json
 import requests
 from zoomus import ZoomClient
 from datetime import date, datetime
-from tqdm import tqdm
-import sys
-import re
 import os
 import mysql.connector
 from dotenv import load_dotenv
@@ -16,8 +13,8 @@ load_dotenv()
 api_key = os.environ.get('zoom_api_key')
 api_sec = os.environ.get('zoom_api_sec')
 home_path = os.environ.get('home_path')
-sub_path = os.environ.get('sub_path')
-year = "2021"
+#sub_path = os.environ.get('sub_path')
+year = "2022"
 day = "01"
 month = "01"
 convert_time = datetime.fromisoformat(year + "-" + month + '-' + day)
@@ -29,17 +26,8 @@ zdl_host = os.environ.get('zdl_host')
 zdl_user = os.environ.get('zdl_user')
 zdl_password = os.environ.get('zdl_password')
 zdl_database = os.environ.get('zdl_database')
-debug = 1
-
-
-def debugger(name, var):
-    if debug == 1:
-        var = str(var)
-        print(name + "=" + var)
-
-
-def print_line_of_stars():
-    print('*********************************************')
+space = " "
+dot = "."
 
 
 def get_zoom_group_emails():
@@ -47,9 +35,9 @@ def get_zoom_group_emails():
     group_list = json.loads(group_list_reponse.content)
     for x in group_list['members']:
         email = x['email']
-        #print(email)
+        # print(email)
         get_list_of_recordings_for_email(email)
-        #return email
+        # return email
 
 
 def get_list_of_recordings_for_email(email):
@@ -99,8 +87,8 @@ def get_list_of_recordings_for_email(email):
                 passer = [status, recording_id, meeting_id, recording_start, recording_end, file_type, file_extension,
                           file_size, play_url, download_url, recording_type]
                 insert_new_recording_info(passer)
-            #check_to_download(recording_id)
-                #return recording_id
+            # check_to_download(recording_id)
+            # return recording_id
 
 
 def check_uuid(uuid):
@@ -140,7 +128,7 @@ def insert_new_meeting_info(passer):
                  comma + str(passer[3]) + comma + str(passer[4]) + comma + str(passer[5]) + \
                  comma + sql_time + comma + str(passer[7]) + comma + str(passer[8]) + \
                  comma + str(passer[9]) + comma + str(passer[10]) + comma + timestamp + "')"
-    #print(select_sql)
+    # print(select_sql)
     mycursor.execute(select_sql)
     mydb.commit()
 
@@ -168,7 +156,7 @@ def insert_new_recording_info(passer):
                  start_time + comma + end_time + comma + str(passer[5]) + comma + str(passer[6]) + comma + \
                  str(passer[7]) + comma + str(passer[8]) + comma + str(passer[9]) + comma + str(
         passer[10]) + comma + timestamp + "')"
-   # print(select_sql)
+    # print(select_sql)
     mycursor.execute(select_sql)
     mydb.commit()
 
@@ -181,7 +169,7 @@ def check_for_recording_id(recording_id):
         database=zdl_database
     )
     mycursor = mydb.cursor(dictionary=True)
-    select_sql = 'select recording_id from recordings'
+    select_sql = "select recording_id from recordings where recording_id ='" + recording_id + "'"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
     for x in myresult:
@@ -190,52 +178,25 @@ def check_for_recording_id(recording_id):
     return False
 
 
-def download_recording(passer):
-    zoomname = passer[0]
-    dl_url = passer[1]
-    #file_size = passer[2]
-    chunk_size = 1024
+def download_recording(zoomname, download_url, r_type):
+    dl_url = download_url
+    sub_path = r_type
     filename = zoomname
-    dl_path = os.path.join(home_path, sub_path, filename)
-    r = requests.get(dl_url, allow_redirects=True, stream=True)
+    slash = '/'
+    path = home_path + sub_path + slash
+    path_exist = os.path.exists(path)
+    if not path_exist:
+        os.makedirs(path)
+    dl_path = os.path.join(path, filename)
+    # r = requests.get(dl_url, allow_redirects=True, stream=True)
     with requests.get(dl_url, allow_redirects=True, stream=True) as r, open(dl_path, "wb") as f:
         f.write(r.content)
-    return True
+    file_exist = os.path.exists(dl_path)
+    if file_exist:
+        return True
 
 
-def check_to_download(recording_id):
-    passer = str(recording_id)
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
-    #select recordings.meeting_id, meetings.topic from recordings, meetings where meetings.meeting_id = 'VTqOwmDOSCSaX2GQGSbsGQ==' limit 1;
-    select_sql = "select recordings.downloaded, recordings.download_url, recordings.recording_start," \
-                 " recordings.file_type, recordings.file_size, recordings.recording_type, meetings.topic from" \
-                 " recordings, meetings where recordings.recording_id = '" + passer + "'"
-    #print(select_sql)
-    mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
-#    zoomname = topic + ' ' + start_time + '.' + file_type.lower()
-    #print(myresult)
-    for x in myresult:
-        if x['downloaded'] == 'None' and x['recording_type'] == 'shared_screen_with_speaker_view':
-            file_type = x['file_type']
-            zoomname = x['topic'] + ' ' + x['start_time'] + '.' + file_type.lower()
-            file_size = x['file_size']
-            dl_url = x['download_url']
-            passing = [zoomname, dl_url, file_size]
-            download_recording(passing)
-            select_sql = "update recordings set downloaded = 1 where recording_id = " + passer
-            mycursor.execute(select_sql)
-            mydb.commit()
-            #return True
-
-
-def check_db_and_send_to_downloader():
+def check_db_and_download_all():
     mydb = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
@@ -245,33 +206,46 @@ def check_db_and_send_to_downloader():
     mycursor = mydb.cursor(dictionary=True)
     select_sql = "select recordings.downloaded, recordings.id, recordings.download_url," \
                  " recordings.recording_start, recordings.file_type," \
-                 " recordings.file_size, meetings.topic from recordings, meetings where " \
-                 " file_type = 'MP4' and recording_type = 'shared_screen_with_speaker_view' and" \
-                 " meetings.meeting_id = recordings.meeting_id"
+                 " meetings.topic from recordings, meetings where" \
+                 " recordings.downloaded is Null"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
     for x in myresult:
-        downloaded = x['downloaded']
         r_id = str(x['id'])
-        if downloaded is None:
-            if check_time_diff(r_id):
-                continue
-            download_url = str(x['download_url'])
-            start_time = str(x['recording_start'])
-            file_size = str(x['file_size'])
-            file_type = str(x['file_type'])
-            zoomname = x['topic'] + ' ' + start_time + '.' + file_type.lower()
-            #print(zoomname)
-            passer = [zoomname, download_url]
-            #print(passer)
-            check = download_recording(passer)
-            if check:
-                select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
-                mycursor.execute(select_sql)
-                mydb.commit()
+        r_type = x['file_type']
+        download_url = str(x['download_url'])
+        start_time = str(x['recording_start'])
+        file_type = str(x['file_type'])
+        topic = str(x['topic'])
+        if not check_time_diff(r_id):
+            if r_type == 'audio_transcript':
+                zoomname = topic + space + start_time + ".vtt"
+                check = download_recording(zoomname, download_url, r_type)
+                if check:
+                    update_to_downloaded(r_id)
+            if r_type == 'shared_screen_with_speaker_view':
+                zoomname = topic + space + start_time + dot + file_type.lower()
+                check = download_recording(zoomname, download_url, r_type)
+                if check:
+                    update_to_downloaded(r_id)
+            if r_type == 'shared_screen_with_gallery_view':
+                zoomname = topic + space + start_time + r_type + dot + file_type.lower()
+                check = download_recording(zoomname, download_url, r_type)
+                if check:
+                    update_to_downloaded(r_id)
+            if r_type == 'TIMELINE':
+                zoomname = topic + space + start_time + space + r_type + dot + file_type.lower()
+                check = download_recording(zoomname, download_url, r_type)
+                if check:
+                    update_to_downloaded(r_id)
+            if r_type == 'CHAT':
+                zoomname = topic + space + start_time + space + r_type + '.txt'
+                check = download_recording(zoomname, download_url, r_type)
+                if check:
+                    update_to_downloaded(r_id)
 
 
-def check_db_and_download_transcripts():
+def update_to_downloaded(r_id):
     mydb = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
@@ -279,71 +253,9 @@ def check_db_and_download_transcripts():
         database=zdl_database
     )
     mycursor = mydb.cursor(dictionary=True)
-    select_sql = "select recordings.downloaded, recordings.id, recordings.download_url, " \
-                 "recordings.recording_start, recordings.file_type," \
-                 " recordings.file_size, meetings.topic from recordings, meetings where" \
-                 " recording_type = 'audio_transcript' and" \
-                 " meetings.meeting_id = recordings.meeting_id"
+    select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
     mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
-    for x in myresult:
-        downloaded = x['downloaded']
-        r_id = str(x['id'])
-        if downloaded is None:
-            download_url = str(x['download_url'])
-            zoomname = str(x['topic']) + " " + str(x['recording_start']) + ".vtt"
-            passer = [zoomname, download_url]
-            check = download_recording(passer)
-            if check:
-                select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
-                mycursor.execute(select_sql)
-                mydb.commit()
-
-
-def download_gallery_view(passer):
-    zoomname = passer[0]
-    dl_url = passer[1]
-    #file_size = passer[2]
-    chunk_size = 1024
-    filename = zoomname
-    gv = 'gv/'
-    dl_path = os.path.join(home_path, sub_path, gv, filename)
-    r = requests.get(dl_url, allow_redirects=True, stream=True)
-    with requests.get(dl_url, allow_redirects=True, stream=True) as r, open(dl_path, "wb") as f:
-        f.write(r.content)
-    return True
-
-
-def check_db_and_download_gallery_view():
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
-    select_sql = "select recordings.downloaded, recordings.id, recordings.download_url," \
-                 " recordings.recording_start, recordings.file_type," \
-                 " recordings.file_size, meetings.topic from recordings, meetings where" \
-                 " recording_type = 'shared_screen_with_gallery_view' and" \
-                 " meetings.meeting_id = recordings.meeting_id"
-    mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
-    for x in myresult:
-        downloaded = x['downloaded']
-        r_id = str(x['id'])
-        if downloaded is None:
-            if check_time_diff(r_id):
-                continue
-            download_url = str(x['download_url'])
-            file_type = str(x['file_type'])
-            zoomname = str(x['topic']) + " " + str(x['recording_start']) + ' gallery_view.' + file_type.lower()
-            passer = [zoomname, download_url]
-            check = download_gallery_view(passer)
-            if check:
-                select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
-                mycursor.execute(select_sql)
-                mydb.commit()
+    mydb.commit()
 
 
 def delete_recordings_from_zoom():
@@ -408,13 +320,9 @@ def check_time_diff(r_id):
 
 def main():
     get_zoom_group_emails()
-    check_db_and_send_to_downloader()
-    check_db_and_download_transcripts()
-    check_db_and_download_gallery_view()
+    check_db_and_download_all()
     delete_recordings_from_zoom()
 
 
 if __name__ == "__main__":
     main()
-
-
