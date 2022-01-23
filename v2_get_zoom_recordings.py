@@ -285,8 +285,6 @@ def update_to_downloaded(r_id):
 
 
 def delete_recordings_from_zoom():
-    # client.recording.delete(meeting_id=meeting_id)
-    # select id, meeting_id from meetings where downloaded is null;
     mydb = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
