@@ -59,7 +59,7 @@ def update_recording_count(email):
         for x in myresult:
             if not str(x['recording_count']) == recording_count:
                 select_sql = "update meetings set recording_count ='" \
-                             + str(x['recording_count']) + "' where meeting_id ='" + meetings_uuid + "'"
+                             + recording_count + "' where meeting_id ='" + meetings_uuid + "'"
                 mycursor.execute(select_sql)
                 print(select_sql)
                 print(recording_count)
