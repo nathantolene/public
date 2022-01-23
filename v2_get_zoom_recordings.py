@@ -33,11 +33,11 @@ dot = "."
 def get_zoom_group_emails():
     group_list_reponse = client.group.list_members(groupid=group_id)
     group_list = json.loads(group_list_reponse.content)
+    print(group_list)
     for x in group_list['members']:
         email = x['email']
         # print(email)
         get_list_of_recordings_for_email(email)
-        # return email
 
 
 def update_recording_count(email):
