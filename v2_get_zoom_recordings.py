@@ -45,7 +45,7 @@ def update_recording_count():
         database=zdl_database
     )
     mycursor = mydb.cursor(dictionary=True)
-    for x in group_list:
+    for x in group_list['members']:
         email = x['email']
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
@@ -68,7 +68,7 @@ def update_recording_count():
 
 def get_list_of_recordings_for_email():
     group_list = get_zoom_group_emails()
-    for x in group_list:
+    for x in group_list['members']:
         email = x['email']
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
