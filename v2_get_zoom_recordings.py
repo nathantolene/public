@@ -60,9 +60,6 @@ def update_recording_count():
                     select_sql = "update meetings set recording_count ='" \
                                  + str(recording_count) + "' where meeting_id ='" + meetings_uuid + "'"
                     mycursor.execute(select_sql)
-                    print(select_sql)
-                    print(recording_count)
-                    print(x['recording_count'])
                     mydb.commit()
 
 
@@ -313,7 +310,6 @@ def delete_recordings_from_zoom():
                 continue
             full_download = full_download + int(str(x['downloaded']))
         if full_download == recording_count:
-            print('delete me! ' + meeting_id)
             client.recording.delete(meeting_id=zoom_meeting_id)
             select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
             mycursor.execute(select_sql)
