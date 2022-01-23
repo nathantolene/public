@@ -40,6 +40,30 @@ def get_zoom_group_emails():
         # return email
 
 
+def update_recording_count(email):
+    mydb = mysql.connector.connect(
+        host=zdl_host,
+        user=zdl_user,
+        password=zdl_password,
+        database=zdl_database
+    )
+    mycursor = mydb.cursor(dictionary=True)
+    recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
+    recording_list = json.loads(recording_list_response.content)
+    for meetings in recording_list['meetings']:
+        meetings_uuid = meetings['uuid']  # key to meeting id
+        recording_count = meetings['recording_count']
+        select_sql = "select recording_count from meetings where meeting_id ='" + meetings_uuid + "'"
+        mycursor.execute(select_sql)
+        myresult = mycursor.fetchall()
+        for x in myresult:
+            if not x['recording_count'] == recording_count:
+                select_sql = "update meetings set recording_count ='" \
+                             + x['recording_count'] + "' where meeting_id ='" + meetings_uuid + "'"
+                mycursor.execute(select_sql)
+                mydb.commit()
+
+
 def get_list_of_recordings_for_email(email):
     recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
     recording_list = json.loads(recording_list_response.content)
