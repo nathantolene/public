@@ -236,18 +236,20 @@ def check_db_and_download_all():
     #             " recordings.recording_start, recordings.recording_type, recordings.file_type," \
     #             " meetings.topic from recordings, meetings where" \
     #             " recordings.downloaded is Null"
-    select_sql = "select recording_id, meeting_id, download_url, recording_start, recording_type," \
+    select_sql = "select id, meeting_id, download_url, recording_start, recording_type," \
                  " file_type from recordings where downloaded is null;"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
     for x in myresult:
-        r_id = str(x['recording_id'])
+        r_id = str(x['id'])
+        print(r_id)
         m_id = str(x['meeting_id'])
         r_type = x['recording_type']
         download_url = str(x['download_url'])
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
         select_sql2 = "select topic from meetings where meeting_id ='" + m_id + "'"
+        print(select_sql2)
         mycursor.execute(select_sql2)
         myselect = mycursor.fetchall()
         for y in myselect:
@@ -268,7 +270,7 @@ def check_db_and_download_all():
                     if check:
                         update_to_downloaded(r_id)
                 if r_type == 'shared_screen_with_gallery_view':
-                    zoomname = topic + space + start_time + r_type + space + dot + file_type.lower()
+                    zoomname = topic + space + start_time + space + r_type + dot + file_type.lower()
                     check = download_recording(zoomname, download_url, r_type)
                     print(zoomname)
                     if check:
@@ -295,6 +297,7 @@ def update_to_downloaded(r_id):
     )
     mycursor = mydb.cursor(dictionary=True)
     select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
+    print(select_sql)
     mycursor.execute(select_sql)
     mydb.commit()
 
@@ -341,15 +344,19 @@ def check_time_diff(r_id):
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
     for x in myresult:
-        start = x['recording_start']
-        end = x['recording_end']
+        start = str(x['recording_start'])
+        print(start)
+        end = str(x['recording_end'])
+        print(end)
         date_format_str = '%Y-%m-%d %H:%M:%S'
         start_time = datetime.strptime(start, date_format_str)
         end_time = datetime.strptime(end, date_format_str)
         diff = end_time - start_time
         diff_in_minutes = diff.total_seconds() / 60
+        print(diff_in_minutes)
         if diff_in_minutes < 10:
             select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
+            print(select_sql)
             mycursor.execute(select_sql)
             mydb.commit()
             return True
