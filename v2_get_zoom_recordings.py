@@ -243,22 +243,25 @@ def check_db_and_download_all():
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
         topic = str(x['topic'])
-        print(topic)
         if not check_time_diff(r_id):
+            print(topic)
             print(r_type)
             if r_type == 'audio_transcript':
                 zoomname = topic + space + start_time + ".vtt"
                 check = download_recording(zoomname, download_url, r_type)
+                print(zoomname)
                 if check:
                     update_to_downloaded(r_id)
             if r_type == 'shared_screen_with_speaker_view':
                 zoomname = topic + space + start_time + dot + file_type.lower()
                 check = download_recording(zoomname, download_url, r_type)
+                print(zoomname)
                 if check:
                     update_to_downloaded(r_id)
             if r_type == 'shared_screen_with_gallery_view':
                 zoomname = topic + space + start_time + r_type + dot + file_type.lower()
                 check = download_recording(zoomname, download_url, r_type)
+                print(zoomname)
                 if check:
                     update_to_downloaded(r_id)
             #if r_type == 'TIMELINE':
@@ -269,6 +272,7 @@ def check_db_and_download_all():
             if r_type == 'CHAT':
                 zoomname = topic + space + start_time + space + r_type + '.txt'
                 check = download_recording(zoomname, download_url, r_type)
+                print(zoomname)
                 if check:
                     update_to_downloaded(r_id)
 
