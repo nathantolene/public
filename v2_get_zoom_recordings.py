@@ -246,42 +246,43 @@ def check_db_and_download_all():
         download_url = str(x['download_url'])
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
-        select_sql = "select topic from meetings where meeting_id ='" + r_id + "'"
-        mycursor.execute(select_sql)
+        select_sql2 = "select topic from meetings where meeting_id ='" + r_id + "'"
+        mycursor.execute(select_sql2)
         myselect = mycursor.fetchall()
-        topic = str(myselect['topic'])
-        if not check_time_diff(r_id):
-            #print(topic)
-            #print(r_type)
-            if r_type == 'audio_transcript':
-                zoomname = topic + space + start_time + ".vtt"
-                check = download_recording(zoomname, download_url, r_type)
-                print(zoomname)
-                if check:
-                    update_to_downloaded(r_id)
-            if r_type == 'shared_screen_with_speaker_view':
-                zoomname = topic + space + start_time + dot + file_type.lower()
-                check = download_recording(zoomname, download_url, r_type)
-                print(zoomname)
-                if check:
-                    update_to_downloaded(r_id)
-            if r_type == 'shared_screen_with_gallery_view':
-                zoomname = topic + space + start_time + r_type + dot + file_type.lower()
-                check = download_recording(zoomname, download_url, r_type)
-                print(zoomname)
-                if check:
-                    update_to_downloaded(r_id)
-            #if r_type == 'TIMELINE':
-            #    zoomname = topic + space + start_time + space + r_type + dot + file_type.lower()
-            #    check = download_recording(zoomname, download_url, r_type)
-            #    if check:
-            #        update_to_downloaded(r_id)
-            if r_type == 'CHAT':
-                zoomname = topic + space + start_time + space + r_type + '.txt'
-                check = download_recording(zoomname, download_url, r_type)
-                print(zoomname)
-                if check:
-                    update_to_downloaded(r_id)
+        for y in myselect:
+            topic = str(y['topic'])
+            if not check_time_diff(r_id):
+                #print(topic)
+                #print(r_type)
+                if r_type == 'audio_transcript':
+                    zoomname = topic + space + start_time + ".vtt"
+                    check = download_recording(zoomname, download_url, r_type)
+                    print(zoomname)
+                    if check:
+                        update_to_downloaded(r_id)
+                if r_type == 'shared_screen_with_speaker_view':
+                    zoomname = topic + space + start_time + dot + file_type.lower()
+                    check = download_recording(zoomname, download_url, r_type)
+                    print(zoomname)
+                    if check:
+                        update_to_downloaded(r_id)
+                if r_type == 'shared_screen_with_gallery_view':
+                    zoomname = topic + space + start_time + r_type + dot + file_type.lower()
+                    check = download_recording(zoomname, download_url, r_type)
+                    print(zoomname)
+                    if check:
+                        update_to_downloaded(r_id)
+                #if r_type == 'TIMELINE':
+                #    zoomname = topic + space + start_time + space + r_type + dot + file_type.lower()
+                #    check = download_recording(zoomname, download_url, r_type)
+                #    if check:
+                #        update_to_downloaded(r_id)
+                if r_type == 'CHAT':
+                    zoomname = topic + space + start_time + space + r_type + '.txt'
+                    check = download_recording(zoomname, download_url, r_type)
+                    print(zoomname)
+                    if check:
+                        update_to_downloaded(r_id)
 
 
 def update_to_downloaded(r_id):
