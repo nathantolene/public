@@ -340,9 +340,11 @@ def check_time_diff(r_id):
         database=zdl_database
     )
     mycursor = mydb.cursor(dictionary=True)
-    select_sql = "select recording_start, recording_end from recordings where recording_id ='" + r_id + "'"
+    select_sql = "select recording_start, recording_end from recordings where id ='" + r_id + "'"
+    print(select_sql)
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
+    print(myresult)
     for x in myresult:
         start = str(x['recording_start'])
         print(start)
