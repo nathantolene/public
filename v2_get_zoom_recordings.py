@@ -232,19 +232,24 @@ def check_db_and_download_all():
         database=zdl_database
     )
     mycursor = mydb.cursor(dictionary=True)
-    select_sql = "select recordings.downloaded, recordings.id, recordings.download_url," \
-                 " recordings.recording_start, recordings.recording_type, recordings.file_type," \
-                 " meetings.topic from recordings, meetings where" \
-                 " recordings.downloaded is Null"
+    #select_sql = "select recordings.downloaded, recordings.id, recordings.download_url," \
+    #             " recordings.recording_start, recordings.recording_type, recordings.file_type," \
+    #             " meetings.topic from recordings, meetings where" \
+    #             " recordings.downloaded is Null"
+    select_sql = "select meeting_id, download_url, recording_start, recording_type," \
+                 " file_type from recordings where downloaded is null;"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
     for x in myresult:
-        r_id = str(x['id'])
+        r_id = str(x['meeting_id'])
         r_type = x['recording_type']
         download_url = str(x['download_url'])
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
-        topic = str(x['topic'])
+        select_sql = "select topic from meetings where meeting_id ='" + r_id + "'"
+        mycursor.execute(select_sql)
+        myselect = mycursor.fetchall()
+        topic = str(myselect['topic'])
         if not check_time_diff(r_id):
             #print(topic)
             #print(r_type)
