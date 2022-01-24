@@ -262,11 +262,11 @@ def move_transcripts():
     files = os.listdir(t_dir)
     for file in files:
         full_path = t_dir + file
-        print(file)
+        #print(file)
         if file.endswith(".vtt"):
-            print(file)
+            #print(file)
             cat_name = file.split(" ", 2)[0] + " " + file.split()[1] + " " + file.split()[2]
-            print(cat_name)
+            #print(cat_name)
             cat_title = get_cat_title(file, cat_name)
             mydb = mysql.connector.connect(
                 host=host,
@@ -283,7 +283,7 @@ def move_transcripts():
                 if x['status'] == 'a':
                     trans_sub_path = x['filename']
                     avideo_path = '/nfs/web/AVideo/videos/'
-                    add_to_name = '.en_US.'
+                    add_to_name = '.en_US'
                     upload_path = avideo_path + trans_sub_path + "/" + trans_sub_path + add_to_name + ".vtt"
                     shutil.move(full_path, upload_path)
 
