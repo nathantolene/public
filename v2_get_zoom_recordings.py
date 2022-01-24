@@ -233,7 +233,7 @@ def check_db_and_download_all():
     )
     mycursor = mydb.cursor(dictionary=True)
     select_sql = "select recordings.downloaded, recordings.id, recordings.download_url," \
-                 " recordings.recording_start, recordings.file_type," \
+                 " recordings.recording_start, recordings.recording_type," \
                  " meetings.topic from recordings, meetings where" \
                  " recordings.downloaded is Null"
     mycursor.execute(select_sql)
