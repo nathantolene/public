@@ -236,17 +236,18 @@ def check_db_and_download_all():
     #             " recordings.recording_start, recordings.recording_type, recordings.file_type," \
     #             " meetings.topic from recordings, meetings where" \
     #             " recordings.downloaded is Null"
-    select_sql = "select meeting_id, download_url, recording_start, recording_type," \
+    select_sql = "select recording_id, meeting_id, download_url, recording_start, recording_type," \
                  " file_type from recordings where downloaded is null;"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
     for x in myresult:
-        r_id = str(x['meeting_id'])
+        r_id = str(x['recording_id'])
+        m_id = str(x['meeting_id'])
         r_type = x['recording_type']
         download_url = str(x['download_url'])
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
-        select_sql2 = "select topic from meetings where meeting_id ='" + r_id + "'"
+        select_sql2 = "select topic from meetings where meeting_id ='" + m_id + "'"
         mycursor.execute(select_sql2)
         myselect = mycursor.fetchall()
         for y in myselect:
@@ -267,7 +268,7 @@ def check_db_and_download_all():
                     if check:
                         update_to_downloaded(r_id)
                 if r_type == 'shared_screen_with_gallery_view':
-                    zoomname = topic + space + start_time + r_type + dot + file_type.lower()
+                    zoomname = topic + space + start_time + r_type + space + dot + file_type.lower()
                     check = download_recording(zoomname, download_url, r_type)
                     print(zoomname)
                     if check:
