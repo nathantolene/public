@@ -211,6 +211,8 @@ def download_recording(zoomname, download_url, r_type):
     slash = '/'
     path = home_path + sub_path + slash
     path_exist = os.path.exists(path)
+    print(dl_url)
+    print(path)
     if not path_exist:
         os.makedirs(path)
     dl_path = os.path.join(path, filename)
@@ -244,8 +246,8 @@ def check_db_and_download_all():
         file_type = str(x['file_type'])
         topic = str(x['topic'])
         if not check_time_diff(r_id):
-            print(topic)
-            print(r_type)
+            #print(topic)
+            #print(r_type)
             if r_type == 'audio_transcript':
                 zoomname = topic + space + start_time + ".vtt"
                 check = download_recording(zoomname, download_url, r_type)
