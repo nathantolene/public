@@ -240,7 +240,7 @@ def check_db_and_download_all():
     myresult = mycursor.fetchall()
     for x in myresult:
         r_id = str(x['id'])
-        r_type = x['file_type']
+        r_type = x['recording_type']
         download_url = str(x['download_url'])
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
