@@ -243,7 +243,9 @@ def check_db_and_download_all():
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
         topic = str(x['topic'])
+        print(topic)
         if not check_time_diff(r_id):
+            print(r_type)
             if r_type == 'audio_transcript':
                 zoomname = topic + space + start_time + ".vtt"
                 check = download_recording(zoomname, download_url, r_type)
