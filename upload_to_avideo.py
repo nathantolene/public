@@ -259,9 +259,9 @@ def insert_cat_into_avideo_db(name):
 
 
 def move_transcripts():
-    files = os.listdir(mydir)
+    files = os.listdir(t_dir)
     for file in files:
-        full_path = mydir + file
+        full_path = t_dir + file
         # print(file)
         if file.endswith(".vtt"):
             print(file)
