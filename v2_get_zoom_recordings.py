@@ -79,7 +79,7 @@ def get_list_of_recordings_for_email():
             topic = topic.replace("'", "_")
             print('Topic ' + topic)
             meetings_type = meetings['type']
-            print('Meeintg_type ' + meetings_type)
+            print('Meeintg_type ' + str(meetings_type))
             start_time = meetings['start_time']
             timezone = meetings['timezone']
             duration = meetings['duration']
