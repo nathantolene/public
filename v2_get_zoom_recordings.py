@@ -70,7 +70,7 @@ def get_list_of_recordings_for_email():
         email = x['email']
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
-        print(recording_list)
+        #print(recording_list)
         for meetings in recording_list['meetings']:
             meetings_uuid = meetings['uuid']  # key to meeting id
             uuid_status = check_uuid(meetings_uuid)
@@ -79,13 +79,13 @@ def get_list_of_recordings_for_email():
             host_id = meetings['host_id']
             topic = meetings['topic']
             topic = topic.replace("'", "_")
-            print('Topic ' + topic)
+            #print('Topic ' + topic)
             meetings_type = meetings['type']
-            print('Meeintg_type ' + str(meetings_type))
+            #print('Meeintg_type ' + str(meetings_type))
             start_time = meetings['start_time']
             timezone = meetings['timezone']
             duration = meetings['duration']
-            print('Duration ' + str(duration))
+            #print('Duration ' + str(duration))
             recording_count = meetings['recording_count']
             share_url = meetings['share_url']
             if not uuid_status:
@@ -118,8 +118,8 @@ def get_list_of_recordings_for_email():
                     passer = [status, recording_id, meeting_id, recording_start, recording_end, file_type, file_extension,
                               file_size, play_url, download_url, recording_type]
                     insert_new_recording_info(passer)
-                check_to_download(recording_id)
-                return recording_id
+                #check_to_download(recording_id)
+                #return recording_id
 
 
 def check_uuid(uuid):
@@ -221,7 +221,7 @@ def download_recording(zoomname, download_url, r_type):
     if not path_exist:
         os.makedirs(path)
     dl_path = os.path.join(path, filename)
-    # r = requests.get(dl_url, allow_redirects=True, stream=True)
+    r = requests.get(dl_url, allow_redirects=True, stream=True)
     with requests.get(dl_url, allow_redirects=True, stream=True) as r, open(dl_path, "wb") as f:
         f.write(r.content)
     file_exist = os.path.exists(dl_path)
