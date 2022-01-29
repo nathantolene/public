@@ -345,24 +345,24 @@ def check_time_diff(r_id):
     )
     mycursor = mydb.cursor(dictionary=True)
     select_sql = "select recording_start, recording_end from recordings where id ='" + r_id + "'"
-    print(select_sql)
+    #print(select_sql)
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
-    print(myresult)
+    #print(myresult)
     for x in myresult:
         start = str(x['recording_start'])
-        print(start)
+        #print(start)
         end = str(x['recording_end'])
-        print(end)
+        #print(end)
         date_format_str = '%Y-%m-%d %H:%M:%S'
         start_time = datetime.strptime(start, date_format_str)
         end_time = datetime.strptime(end, date_format_str)
         diff = end_time - start_time
         diff_in_minutes = diff.total_seconds() / 60
-        print(diff_in_minutes)
+        #print(diff_in_minutes)
         if diff_in_minutes < 10:
             select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
-            print(select_sql)
+            #print(select_sql)
             mycursor.execute(select_sql)
             mydb.commit()
             return True
