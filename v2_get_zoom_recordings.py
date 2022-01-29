@@ -118,8 +118,8 @@ def get_list_of_recordings_for_email():
                     passer = [status, recording_id, meeting_id, recording_start, recording_end, file_type, file_extension,
                               file_size, play_url, download_url, recording_type]
                     insert_new_recording_info(passer)
-                # check_to_download(recording_id)
-                # return recording_id
+                check_to_download(recording_id)
+                return recording_id
 
 
 def check_uuid(uuid):
