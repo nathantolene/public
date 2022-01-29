@@ -77,13 +77,13 @@ def get_list_of_recordings_for_email():
             host_id = meetings['host_id']
             topic = meetings['topic']
             topic = topic.replace("'", "_")
-            print(topic)
+            print('Topic ' + topic)
             meetings_type = meetings['type']
-            print(meetings_type)
+            print('Meeintg_type ' + meetings_type)
             start_time = meetings['start_time']
             timezone = meetings['timezone']
             duration = meetings['duration']
-            print(duration)
+            print('Duration ' + duration)
             recording_count = meetings['recording_count']
             share_url = meetings['share_url']
             if not uuid_status:
