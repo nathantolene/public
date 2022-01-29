@@ -286,7 +286,7 @@ def check_db_and_download_all():
                     check = download_recording(zoomname, download_url, r_type)
                     if check:
                         update_to_downloaded(r_id)
-                if r_type == 'CHAT':
+                if r_type == 'CHAT' or r_type == 'chat_file':
                     zoomname = topic + space + start_time + space + r_type + '.txt'
                     check = download_recording(zoomname, download_url, r_type)
                     print(zoomname)
