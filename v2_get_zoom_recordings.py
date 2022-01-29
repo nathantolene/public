@@ -77,10 +77,13 @@ def get_list_of_recordings_for_email():
             host_id = meetings['host_id']
             topic = meetings['topic']
             topic = topic.replace("'", "_")
+            print(topic)
             meetings_type = meetings['type']
+            print(meetings_type)
             start_time = meetings['start_time']
             timezone = meetings['timezone']
             duration = meetings['duration']
+            print(duration)
             recording_count = meetings['recording_count']
             share_url = meetings['share_url']
             if not uuid_status:
@@ -240,7 +243,7 @@ def check_db_and_download_all():
                  " file_type from recordings where downloaded is null;"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
-    print(myresult)
+    #print(myresult)
     for x in myresult:
         r_id = str(x['id'])
         print(r_id)
