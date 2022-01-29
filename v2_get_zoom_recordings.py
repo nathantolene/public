@@ -261,8 +261,8 @@ def check_db_and_download_all():
         for y in myselect:
             topic = str(y['topic'])
             if not check_time_diff(r_id):
-                #print(topic)
-                #print(r_type)
+                print(topic)
+                print(r_type)
                 if r_type == 'audio_transcript':
                     zoomname = topic + space + start_time + ".vtt"
                     check = download_recording(zoomname, download_url, r_type)
