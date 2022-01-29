@@ -246,14 +246,14 @@ def check_db_and_download_all():
     #print(myresult)
     for x in myresult:
         r_id = str(x['id'])
-        print(r_id)
+        #print(r_id)
         m_id = str(x['meeting_id'])
         r_type = x['recording_type']
         download_url = str(x['download_url'])
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
         select_sql2 = "select topic from meetings where meeting_id ='" + m_id + "'"
-        print(select_sql2)
+        #print(select_sql2)
         mycursor.execute(select_sql2)
         myselect = mycursor.fetchall()
         for y in myselect:
