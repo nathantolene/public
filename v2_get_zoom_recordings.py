@@ -240,6 +240,7 @@ def check_db_and_download_all():
                  " file_type from recordings where downloaded is null;"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
+    print(myresult)
     for x in myresult:
         r_id = str(x['id'])
         print(r_id)
