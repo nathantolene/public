@@ -5,7 +5,6 @@ import syslog
 from datetime import datetime
 from zoomus import ZoomClient
 import os
-from syslog import syslog
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -33,7 +32,7 @@ def list_all_zoom_users():
     group_list = json.loads(group_response.content)
     if debug:
         print(group_list)
-        syslog(syslog.LOG_INFO, group_list)
+        #syslog.syslog(syslog.LOG_INFO, group_list)
     return group_list
 
 
@@ -42,7 +41,7 @@ def strip_emails_from_group_list(group_list):
         email = x['email']
         if debug:
             print('Email Address: ' + email)
-            syslog('Email Address: ' + email)
+            #syslog('Email Address: ' + email)
         find_old_recordings(email)
 
 
@@ -51,7 +50,7 @@ def find_old_recordings(email):
     recordings_list = json.loads(recordings_response.content)
     if debug:
         print(recordings_list)
-        syslog(recordings_list)
+        #syslog(recordings_list)
     for y in recordings_list['meetings']:
         start = str(x['start_time'])
         topic = x['topic']
@@ -63,18 +62,18 @@ def find_old_recordings(email):
             print('Topic: ' + topic)
             print('Start_time' + str(start_time))
             print('Number of days old: ' + str(delta.days))
-            syslog(topic)
-            syslog(start_time)
-            syslog(delta.days)
+            #syslog(topic)
+            #syslog(start_time)
+            #syslog(delta.days)
         if str(delta.days) >= '7':
             if debug:
                 print('More then 7 days old, time to delete')
-                syslog('More then 7 days old, time to delete')
+                #syslog('More then 7 days old, time to delete')
             for z in y['recording_files']:
                 meeting_id = z['meeting_id']
             check = delete_zoom_recording(meeting_id)
             if check:
-                syslog("Deleted " + topic + "it is " + str(delta.days) + " old.")
+                print("Deleted " + topic + "it is " + str(delta.days) + " old.")
 
 
 def check_for_specials_now():
