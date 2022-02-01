@@ -7,7 +7,6 @@ from zoomus import ZoomClient
 import os
 from syslog import syslog
 from dotenv import load_dotenv
-
 load_dotenv()
 
 api_key = os.environ.get('zoom_api_key')

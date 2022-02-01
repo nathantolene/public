@@ -6,6 +6,7 @@ from zoomus import ZoomClient
 from datetime import date, datetime
 import os
 import mysql.connector
+import zoom_auto_delete
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -377,6 +378,7 @@ def main():
     check_db_and_download_all()
     update_recording_count()
     delete_recordings_from_zoom()
+    zoom_auto_delete.main()
 
 
 if __name__ == "__main__":
