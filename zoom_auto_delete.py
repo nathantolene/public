@@ -33,7 +33,7 @@ def list_all_zoom_users():
     group_list = json.loads(group_response.content)
     if debug:
         print(group_list)
-        syslog(group_list)
+        syslog(syslog.LOG_INFO, group_list)
     return group_list
 
 
