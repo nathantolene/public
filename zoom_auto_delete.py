@@ -52,8 +52,8 @@ def find_old_recordings(email):
         print(recordings_list)
         #syslog(recordings_list)
     for y in recordings_list['meetings']:
-        start = str(x['start_time'])
-        topic = x['topic']
+        start = str(y['start_time'])
+        topic = y['topic']
         start_time = datetime.strptime(start, date_format_str)
         now = datetime.now()
         delta = start_time - now
