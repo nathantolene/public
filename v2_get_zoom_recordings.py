@@ -332,10 +332,11 @@ def delete_recordings_from_zoom():
                 continue
             full_download = full_download + int(str(x['downloaded']))
         if full_download == recording_count:
-            client.recording.delete(meeting_id=zoom_meeting_id)
-            select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
-            mycursor.execute(select_sql)
-            mydb.commit()
+            check = client.recording.delete(meeting_id=zoom_meeting_id)
+            if check.status_code == '204':
+                select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
+                mycursor.execute(select_sql)
+                mydb.commit()
 
 
 def check_time_diff(r_id):
