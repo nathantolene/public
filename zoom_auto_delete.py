@@ -65,7 +65,7 @@ def find_old_recordings(email):
             #syslog(topic)
             #syslog(start_time)
             #syslog(delta.days)
-        if str(delta.days) >= '7':
+        if str(delta.days) >= '-7':
             if debug:
                 print('More then 7 days old, time to delete')
                 #syslog('More then 7 days old, time to delete')
