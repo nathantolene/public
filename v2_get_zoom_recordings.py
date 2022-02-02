@@ -333,7 +333,7 @@ def delete_recordings_from_zoom():
                 continue
             full_download = full_download + int(str(x['downloaded']))
         if full_download == recording_count:
-            print('Full Downloaded: ' + full_download)
+            print('Full Downloaded: ' + str(full_download))
             print('Recording Count: ' + recording_count)
             check = client.recording.delete(meeting_id=zoom_meeting_id)
             print('Check Status Code: ' + check.status_code)
