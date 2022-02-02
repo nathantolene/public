@@ -336,7 +336,7 @@ def delete_recordings_from_zoom():
             print('Full Downloaded: ' + str(full_download))
             print('Recording Count: ' + str(recording_count))
             check = client.recording.delete(meeting_id=zoom_meeting_id)
-            print('Check Status Code: ' + check.status_code)
+            print('Check Status Code: ' + str(check.status_code))
             if check.status_code == '204':
                 select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
                 mycursor.execute(select_sql)
