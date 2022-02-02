@@ -317,12 +317,14 @@ def delete_recordings_from_zoom():
         database=zdl_database
     )
     mycursor = mydb.cursor(dictionary=True)
-    select_sql = "select id, meeting_id, recording_count from meetings where downloaded is null"
+    select_sql = "select id, meeting_id, recording_count, meetings_zoom_number from meetings where downloaded is null"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
     for x in myresult:
-        zoom_meeting_id = x['meeting_id']
+        zoom_meeting_id = x['meetings_zoom_number']
         meeting_id = str(x['meeting_id'])
+        print(zoom_meeting_id)
+        print(meeting_id)
         select_sql = "select downloaded from recordings where meeting_id = '" + meeting_id + "'"
         mycursor.execute(select_sql)
         myr = mycursor.fetchall()
