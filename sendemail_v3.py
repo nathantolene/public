@@ -46,7 +46,7 @@ def sendit(send_to_address, name):
     os.system(statement)
 
 
-def check_db_for_email_address(cat_id):
+def delete_one_off(email_id):
     mydb = mysql.connector.connect(
         host=host,
         user=user,
@@ -54,13 +54,34 @@ def check_db_for_email_address(cat_id):
         database=database
     )
     mycursor = mydb.cursor()
-    mycursor.execute('select * from email')
+    select_sql = 'delete from email where ID = ' + email_id
+    mycursor.execute(select_sql)
+    mydb.commit()
+
+
+def check_db_for_email_address(cat_id):
+    cat_id = str(cat_id)
+    mydb = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )
+    mycursor = mydb.cursor()
+    mycursor.execute("select * from email where cat = '" + cat_id + "'")
     email_address = mycursor.fetchall()
     for row in email_address:
-        if row[3] == str(cat_id):
-            syslog.syslog('Email Address: ' + row[2])
+        check_cat_id = row[3]
+        address_to_send = row[2]
+        name_to_email = row[1]
+        one_off = row[4]
+        email_id = row[0]
+        if check_cat_id == cat_id:
+            syslog.syslog('Email Address: ' + address_to_send)
             # print(row[2])
-            sendit(row[2], row[1])
+            sendit(address_to_send, name_to_email)
+        if one_off == '1':
+            delete_one_off(email_id)
     if copy_nathan == 'True':
         sendit('nathant@utm.edu', 'Automater')
 
