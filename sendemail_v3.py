@@ -55,7 +55,7 @@ def delete_one_off(email_id):
         database=database
     )
     mycursor = mydb.cursor()
-    select_sql = 'delete from email where ID = ' + email_id
+    select_sql = "delete from email where ID = '" + email_id + "'"
     mycursor.execute(select_sql)
     mydb.commit()
 
