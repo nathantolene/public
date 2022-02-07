@@ -47,6 +47,7 @@ def sendit(send_to_address, name):
 
 
 def delete_one_off(email_id):
+    email_id = str(email_id)
     mydb = mysql.connector.connect(
         host=host,
         user=user,
