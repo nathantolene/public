@@ -74,7 +74,7 @@ def check_db_for_email_address(cat_id):
         check_cat_id = x['cat']
         address_to_send = x['email']
         name_to_email = x['name']
-        one_off = str(x['one_off'])
+        one_off = x['one_off']
         email_id = x['ID']
         print(one_off)
         if check_cat_id == cat_id:
