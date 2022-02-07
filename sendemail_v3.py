@@ -74,14 +74,14 @@ def check_db_for_email_address(cat_id):
         check_cat_id = row[3]
         address_to_send = row[2]
         name_to_email = row[1]
-        one_off = row[4]
+        one_off = str(row[4])
         email_id = row[0]
         if check_cat_id == cat_id:
             syslog.syslog('Email Address: ' + address_to_send)
             # print(row[2])
             sendit(address_to_send, name_to_email)
-        if one_off == '1':
-            delete_one_off(email_id)
+            if one_off == '1':
+                delete_one_off(email_id)
     if copy_nathan == 'True':
         sendit('nathant@utm.edu', 'Automater')
 
