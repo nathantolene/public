@@ -76,6 +76,7 @@ def check_db_for_email_address(cat_id):
         name_to_email = x['name']
         one_off = str(x['one_off'])
         email_id = x['ID']
+        print(one_off)
         if check_cat_id == cat_id:
             syslog.syslog('Email Address: ' + address_to_send)
             # print(row[2])
