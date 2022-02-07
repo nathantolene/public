@@ -67,15 +67,15 @@ def check_db_for_email_address(cat_id):
         password=password,
         database=database
     )
-    mycursor = mydb.cursor()
+    mycursor = mydb.cursor(dictionary=True)
     mycursor.execute("select * from email where cat = '" + cat_id + "'")
     email_address = mycursor.fetchall()
-    for row in email_address:
-        check_cat_id = row[3]
-        address_to_send = row[2]
-        name_to_email = row[1]
-        one_off = str(row[4])
-        email_id = row[0]
+    for x in email_address:
+        check_cat_id = x['cat']
+        address_to_send = x['email']
+        name_to_email = x['name']
+        one_off = str(x['one_off'])
+        email_id = x['ID']
         if check_cat_id == cat_id:
             syslog.syslog('Email Address: ' + address_to_send)
             # print(row[2])
