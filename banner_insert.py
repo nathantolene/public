@@ -40,7 +40,7 @@ def banner_info_insert(events):
     mycursor = mydb.cursor(dictionary=True)
     for i in range(len(events)):
         for x in events[i]['items']:
-            print(x)
+            #print(x)
             termcode = mark + x['ssbsect_term_code'] + mark
             crn = mark + x['ssbsect_crn'] + mark
             subj = mark + x['ssbsect_subj_code'] + mark
