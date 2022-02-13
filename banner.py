@@ -23,7 +23,7 @@ thisTerm = "202220"
 
 
 def getTimes(bldg, room, term):
-   # print(bldg, room, term)
+   ## print(bldg, room, term)
     try:
         apiURL = banner_api_base + bldg + "&room=" + room + "&term=" + term
         try:
