@@ -20,6 +20,7 @@ print(f)
 y = []
 for x in f:
     y.append(x)
+print(y)
 l = len(y)
 m = y[l - 1]
 remove_n = m.strip()
