@@ -30,9 +30,9 @@ def insert_info():
         list.append(x)
         print(x)
     print(list)
-    minilatms = list[0]
+    minilatms = list[0][2:]
     maxlatms = list[1]
-    meanlatms = list[2]
+    meanlatms = list[2][:-3]
     mk = "'"
     cm = "', '"
     mydb = mysql.connector.connect(
