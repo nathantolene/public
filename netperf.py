@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import subprocess
 import mysql.connector
 from dotenv import load_dotenv
 
@@ -13,7 +14,8 @@ netperf_server = os.environ.get('netperf_server')
 netperf_command = 'netperf -H ' + netperf_server + ' -t TCP_RR -w 10ms --  -o min_latency,max_latency,mean_latency'
 
 print(netperf_command)
-f = os.system(netperf_command)
+subprocess = subprocess.Popen(netperf_command, shell=True, stdout=subprocess.PIPE)
+f = subprocess.stdout.read()
 y = []
 for x in f:
     y.append(x)
