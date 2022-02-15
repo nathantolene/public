@@ -18,7 +18,7 @@ def insert_info():
     sp = subprocess.Popen(netperf_command, shell=True, stdout=subprocess.PIPE)
     f = sp.stdout.readlines()
     #f = str(f)
-    #print(f)
+    print(f)
     f = f.split("b'")
     print(f)
     list = []
