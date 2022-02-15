@@ -16,6 +16,7 @@ netperf_command = 'netperf -H ' + netperf_server + ' -t TCP_RR -w 10ms --  -o mi
 print(netperf_command)
 subprocess = subprocess.Popen(netperf_command, shell=True, stdout=subprocess.PIPE)
 f = subprocess.stdout.read()
+print(f)
 y = []
 for x in f:
     y.append(x)
