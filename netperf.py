@@ -19,8 +19,8 @@ def insert_info():
     f = sp.stdout.readlines()
     f = str(f)
     print(f)
-    f = f.split()
-    print(f)
+    #f = f.split()
+    #print(f)
     list = []
     g = f[-2]
     h = g.split(',')
