@@ -22,7 +22,7 @@ def insert_info():
     f = f.split("b'")
     print(f)
     list = []
-    g = f[-2]
+    g = f[-1]
     h = g.split(',')
     for x in h:
         list.append(x)
