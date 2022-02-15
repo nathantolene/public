@@ -24,8 +24,8 @@ def insert_info():
     l = len(f)
     print(f[3])
     list = []
-    # g = f[-1]
-    # h = g.split(',')
+    g = str(f[3])
+    h = g.split(',')
     for x in h:
         list.append(x)
         print(x)
