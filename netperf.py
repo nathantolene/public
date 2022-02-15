@@ -19,8 +19,10 @@ def insert_info():
     f = sp.stdout.readlines()
     #f = str(f)
     print(f)
-    f = f.split("b'")
-    print(f)
+    #f = f.split("b'")
+    #print(f)
+    l = len(f)
+    print(l)
     list = []
     g = f[-1]
     h = g.split(',')
