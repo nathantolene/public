@@ -22,7 +22,7 @@ def insert_info():
     # f = f.split("b'")
     # print(f)
     l = len(f)
-    h = f[l - 1]
+    print(f[3])
     list = []
     # g = f[-1]
     # h = g.split(',')
