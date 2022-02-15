@@ -17,15 +17,14 @@ netperf_command = 'netperf -H ' + netperf_server + ' -t TCP_RR -w 10ms --  -o mi
 def insert_info():
     sp = subprocess.Popen(netperf_command, shell=True, stdout=subprocess.PIPE)
     f = sp.stdout.readlines()
-    f = str(f)
-    print(f)
+    #f = str(f)
+    #print(f)
     f = f.split("b'")
     print(f)
     list = []
     g = f[-1]
     h = g.split(',')
     for x in h:
-        x = x.replace("\n']", "")
         list.append(x)
         print(x)
     print(list)
