@@ -23,7 +23,7 @@ def insert_info():
     print(f)
     list = []
     g = f[-1]
-    a = g.replace('\n', '')
+    a = g.replace("\n']", '')
     h = a.split(',')
     for x in h:
         list.append(x)
