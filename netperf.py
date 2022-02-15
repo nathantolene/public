@@ -26,6 +26,7 @@ def insert_info():
     h = g.split(',')
     for x in h:
         list.append(x)
+        print(x)
     print(list)
     minilatms = list[0]
     maxlatms = list[1]
