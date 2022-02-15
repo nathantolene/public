@@ -42,4 +42,4 @@ def insert_info():
     mydb.commit()
 
 
-#insert_info()
+insert_info()
