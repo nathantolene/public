@@ -13,30 +13,16 @@ utm_database = os.environ.get('db')
 netperf_server = os.environ.get('netperf_server')
 netperf_command = 'netperf -H ' + netperf_server + ' -t TCP_RR -w 10ms --  -o min_latency,max_latency,mean_latency'
 
-print(netperf_command)
-subprocess = subprocess.Popen(netperf_command, shell=True, stdout=subprocess.PIPE)
-f = subprocess.stdout.read()
-print(f)
-y = []
-for x in f:
-    y.append(x)
-print(y)
-l = len(y)
-m = y[l - 1]
-remove_n = m.strip()
-list = remove_n.split(",")
-print(list)
 
 def insert_info():
-    #f = open('test.txt', 'r')
-    f = os.system(netperf_command)
-    y = []
-    for x in f:
-        y.append(x)
-    l = len(y)
-    m = y[l - 1]
-    remove_n = m.strip()
-    list = remove_n.split(",")
+    subprocess = subprocess.Popen(netperf_command, shell=True, stdout=subprocess.PIPE)
+    f = subprocess.stdout.read()
+    f = f.split('\n')
+    list = []
+    g = f[-2]
+    h = g.split(',')
+    for x in h:
+        list.append(x)
     minilatms = list[0]
     maxlatms = list[1]
     meanlatms = list[2]
