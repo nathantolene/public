@@ -23,9 +23,9 @@ def insert_info():
     print(f)
     list = []
     g = f[-1]
-    a = g.replace("\n']", '')
-    h = a.split(',')
+    h = g.split(',')
     for x in h:
+        x = x.replace("\n']", "")
         list.append(x)
         print(x)
     print(list)
