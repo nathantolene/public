@@ -17,15 +17,15 @@ netperf_command = 'netperf -H ' + netperf_server + ' -t TCP_RR -w 10ms --  -o mi
 def insert_info():
     sp = subprocess.Popen(netperf_command, shell=True, stdout=subprocess.PIPE)
     f = sp.stdout.readlines()
-    #f = str(f)
+    # f = str(f)
     print(f)
-    #f = f.split("b'")
-    #print(f)
+    # f = f.split("b'")
+    # print(f)
     l = len(f)
-    print(l)
+    h = f[l - 1]
     list = []
-    g = f[-1]
-    h = g.split(',')
+    # g = f[-1]
+    # h = g.split(',')
     for x in h:
         list.append(x)
         print(x)
@@ -40,7 +40,7 @@ def insert_info():
         user=utm_user,
         password=utm_password,
         database=utm_database
-        )
+    )
     mycursor = mydb.cursor(dictionary=True)
     insert_sql = "insert into netperf (minilatms, maxlatms, meanlatms) values (" + mk + minilatms + cm \
                  + maxlatms + cm + meanlatms + mk + ")"
