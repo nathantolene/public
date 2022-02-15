@@ -19,6 +19,7 @@ def insert_info():
     f = str(sp.stdout.read())
     print(f)
     f = f.split('\n')
+    print(f)
     list = []
     g = f[-2]
     h = g.split(',')
