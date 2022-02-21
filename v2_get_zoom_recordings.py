@@ -186,9 +186,9 @@ def insert_new_recording_info(recordings):
     end_time = end_time.strftime('%Y-%m-%d %H:%M:%S')
     select_sql = "insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
                  " file_type, file_extension, file_size, play_url, download_url, recording_type, modified) " \
-                 "values ( '" + status + comma + recording_id + comma + meeting_id + comma + \
-                 start_time + comma + end_time + comma + file_type + comma + file_extension + comma + \
-                 file_size + comma + play_url + comma + download_url + comma + recording_type + comma + timestamp + "')"
+                 "values ( '" + status + cm + recording_id + cm + meeting_id + cm + \
+                 start_time + cm + end_time + cm + file_type + cm + file_extension + cm + \
+                 file_size + cm + play_url + cm + download_url + cm + recording_type + cm + timestamp + "')"
     if debug:
         print(select_sql)
     mycursor.execute(select_sql)
