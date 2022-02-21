@@ -158,22 +158,22 @@ def insert_new_recording_info(recordings):
         password=zdl_password,
         database=zdl_database
     )
-    status = recordings['status']
-    recording_id = recordings['id']
-    meeting_id = recordings['meeting_id']
-    recording_start = recordings['recording_start']
-    recording_end = recordings['recording_end']
-    file_type = recordings['file_type']
-    file_extension = recordings['file_extension']
-    file_size = recordings['file_size']
+    status = str(recordings['status'])
+    recording_id = str(recordings['id'])
+    meeting_id = str(recordings['meeting_id'])
+    recording_start = str(recordings['recording_start'])
+    recording_end = str(recordings['recording_end'])
+    file_type = str(recordings['file_type'])
+    file_extension = str(recordings['file_extension'])
+    file_size = str(recordings['file_size'])
     try:
         play_url = recordings['play_url']
     except KeyError:
         play_url = 'TRANSCRIPT'
         if debug:
             print('No play_url it is a ' + file_type + ' file!')
-    download_url = recordings['download_url']
-    recording_type = recordings['recording_type']
+    download_url = str(recordings['download_url'])
+    recording_type = str(recordings['recording_type'])
     mycursor = mydb.cursor(dictionary=True)
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
