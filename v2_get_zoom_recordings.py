@@ -110,6 +110,8 @@ def check_uuid(uuid):
 
 
 def insert_new_meeting_info(meetings):
+    if debug:
+        print(meetings)
     mydb = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
