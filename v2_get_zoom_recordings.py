@@ -341,12 +341,12 @@ def delete_recordings_from_zoom():
             print('Recording Count: ' + str(recording_count))
             check = client.recording.delete(meeting_id=zoom_meeting_id)
             print('Check Status Code: ' + str(check.status_code))
-            if check.status_code == '204':
+            if str(check.status_code) == '204':
                 print("Status Code is 204 marking as downloaded")
                 select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
                 mycursor.execute(select_sql)
                 mydb.commit()
-            if check.status_code == '404':
+            if str(check.status_code) == '404':
                 print("Status code is 404 marking as downloaded")
                 select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
                 mycursor.execute(select_sql)
