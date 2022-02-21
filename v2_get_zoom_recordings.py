@@ -110,8 +110,6 @@ def check_uuid(uuid):
 
 
 def insert_new_meeting_info(meetings):
-    if debug:
-        print(meetings)
     mydb = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
@@ -134,13 +132,13 @@ def insert_new_meeting_info(meetings):
     topic = topic.replace("'", "_")
     if debug:
         print('Topic ' + topic)
-    meetings_type = meetings['type']
+    meetings_type = str(meetings['type'])
     if debug:
         print('Meeting_type ' + str(meetings_type))
-    timezone = meetings['timezone']
-    duration = meetings['duration']
-    recording_count = meetings['recording_count']
-    share_url = meetings['share_url']
+    timezone = str(meetings['timezone'])
+    duration = str(meetings['duration'])
+    recording_count = str(meetings['recording_count'])
+    share_url = str(meetings['share_url'])
     select_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
                  "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
                  + meetings_id + comma + meetings_zoom_number + comma + account_id + \
