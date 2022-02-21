@@ -27,8 +27,10 @@ zdl_host = os.environ.get('zdl_host')
 zdl_user = os.environ.get('zdl_user')
 zdl_password = os.environ.get('zdl_password')
 zdl_database = os.environ.get('zdl_database')
+debug = os.environ.get('debug')
 space = " "
 dot = "."
+comma = ", "
 
 
 def get_zoom_group_emails():
@@ -64,63 +66,30 @@ def update_recording_count():
                     mydb.commit()
 
 
-def get_list_of_recordings_for_email():
-    group_list = get_zoom_group_emails()
+def get_list_of_recordings_from_email_list(group_list):
+    # Purpose of this function is to insert recording info into zdl_database db for later processing
+    if debug:
+        print('get_list_of_recordings_from_email_list')
     for x in group_list['members']:
-        #print(x)
+        if debug:
+            print(x)
         email = x['email']
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
-        #print(recording_list)
+        if debug:
+            print(recording_list)
         for meetings in recording_list['meetings']:
-            meetings_uuid = meetings['uuid']  # key to meeting id
-            uuid_status = check_uuid(meetings_uuid)
-            meetings_zoom_number = meetings['id']
-            account_id = meetings['account_id']
-            host_id = meetings['host_id']
-            topic = meetings['topic']
-            topic = topic.replace("'", "_")
-            #print('Topic ' + topic)
-            meetings_type = meetings['type']
-            #print('Meeintg_type ' + str(meetings_type))
-            start_time = meetings['start_time']
-            timezone = meetings['timezone']
-            duration = meetings['duration']
-            #print('Duration ' + str(duration))
-            recording_count = meetings['recording_count']
-            share_url = meetings['share_url']
+            uuid_status = check_uuid(meetings['uuid'])
             if not uuid_status:
-                passer = [meetings_uuid, meetings_zoom_number, account_id, host_id, topic, meetings_type, start_time,
-                          timezone, duration, recording_count, share_url]
-                insert_new_meeting_info(passer)
+                insert_new_meeting_info(meetings)
             for recordings in meetings['recording_files']:
                 status = recordings['status']
                 if status == 'processing':
                     continue
-                # duration_meeting = recordings['duration']
-                # if duration_meeting <= 10:
-                #    continue
                 recording_id = recordings['id']
-                meeting_id = recordings['meeting_id']
-                recording_start = recordings['recording_start']
-                recording_end = recordings['recording_end']
-                file_type = recordings['file_type']
-                file_extension = recordings['file_extension']
-                file_size = recordings['file_size']
-                try:
-                    play_url = recordings['play_url']
-                except KeyError:
-                    play_url = 'TRANSCRIPT'
-                    # print('No play_url it is a ' + file_type + ' file!')
-                download_url = recordings['download_url']
-                recording_type = recordings['recording_type']
                 new_recording = check_for_recording_id(recording_id)
                 if not new_recording:
-                    passer = [status, recording_id, meeting_id, recording_start, recording_end, file_type, file_extension,
-                              file_size, play_url, download_url, recording_type]
-                    insert_new_recording_info(passer)
-                #check_to_download(recording_id)
-                #return recording_id
+                    insert_new_recording_info(recordings)
 
 
 def check_uuid(uuid):
@@ -131,7 +100,7 @@ def check_uuid(uuid):
         database=zdl_database
     )
     mycursor = mydb.cursor(dictionary=True)
-    select_sql = 'select meeting_id from meetings'
+    select_sql = "select id, meeting_id from meetings where meeting_id = '" + uuid + "'"
     mycursor.execute(select_sql)
     myresult = mycursor.fetchall()
     for x in myresult:
@@ -140,7 +109,7 @@ def check_uuid(uuid):
     return False
 
 
-def insert_new_meeting_info(passer):
+def insert_new_meeting_info(meetings):
     mydb = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
@@ -149,46 +118,78 @@ def insert_new_meeting_info(passer):
     )
     comma = "', '"
     mycursor = mydb.cursor(dictionary=True)
-    sql_time = passer[6]
+    start_time = meetings['start_time']
+    sql_time = start_time
     sql_time = datetime.fromisoformat(sql_time[:-1])
     sql_time = sql_time.strftime('%Y-%m-%d %H:%M:%S')
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
+    meetings_id = meetings['uuid']  # key to meeting id
+    meetings_zoom_number = str(meetings['id'])
+    account_id = str(meetings['account_id'])
+    host_id = str(meetings['host_id'])
+    topic = str(meetings['topic'])
+    topic = topic.replace("'", "_")
+    if debug:
+        print('Topic ' + topic)
+    meetings_type = meetings['type']
+    if debug:
+        print('Meeting_type ' + str(meetings_type))
+    timezone = meetings['timezone']
+    duration = meetings['duration']
+    recording_count = meetings['recording_count']
+    share_url = meetings['share_url']
     select_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
                  "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
-                 + str(passer[0]) + comma + str(passer[1]) + comma + str(passer[2]) + \
-                 comma + str(passer[3]) + comma + str(passer[4]) + comma + str(passer[5]) + \
-                 comma + sql_time + comma + str(passer[7]) + comma + str(passer[8]) + \
-                 comma + str(passer[9]) + comma + str(passer[10]) + comma + timestamp + "')"
-    # print(select_sql)
+                 + meetings_id + comma + meetings_zoom_number + comma + account_id + \
+                 comma + host_id + comma + topic + comma + meetings_type + \
+                 comma + sql_time + comma + timezone + comma + duration + \
+                 comma + recording_count + comma + share_url + comma + timestamp + "')"
+    if debug:
+        print(select_sql)
     mycursor.execute(select_sql)
     mydb.commit()
 
 
-def insert_new_recording_info(passer):
+def insert_new_recording_info(recordings):
     mydb = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
         password=zdl_password,
         database=zdl_database
     )
-    comma = "', '"
+    status = recordings['status']
+    recording_id = recordings['id']
+    meeting_id = recordings['meeting_id']
+    recording_start = recordings['recording_start']
+    recording_end = recordings['recording_end']
+    file_type = recordings['file_type']
+    file_extension = recordings['file_extension']
+    file_size = recordings['file_size']
+    try:
+        play_url = recordings['play_url']
+    except KeyError:
+        play_url = 'TRANSCRIPT'
+        if debug:
+            print('No play_url it is a ' + file_type + ' file!')
+    download_url = recordings['download_url']
+    recording_type = recordings['recording_type']
     mycursor = mydb.cursor(dictionary=True)
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
-    sql_time = passer[3]
+    sql_time = recording_start
     sql_time = datetime.fromisoformat(sql_time[:-1])
     start_time = sql_time.strftime('%Y-%m-%d %H:%M:%S')
-    end_time = passer[4]
+    end_time = recording_end
     end_time = datetime.fromisoformat(end_time[:-1])
     end_time = end_time.strftime('%Y-%m-%d %H:%M:%S')
     select_sql = "insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
                  " file_type, file_extension, file_size, play_url, download_url, recording_type, modified) " \
-                 "values ( '" + str(passer[0]) + comma + str(passer[1]) + comma + str(passer[2]) + comma + \
-                 start_time + comma + end_time + comma + str(passer[5]) + comma + str(passer[6]) + comma + \
-                 str(passer[7]) + comma + str(passer[8]) + comma + str(passer[9]) + comma + str(
-        passer[10]) + comma + timestamp + "')"
-    # print(select_sql)
+                 "values ( '" + status + comma + recording_id + comma + meeting_id + comma + \
+                 start_time + comma + end_time + comma + file_type + comma + file_extension + comma + \
+                 file_size + comma + play_url + comma + download_url + comma + recording_type + comma + timestamp + "')"
+    if debug:
+        print(select_sql)
     mycursor.execute(select_sql)
     mydb.commit()
 
@@ -343,6 +344,10 @@ def delete_recordings_from_zoom():
                 select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
                 mycursor.execute(select_sql)
                 mydb.commit()
+            if check.status_code == '404':
+                select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
+                mycursor.execute(select_sql)
+                mydb.commit()
 
 
 def check_time_diff(r_id):
@@ -379,7 +384,8 @@ def check_time_diff(r_id):
 
 
 def main():
-    get_list_of_recordings_for_email()
+    group_list = get_zoom_group_emails()
+    get_list_of_recordings_from_email_list(group_list)
     check_db_and_download_all()
     update_recording_count()
     delete_recordings_from_zoom()
