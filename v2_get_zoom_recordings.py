@@ -31,6 +31,7 @@ debug = os.environ.get('debug')
 space = " "
 dot = "."
 comma = ", "
+cm = "', '"
 
 
 def get_zoom_group_emails():
@@ -141,10 +142,10 @@ def insert_new_meeting_info(meetings):
     share_url = str(meetings['share_url'])
     select_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
                  "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
-                 + meetings_id + comma + meetings_zoom_number + comma + account_id + \
-                 comma + host_id + comma + topic + comma + meetings_type + \
-                 comma + sql_time + comma + timezone + comma + duration + \
-                 comma + recording_count + comma + share_url + comma + timestamp + "')"
+                 + meetings_id + cm + meetings_zoom_number + cm + account_id + \
+                 cm + host_id + cm + topic + cm + meetings_type + \
+                 cm + sql_time + cm + timezone + cm + duration + \
+                 cm + recording_count + cm + share_url + cm + timestamp + "')"
     if debug:
         print(select_sql)
     mycursor.execute(select_sql)
