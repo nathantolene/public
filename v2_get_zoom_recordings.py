@@ -333,9 +333,11 @@ def delete_recordings_from_zoom():
         full_download = 0
         recording_count = x['recording_count']
         for x in myr:
+            print(x)
             if x['downloaded'] is None:
                 continue
             full_download = full_download + int(str(x['downloaded']))
+            print(str(full_download))
         if full_download == recording_count:
             print('Full Downloaded: ' + str(full_download))
             print('Recording Count: ' + str(recording_count))
