@@ -42,8 +42,9 @@ def v2_delete_recordings_from_zoom(group_list):
             for y in myresult:
                 print(y)
                 if str(y['downloaded']) == '1':
-                    print('delete me bitch!')
-
+                    #print('delete me bitch!')
+                    check = client.recording.delete(meeting_id=meeting_id)
+                    print('Check Status Code: ' + str(check.status_code))
 
 
 def main():
