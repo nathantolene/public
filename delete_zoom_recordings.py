@@ -39,8 +39,9 @@ def v2_delete_recordings_from_zoom(group_list):
             select_sql = "select downloaded from meetings where meeting_id = '" + meeting_id + "'"
             mycursor.execute(select_sql)
             myresult = mycursor.fetchall()
-            for x in myresult:
-                if x['downloaded'] == '1':
+            for y in myresult:
+                print(y)
+                if y['downloaded'] == '1':
                     print('delete me bitch!')
 
 
