@@ -41,7 +41,7 @@ def v2_delete_recordings_from_zoom(group_list):
             myresult = mycursor.fetchall()
             for y in myresult:
                 print(y)
-                if y['downloaded'] == '1':
+                if str(y['downloaded']) == '1':
                     print('delete me bitch!')
 
 
