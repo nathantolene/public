@@ -312,47 +312,30 @@ def update_to_downloaded(r_id):
 
 
 def delete_recordings_from_zoom():
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
-    select_sql = "select id, meeting_id, recording_count, meetings_zoom_number from meetings where downloaded is null"
-    mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
-    for x in myresult:
-        zoom_meeting_id = x['meetings_zoom_number']
-        meeting_id = str(x['meeting_id'])
-        print(zoom_meeting_id)
-        print(meeting_id)
-        select_sql = "select downloaded from recordings where meeting_id = '" + meeting_id + "'"
-        mycursor.execute(select_sql)
-        myr = mycursor.fetchall()
-        full_download = 0
-        recording_count = x['recording_count']
-        for x in myr:
-            print(x)
-            if x['downloaded'] is None:
-                continue
-            full_download = full_download + int(str(x['downloaded']))
-            print(str(full_download))
-        if full_download == recording_count:
-            print('Full Downloaded: ' + str(full_download))
-            print('Recording Count: ' + str(recording_count))
-            check = client.recording.delete(meeting_id=zoom_meeting_id)
-            print('Check Status Code: ' + str(check.status_code))
-            if str(check.status_code) == '204':
-                print("Status Code is 204 marking as downloaded")
-                select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
-                mycursor.execute(select_sql)
-                mydb.commit()
-            if str(check.status_code) == '404':
-                print("Status code is 404 marking as downloaded")
-                select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
-                mycursor.execute(select_sql)
-                mydb.commit()
+    for x in group_list['members']:
+        email = x['email']
+        recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
+        recording_list = json.loads(recording_list_response.content)
+        print(recording_list)
+        for meetings in recording_list['meetings']:
+            meeting_id = meetings['uuid']
+            print(meeting_id)
+            mydb = mysql.connector.connect(
+                host=zdl_host,
+                user=zdl_user,
+                password=zdl_password,
+                database=zdl_database
+            )
+            mycursor = mydb.cursor(dictionary=True)
+            select_sql = "select downloaded from meetings where meeting_id = '" + meeting_id + "'"
+            mycursor.execute(select_sql)
+            myresult = mycursor.fetchall()
+            for y in myresult:
+                print(y)
+                if str(y['downloaded']) == '1':
+                    # print('delete me bitch!')
+                    check = client.recording.delete(meeting_id=meeting_id)
+                    print('Check Status Code: ' + str(check.status_code))
 
 
 def check_time_diff(r_id):
@@ -393,7 +376,7 @@ def main():
     get_list_of_recordings_from_email_list(group_list)
     check_db_and_download_all()
     update_recording_count()
-    delete_recordings_from_zoom()
+    delete_recordings_from_zoom(group_list)
     zoom_auto_delete.main()
 
 
