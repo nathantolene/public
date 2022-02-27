@@ -81,7 +81,7 @@ def check_for_specials_now():
     find_old_recordings('nathant@utm.edu')
     find_old_recordings('ebell@utm.edu')
     room_list = list_rooms()
-    for x in room_list:
+    for x in room_list['rooms']:
         zoom_id = str(x['id'])
         gen_host_id = "rooms_" + zoom_id + "@utm.edu"
         find_old_recordings(gen_host_id)
