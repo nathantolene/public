@@ -2,6 +2,7 @@
 
 import json
 import syslog
+from zoom_rooms import list_rooms
 from datetime import datetime
 from zoomus import ZoomClient
 import os
@@ -48,8 +49,8 @@ def strip_emails_from_group_list(group_list):
 def find_old_recordings(email):
     recordings_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
     recordings_list = json.loads(recordings_response.content)
-    if debug:
-        print(recordings_list)
+    #if debug:
+    print(recordings_list)
         #syslog(recordings_list)
     for y in recordings_list['meetings']:
         start = str(y['start_time'])
@@ -78,6 +79,12 @@ def find_old_recordings(email):
 
 def check_for_specials_now():
     find_old_recordings('nathant@utm.edu')
+    find_old_recordings('ebell@utm.edu')
+    room_list = list_rooms()
+    for x in room_list:
+        zoom_id = x['id']
+        gen_host_id = "rooms_" + zoom_id + "@utm.edu"
+        find_old_recordings(gen_host_id)
 
 
 def main():
