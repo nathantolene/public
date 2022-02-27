@@ -311,7 +311,7 @@ def update_to_downloaded(r_id):
     mydb.commit()
 
 
-def delete_recordings_from_zoom():
+def delete_recordings_from_zoom(group_list):
     for x in group_list['members']:
         email = x['email']
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
