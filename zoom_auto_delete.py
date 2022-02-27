@@ -50,7 +50,7 @@ def find_old_recordings(email):
     recordings_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
     recordings_list = json.loads(recordings_response.content)
     #if debug:
-    print(recordings_list)
+    #print(recordings_list)
         #syslog(recordings_list)
     for y in recordings_list['meetings']:
         start = str(y['start_time'])
@@ -66,7 +66,7 @@ def find_old_recordings(email):
             #syslog(topic)
             #syslog(start_time)
             #syslog(delta.days)
-        if str(delta.days) == '-7':
+        if delta.days >= -7:
             if debug:
                 print('More then 7 days old, time to delete')
                 #syslog('More then 7 days old, time to delete')
