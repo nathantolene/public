@@ -34,7 +34,7 @@ def insert_all_rooms_to_zdb(room_list):
             act_code = "No current Value"
         status= x['status']
         insert_sql = "insert into zoom_rooms (zoom_id, room_id, name, loc_id, act_code, status) values " \
-                     "('" + zoom_id + cm + room_id + name + cm + loc_id + cm + act_code + cm + status + "' )"
+                     "('" + zoom_id + cm + room_id + cm + name + cm + loc_id + cm + act_code + cm + status + "' )"
         #print(insert_sql)
         mycursor.execute(insert_sql)
         mydb.commit()
