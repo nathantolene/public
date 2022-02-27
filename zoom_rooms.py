@@ -49,3 +49,7 @@ def list_rooms():
 def main():
     room_list = list_rooms()
     insert_all_rooms_to_zdb(room_list)
+
+
+if __name__ == "__main__":
+    main()
