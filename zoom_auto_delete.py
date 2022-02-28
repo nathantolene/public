@@ -22,6 +22,7 @@ date_format_str = '%Y-%m-%dT%H:%M:%SZ'
 
 def delete_zoom_recording(meeting_id):
     check = client.recording.delete(meeting_id=meeting_id)
+    print(check.status_code)
     if check.status_code == '204':
         print('Recording Delete!')
         return True
@@ -74,7 +75,7 @@ def find_old_recordings(email):
                 meeting_id = z['meeting_id']
             check = delete_zoom_recording(meeting_id)
             if check:
-                print("Deleted " + topic + "it is " + str(delta.days) + " old.")
+                print("Deleted " + topic + " it is " + str(delta.days) + "days old.")
             else:
                 print("Something is wrong, here is the status code: " + check)
 
