@@ -54,15 +54,43 @@ def update_recording_count():
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
         for meetings in recording_list['meetings']:
-            meetings_uuid = meetings['uuid']  # key to meeting id
             recording_count = meetings['recording_count']
-            select_sql = "select recording_count from meetings where meeting_id ='" + meetings_uuid + "'"
+            zoom_meeting_id = meetings['id']
+            meeting_id = meetings['uuid'] # key to meeting id
+            select_sql = "select recording_count from meetings where meeting_id ='" + meeting_id + "'"
             mycursor.execute(select_sql)
             myresult = mycursor.fetchall()
             for x in myresult:
                 if not str(x['recording_count']) == recording_count:
                     select_sql = "update meetings set recording_count ='" \
-                                 + str(recording_count) + "' where meeting_id ='" + meetings_uuid + "'"
+                                 + str(recording_count) + "' where meeting_id ='" + meeting_id + "'"
+                    mycursor.execute(select_sql)
+                    mydb.commit()
+            print(zoom_meeting_id)
+            print(meeting_id)
+            select_sql = "select downloaded from recordings where meeting_id = '" + meeting_id + "'"
+            mycursor.execute(select_sql)
+            myr = mycursor.fetchall()
+            full_download = 0
+            for y in myr:
+                print(y)
+                if y['downloaded'] is None:
+                    continue
+                full_download = full_download + y['downloaded']
+                print(str(full_download))
+            if full_download == recording_count:
+                print('Full Downloaded: ' + str(full_download))
+                print('Recording Count: ' + str(recording_count))
+                check = client.recording.delete(meeting_id=zoom_meeting_id)
+                print('Check Status Code: ' + str(check.status_code))
+                if str(check.status_code) == '204':
+                    print("Status Code is 204 marking as downloaded")
+                    select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
+                    mycursor.execute(select_sql)
+                    mydb.commit()
+                if str(check.status_code) == '404':
+                    print("Status code is 404 marking as downloaded")
+                    select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
                     mycursor.execute(select_sql)
                     mydb.commit()
 
