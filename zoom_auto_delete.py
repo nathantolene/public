@@ -74,7 +74,7 @@ def find_old_recordings(email):
             for z in y['recording_files']:
                 meeting_id = z['meeting_id']
             check = delete_zoom_recording(meeting_id)
-            if check:
+            if check is True:
                 print("Deleted " + topic + " it is " + str(delta.days) + " days old.")
             else:
                 print("Something is wrong, here is the status code: " + check)
