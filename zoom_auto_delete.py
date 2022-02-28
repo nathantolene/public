@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import urllib.parse
 import json
 import syslog
 from zoom_rooms import list_rooms
@@ -21,9 +22,10 @@ date_format_str = '%Y-%m-%dT%H:%M:%SZ'
 
 
 def delete_zoom_recording(meeting_id):
-    check = client.recording.delete(meeting_id=meeting_id)
-    #print(check.status_code)
     print("Meeting ID " + meeting_id)
+    encoded = urllib.parse.quote(meeting_id, safe='')
+    reencoded = urllib.parse.quote(encoded, safe='')
+    check = client.recording.delete(meeting_id=reencoded)
     if check.status_code == 204:
         print('Recording Delete!')
         return True
