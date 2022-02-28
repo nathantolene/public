@@ -25,7 +25,7 @@ def delete_zoom_recording(meeting_id):
     if check.status_code == '204':
         print('Recording Delete!')
         return True
-    return False
+    return check.status_code
 
 
 def list_all_zoom_users():
@@ -75,6 +75,8 @@ def find_old_recordings(email):
             check = delete_zoom_recording(meeting_id)
             if check:
                 print("Deleted " + topic + "it is " + str(delta.days) + " old.")
+            else:
+                print("Something is wrong, here is the status code: " + check)
 
 
 def check_for_specials_now():
