@@ -54,9 +54,9 @@ def update_recording_count():
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
         for meetings in recording_list['meetings']:
-            if meetings['status'] == "processing":
-                continue
             recording_count = meetings['recording_count']
+            if recording_count == 0:
+                continue
             zoom_meeting_id = meetings['id']
             meeting_id = meetings['uuid'] # key to meeting id
             select_sql = "select recording_count from meetings where meeting_id ='" + meeting_id + "'"
