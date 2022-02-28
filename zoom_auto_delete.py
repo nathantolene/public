@@ -22,7 +22,8 @@ date_format_str = '%Y-%m-%dT%H:%M:%SZ'
 
 def delete_zoom_recording(meeting_id):
     check = client.recording.delete(meeting_id=meeting_id)
-    print(check.status_code)
+    #print(check.status_code)
+    print("Meeting ID " + meeting_id)
     if check.status_code == 204:
         print('Recording Delete!')
         return True
