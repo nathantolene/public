@@ -77,7 +77,7 @@ def find_old_recordings(email):
             if check is True:
                 print("Deleted " + topic + " it is " + str(delta.days) + " days old.")
             else:
-                print("Something is wrong, here is the status code: " + check)
+                print("Something is wrong, here is the status code: " + str(check))
 
 
 def check_for_specials_now():
