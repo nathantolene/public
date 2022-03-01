@@ -2,6 +2,7 @@
 
 import json
 import requests
+import urllib.parse
 from zoomus import ZoomClient
 from datetime import date, datetime
 import os
@@ -83,6 +84,9 @@ def update_recording_count():
             if full_download == recording_count:
                 print('Full Downloaded: ' + str(full_download))
                 print('Recording Count: ' + str(recording_count))
+                if '/' in meeting_id:
+                    encoded = urllib.parse.quote(meeting_id, safe='')
+                    meeting_id = urllib.parse.quote(encoded, safe='')
                 check = client.recording.delete(meeting_id=zoom_meeting_id)
                 print('Check Status Code: ' + str(check.status_code))
                 if str(check.status_code) == '204':
@@ -300,30 +304,30 @@ def check_db_and_download_all():
                     zoomname = topic + space + start_time + ".vtt"
                     check = download_recording(zoomname, download_url, r_type)
                     print(zoomname)
-                    if check:
+                    if check is True:
                         update_to_downloaded(r_id)
                 if r_type == 'shared_screen_with_speaker_view':
                     zoomname = topic + space + start_time + dot + file_type.lower()
                     check = download_recording(zoomname, download_url, r_type)
                     print(zoomname)
-                    if check:
+                    if check is True:
                         update_to_downloaded(r_id)
                 if r_type == 'shared_screen_with_gallery_view':
                     zoomname = topic + space + start_time + space + r_type + dot + file_type.lower()
                     check = download_recording(zoomname, download_url, r_type)
                     print(zoomname)
-                    if check:
+                    if check is True:
                         update_to_downloaded(r_id)
                 if r_type == 'TIMELINE' or r_type == 'timeline':
                     zoomname = topic + space + start_time + space + r_type + dot + file_type.lower()
                     check = download_recording(zoomname, download_url, r_type)
-                    if check:
+                    if check is True:
                         update_to_downloaded(r_id)
                 if r_type == 'CHAT' or r_type == 'chat_file':
                     zoomname = topic + space + start_time + space + r_type + '.txt'
                     check = download_recording(zoomname, download_url, r_type)
                     print(zoomname)
-                    if check:
+                    if check is True:
                         update_to_downloaded(r_id)
 
 
@@ -363,7 +367,9 @@ def delete_recordings_from_zoom(group_list):
             for y in myresult:
                 print(y)
                 if str(y['downloaded']) == '1':
-                    # print('delete me bitch!')
+                    if '/' in meeting_id:
+                        encoded = urllib.parse.quote(meeting_id, safe='')
+                        meeting_id = urllib.parse.quote(encoded, safe='')
                     check = client.recording.delete(meeting_id=meeting_id)
                     print('Check Status Code: ' + str(check.status_code))
 

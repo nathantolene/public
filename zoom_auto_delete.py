@@ -23,9 +23,10 @@ date_format_str = '%Y-%m-%dT%H:%M:%SZ'
 
 def delete_zoom_recording(meeting_id):
     print("Meeting ID " + meeting_id)
-    encoded = urllib.parse.quote(meeting_id, safe='')
-    reencoded = urllib.parse.quote(encoded, safe='')
-    check = client.recording.delete(meeting_id=reencoded)
+    if '/' in meeting_id:
+        encoded = urllib.parse.quote(meeting_id, safe='')
+        meeting_id = urllib.parse.quote(encoded, safe='')
+    check = client.recording.delete(meeting_id=meeting_id)
     if check.status_code == 204:
         print('Recording Delete!')
         return True
