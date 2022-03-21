@@ -502,7 +502,7 @@ def main():
     active_dlzoom1()
     active_calls()
     get_events_to_update_color(events)
-    find_missing_attendees()
+    #find_missing_attendees()
 
 
 if __name__ == "__main__":
