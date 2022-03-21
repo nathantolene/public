@@ -327,10 +327,10 @@ def active_calls():
                 pass
             if leave_reason == '':
                 active_user = y['user_name']
-                #print('Active:', active_user + '*')
+                print('Active:', active_user + '*')
                 peers.append(active_user)
         for z in attendess:
-            #print(peers)
+            print(peers)
             try:
                 displayName_real = z['displayName']
                 displayName = displayName_real.split("-")
@@ -349,10 +349,10 @@ def active_calls():
                 room = room[0]
                 room = room.replace(" ", "")
                 room = room.upper()
-                #print(building, room)
+                print(building, room)
                 building_room = building + ' ' + room
                 for w in peers:
-                    #print(w)
+                    print(w)
                     if w == building_room:
                         print('Connected', building_room)
                         update_sql = "update gcal_attendees set active=1 where gcal_id ='" + gcal_id + "'" + \
@@ -361,7 +361,7 @@ def active_calls():
                         mycursor.execute(update_sql)
                         mydb.commit()
                     else:
-                        #print('else', w)
+                        print('else', w)
                         pass
             except IndexError:
                 continue
