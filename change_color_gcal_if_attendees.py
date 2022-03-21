@@ -300,7 +300,7 @@ def active_calls():
     )
     mycursor = mydb.cursor(dictionary=True)
     select_sql = "select location, gcal_id from gcal where '" + now + "' between start_time and end_time"
-    # print(select_sql)
+    print(select_sql)
     mycursor.execute(select_sql)
     response = mycursor.fetchall()
     for x in response:
