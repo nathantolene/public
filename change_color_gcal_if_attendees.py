@@ -50,11 +50,11 @@ def pull_cisco_room_info():
 def get_participants_from_zoom_call(zoom_number):
     info = client.meeting.list_meeting_participants(id=zoom_number)
     info = json.loads(info.content)
-    # print(info)
+    print(info)
     participants = []
     try:
         for x in info['participants']:
-            #print(x)
+            print(x)
             participants.append(x)
     except KeyError:
         print('Class disconnected or not started', zoom_number )
