@@ -4,13 +4,18 @@ import xmltodict
 import datetime
 from datetime import timedelta
 from datetime import datetime
-from cal_setup import get_calendar_service
+# from cal_setup import get_calendar_service
 from lxml.etree import tostring
 from lxml.builder import E
 import os
 import mysql.connector
 import json
 from zoomus import ZoomClient
+import pickle
+import os.path
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,8 +34,37 @@ gcal_database = os.environ.get('utm_database')
 api_key = os.environ.get('zoom_api_key')
 api_sec = os.environ.get('zoom_api_sec')
 client = ZoomClient(api_key, api_sec)
-service = get_calendar_service()
 zoom_passcode = os.environ.get('zoom_passcode')
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+CREDENTIALS_FILE = os.environ.get('cred_file')
+
+
+def get_calendar_service():
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                CREDENTIALS_FILE, SCOPES)
+            creds = flow.run_local_server(port=0)
+
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+    return service
+
+
+service = get_calendar_service()
 
 
 def pull_cisco_room_info():
@@ -51,14 +85,14 @@ def pull_cisco_room_info():
 def get_participants_from_zoom_call(zoom_number):
     info = client.meeting.list_meeting_participants(id=zoom_number)
     info = json.loads(info.content)
-    #print(info)
+    # print(info)
     participants = []
     try:
         for x in info['participants']:
-            #print(x)
+            # print(x)
             participants.append(x)
     except KeyError:
-        print('Class disconnected or not started', zoom_number )
+        print('Class disconnected or not started', zoom_number)
         pass
     # print(participants)
     return participants
@@ -234,13 +268,13 @@ def insert_glcal_info_into_db(events):
                 try:
                     resource = y['resource']
                     resource = str(resource)
-                    #print(resource)
+                    # print(resource)
                 except KeyError:
                     resource = ''
                 try:
                     organizer = y['organizer']
                     organizer = str(organizer)
-                    #print(organizer)
+                    # print(organizer)
                 except KeyError:
                     organizer = ''
                 insert_sql2 = "insert into gcal_attendees " \
@@ -283,7 +317,7 @@ def find_attendees_from_gcal_attendees_db(gcal_id):
     select_sql = "select displayName from gcal_attendees where gcal_id ='" + gcal_id + "'"
     mycursor.execute(select_sql)
     attendees = mycursor.fetchall()
-    #print(attendees)
+    # print(attendees)
     return attendees
 
 
@@ -301,37 +335,37 @@ def active_calls():
     )
     mycursor = mydb.cursor(dictionary=True)
     select_sql = "select location, gcal_id from gcal where '" + now + "' between start_time and end_time"
-    #print(select_sql)
+    # print(select_sql)
     mycursor.execute(select_sql)
     response = mycursor.fetchall()
     for x in response:
         location = x['location']
-        #sip_number = x['location'].split(",")
-        #sip_number = sip_number[0]
-        #sip_number = sip_number.split("?")
-        #sip_number = sip_number[0].split("/")
-        #sip_number = sip_number[4]
+        # sip_number = x['location'].split(",")
+        # sip_number = sip_number[0]
+        # sip_number = sip_number.split("?")
+        # sip_number = sip_number[0].split("/")
+        # sip_number = sip_number[4]
         sip_number = find_sip_number_from_gcal_location(location)
         gcal_id = x['gcal_id']
         participants = get_participants_from_zoom_call(sip_number)
         if not participants:
             continue
         attendess = find_attendees_from_gcal_attendees_db(gcal_id)
-        #print(participants)
+        # print(participants)
         peers = []
         for y in participants:
             leave_reason = ''
             try:
-                #print(y['leave_reason'])
+                # print(y['leave_reason'])
                 leave_reason = y['leave_reason']
             except KeyError:
                 pass
             if leave_reason == '':
                 active_user = y['user_name']
-                #print('Active:', active_user + '*')
+                # print('Active:', active_user + '*')
                 peers.append(active_user)
         for z in attendess:
-            #print(peers)
+            # print(peers)
             try:
                 displayName_real = z['displayName']
                 displayName = displayName_real.split("-")
@@ -350,19 +384,19 @@ def active_calls():
                 room = room[0]
                 room = room.replace(" ", "")
                 room = room.upper()
-                #print(building, room)
+                # print(building, room)
                 building_room = building + ' ' + room
                 for w in peers:
-                    #print(w)
+                    # print(w)
                     if w == building_room:
                         print('Connected', building_room)
                         update_sql = "update gcal_attendees set active=1 where gcal_id ='" + gcal_id + "'" + \
                                      "and displayName = '" + displayName_real + "'"
-                        #print(insert_sql)
+                        # print(insert_sql)
                         mycursor.execute(update_sql)
                         mydb.commit()
                     else:
-                        #print('else', w)
+                        # print('else', w)
                         pass
             except IndexError:
                 continue
@@ -392,15 +426,15 @@ def compare_gcal_w_attendees(gcal_id):
     mycursor = mydb.cursor(buffered=True)
     select_sql = "select active from gcal_attendees where gcal_id = '" + gcal_id + "'"
     mycursor.execute(select_sql)
-    rows = mycursor.rowcount # to use rowcount you must use buffered=True with mydb.cursor as above
+    rows = mycursor.rowcount  # to use rowcount you must use buffered=True with mydb.cursor as above
     active = mycursor.fetchall()
     count = 0
-    #print('rows', rows)
+    # print('rows', rows)
     for x in active:
         if x[0] is None:
             continue
         count = count + x[0]
-        #print(count)
+        # print(count)
     if count == rows:
         mycursor = mydb.cursor(dictionary=True)
         update_sql = "update gcal set all_in_attendance = 1 where gcal_id = '" + gcal_id + "'"
@@ -432,11 +466,11 @@ def get_events_to_update_color(events):
 
 def join_call(building, room, sip_number):
     xml_string = tostring(E.Command(E.Dial(E.Number(sip_number))),
-                         pretty_print=True, xml_declaration=True, encoding='utf-8')
-    #print(xmlstring)
+                          pretty_print=True, xml_declaration=True, encoding='utf-8')
+    # print(xmlstring)
     gather = starter + building + room + domain + post_path
     post = requests.post(gather, data=xml_string, auth=(cisco_user, cisco_pass))
-    #print(post.content)
+    # print(post.content)
     return post
 
 
@@ -458,11 +492,11 @@ def find_missing_attendees():
         summary = x['summary']
         sip_number = find_sip_number_from_gcal_location(location)
         sip_number = sip_number + '.' + zoom_passcode + '@zoomcrc.com'
-        #print(gcal_id)
+        # print(gcal_id)
         select_sql2 = "select displayName from gcal_attendees where gcal_id = '" + gcal_id + "' and active is NUll"
         mycursor.execute(select_sql2)
         missing = mycursor.fetchall()
-        #print(missing)
+        # print(missing)
         for y in missing:
             displayName_real = y['displayName']
             displayName = displayName_real.split("-")
@@ -478,7 +512,7 @@ def find_missing_attendees():
             room = room.split('(')
             room = room[0]
             room = room.replace(" ", "")
-            select_sql3 = "select room_type from room_info where displayName = '"+ displayName_real + "'"
+            select_sql3 = "select room_type from room_info where displayName = '" + displayName_real + "'"
             mycursor.execute(select_sql3)
             rooms = mycursor.fetchall()
             for z in rooms:
@@ -489,21 +523,21 @@ def find_missing_attendees():
                     yes_no = yes_no.lower()
                     if yes_no == 'y':
                         join_call(building, room, sip_number)
-                        #print(building, room, sip_number)
+                        # print(building, room, sip_number)
                     else:
                         continue
 
 
 def main():
     clear_tables()
-    #cisco = pull_cisco_room_info()
-    #get_info_from_cisco(cisco)
+    # cisco = pull_cisco_room_info()
+    # get_info_from_cisco(cisco)
     events = get_events_from_gcal()
     insert_glcal_info_into_db(events)
     active_dlzoom1()
     active_calls()
     get_events_to_update_color(events)
-    #find_missing_attendees()
+    # find_missing_attendees()
 
 
 if __name__ == "__main__":
