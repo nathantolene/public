@@ -2,6 +2,7 @@
 #https://karenapp.io/articles/how-to-automate-google-calendar-with-python-using-the-calendar-api/
 
 import datetime
+import os
 import pickle
 import os.path
 from googleapiclient.discovery import build
@@ -11,7 +12,9 @@ from google.auth.transport.requests import Request
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
-CREDENTIALS_FILE = 'credentials.json'
+#CREDENTIALS_FILE = 'credentials.json'
+CREDENTIALS_FILE = os.environ.get('cred_file')
+
 
 def get_calendar_service():
    creds = None
