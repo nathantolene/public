@@ -28,7 +28,8 @@ def get_participants_from_zoom_call(zoom_number):
 
 def main():
     zoom_number = input('Zoom Number? ')
-    get_participants_from_zoom_call(zoom_number)
+    participants = get_participants_from_zoom_call(zoom_number)
+    print(participants)
 
 
 if __name__ == "__main__":
