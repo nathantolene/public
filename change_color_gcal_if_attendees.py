@@ -16,6 +16,7 @@ import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from time import time, sleep
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -538,6 +539,8 @@ def main():
     active_calls()
     get_events_to_update_color(events)
     # find_missing_attendees()
+    sleep(90)
+    main()
 
 
 if __name__ == "__main__":
