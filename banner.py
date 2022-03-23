@@ -121,6 +121,7 @@ except Exception as e:
 
 if __name__ == "__main__":
     #b = readJSON('buildings.json')
+    banner_insert.banner_pull_clear()
     b = banner_insert.list_it()
     #print(b)
     events = getAllTimes(b)
