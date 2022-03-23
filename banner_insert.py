@@ -52,7 +52,10 @@ def banner_info_insert(events):
             room = mark + x['ssrmeet_room_code'] + mark
             start_date = mark + x['ssrmeet_start_date'] + mark
             end_date = mark + x['ssrmeet_end_date'] + mark
-            begin_time = mark + x['ssrmeet_begin_time'] + mark
+            try:
+                begin_time = mark + x['ssrmeet_begin_time'] + mark
+            except TypeError:
+                pass
             end_time = mark + x['ssrmeet_end_time'] + mark
             try:
                 sun = mark + str(x['ssrmeet_sun_day']) + mark
