@@ -11,10 +11,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-utm_host = os.environ.get('host')
-utm_user = os.environ.get('dbuser')
-utm_password = os.environ.get('dbpass')
-utm_database = os.environ.get('db')
+utm_host = os.environ.get('utm_host')
+utm_user = os.environ.get('utm_user')
+utm_password = os.environ.get('utm_password')
+utm_database = os.environ.get('utm_database')
 banner_api_base = os.environ.get('banner_api_base')
 
 # CURRENT TERM CODE #
