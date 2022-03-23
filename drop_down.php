@@ -6,7 +6,7 @@ if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 
-$sql = "select bldg_code from banner_pull;";
+$sql = "select DISTINCT bldg_code from banner_pull;";
 
 echo "<select name='Building'>";
 if($result = mysqli_query($link, $sql)){
