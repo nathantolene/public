@@ -9,7 +9,8 @@ if($link === false){
 $sql = "select DISTINCT bldg_code from banner_pull;";
 
 echo "<select name='Building'>";
-if($result = mysqli_query($link, $sql)){echo "<table>";
+if($result = mysqli_query($link, $sql)){
+            echo "<table>";
             echo "<tr>";
                 echo "<th>Subject</th>";
                 echo "<th>Title</th>";
@@ -33,3 +34,4 @@ echo "<option value='" . $row['bldg_code'] ."'>" . $row['bldg_code'] ."</option>
 }
 echo "</select>";
 }
+echo "</table>";
