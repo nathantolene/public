@@ -7,12 +7,11 @@ if($link === false){
 }
 
 $sql = "select bldg_code from banner_pull;";
-$result = mysql_query($sql);
 
 echo "<select name='Building'>";
 if($result = mysqli_query($link, $sql)){
-while ($row = mysql_fetch_array($result)) {
-    echo "<option value='" . $row['bldg_code'] ."'>" . $row['bldg_code'] ."</option>";
+while($row = mysqli_fetch_array($result)){
+echo "<option value='" . $row['bldg_code'] ."'>" . $row['bldg_code'] ."</option>";
 }
 echo "</select>";
 }
