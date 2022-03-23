@@ -68,6 +68,10 @@ def get_calendar_service():
 service = get_calendar_service()
 
 
+def print_now():
+    print(datetime.now())
+
+
 def pull_cisco_room_info():
     mydb = mysql.connector.connect(
         host=gcal_host,
@@ -465,6 +469,29 @@ def get_events_to_update_color(events):
         change_gcal_event_color(events, 10, gcal_id)
 
 
+def get_missing_to_update_color(events):
+    mydb = mysql.connector.connect(
+        host=gcal_host,
+        user=gcal_user,
+        password=gcal_password,
+        database=gcal_database
+    )
+    mycursor = mydb.cursor(dictionary=True)
+    now = datetime.now().isoformat() + 'Z'
+    select_sql = "select * from gcal where all_in_attendance is Null and '" + now + "' between start_time and end_time"
+    mycursor.execute(select_sql)
+    yellow_events = mycursor.fetchall()
+    for x in yellow_events:
+        # print(x)
+        # select_sql2 = "select * from gcal_attendees where gcal_id = '" + x['gcal_id'] + "'"
+        # mycursor.execute(select_sql2)
+        # attendees = mycursor.fetchall()
+        # print(attendees)
+        print('Rooms not connected for: ', x['summary'])
+        gcal_id = x['gcal_id']
+        change_gcal_event_color(events, 5, gcal_id)
+
+
 def join_call(building, room, sip_number):
     xml_string = tostring(E.Command(E.Dial(E.Number(sip_number))),
                           pretty_print=True, xml_declaration=True, encoding='utf-8')
@@ -498,46 +525,59 @@ def find_missing_attendees():
         mycursor.execute(select_sql2)
         missing = mycursor.fetchall()
         # print(missing)
-        for y in missing:
-            displayName_real = y['displayName']
-            displayName = displayName_real.split("-")
+        # connect_missing(missing, summary, sip_number)
+
+
+def connect_missing(missing, summary, sip_number):
+    mydb = mysql.connector.connect(
+        host=gcal_host,
+        user=gcal_user,
+        password=gcal_password,
+        database=gcal_database
+    )
+    mycursor = mydb.cursor(dictionary=True)
+    for y in missing:
+        displayName_real = y['displayName']
+        displayName = displayName_real.split("-")
+        building = displayName[0]
+        building = building.split(' ')
+        try:
+            if building[1] == 'Hall':
+                building = building[0]
+        except IndexError:
             building = displayName[0]
-            building = building.split(' ')
-            try:
-                if building[1] == 'Hall':
-                    building = building[0]
-            except IndexError:
-                building = displayName[0]
-                building = building.replace(" ", "")
-            room = displayName[2]
-            room = room.split('(')
-            room = room[0]
-            room = room.replace(" ", "")
-            select_sql3 = "select room_type from room_info where displayName = '" + displayName_real + "'"
-            mycursor.execute(select_sql3)
-            rooms = mycursor.fetchall()
-            for z in rooms:
-                room_type = z['room_type']
-                if room_type == 'cisco':
-                    print(displayName_real, 'is missing from', summary)
-                    yes_no = input('Should I connect this room? Y/N: ')
-                    yes_no = yes_no.lower()
-                    if yes_no == 'y':
-                        join_call(building, room, sip_number)
-                        # print(building, room, sip_number)
-                    else:
-                        continue
+            building = building.replace(" ", "")
+        room = displayName[2]
+        room = room.split('(')
+        room = room[0]
+        room = room.replace(" ", "")
+        select_sql3 = "select room_type from room_info where displayName = '" + displayName_real + "'"
+        mycursor.execute(select_sql3)
+        rooms = mycursor.fetchall()
+        for z in rooms:
+            room_type = z['room_type']
+            if room_type == 'cisco':
+                print(displayName_real, 'is missing from', summary)
+                yes_no = input('Should I connect this room? Y/N: ')
+                yes_no = yes_no.lower()
+                if yes_no == 'y':
+                    join_call(building, room, sip_number)
+                    # print(building, room, sip_number)
+                else:
+                    continue
 
 
 def main():
     clear_tables()
     # cisco = pull_cisco_room_info()
     # get_info_from_cisco(cisco)
+    print_now()
     events = get_events_from_gcal()
     insert_glcal_info_into_db(events)
     active_dlzoom1()
     active_calls()
     get_events_to_update_color(events)
+    get_missing_to_update_color(events)
     # find_missing_attendees()
     sleep(90)
     main()
