@@ -56,7 +56,10 @@ def banner_info_insert(events):
                 begin_time = mark + x['ssrmeet_begin_time'] + mark
             except TypeError:
                 pass
-            end_time = mark + x['ssrmeet_end_time'] + mark
+            try:
+                end_time = mark + x['ssrmeet_end_time'] + mark
+            except TypeError:
+                pass
             try:
                 sun = mark + str(x['ssrmeet_sun_day']) + mark
             except NameError:
