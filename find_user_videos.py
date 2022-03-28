@@ -75,7 +75,8 @@ def create_symlink_to_files(files):
     for x in files:
         title = x['title']
         directory = x['filename']
-        os.symlink(avideo_root_videos, os.path.join(download_folder, os.path.dirname(avideo_root_videos)))
+        #os.symlink(avideo_root_videos + directory, os.path.join(download_folder, os.path.dirname(avideo_root_videos)))
+        os.symlink(avideo_root_videos + directory, download_folder + directory)
 
 
 def main():
