@@ -33,14 +33,14 @@ def get_list_user_files(username, class_name):
     return response
 
 
-def copy_files_to_download_folder(files):
+def copy_files_to_download_folder(files, username):
     for x in files:
         title = x['title']
         directory = x['filename']
         copy_move = input('Would you like to copy:(Y/N) ' + title)
         copy_move = copy_move.lower()
         if copy_move == 'y':
-            shutil.copytree(avideo_root_videos + directory, download_folder + directory)
+            shutil.copytree(avideo_root_videos + directory, download_folder + username + directory)
             file_exists = exists(download_folder + directory)
             if file_exists:
                 print("Copied", title, "to", download_folder + directory)
@@ -58,7 +58,7 @@ def main():
     username = input("User? ")
     class_name = input("Class Name? ")
     files = get_list_user_files(username, class_name)
-    copy_files_to_download_folder(files)
+    copy_files_to_download_folder(files, username)
 
 
 if __name__ == "__main__":
