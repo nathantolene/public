@@ -42,9 +42,9 @@ def copy_files_to_download_folder(files, username):
         copy_move = copy_move.lower()
         if copy_move == 'y':
             shutil.copytree(avideo_root_videos + directory, download_folder + username + directory)
-            file_exists = exists(download_folder + directory)
+            file_exists = exists(download_folder + username + directory)
             if file_exists:
-                print("Copied", title, "to", download_folder + directory)
+                print("Copied", title, "to", download_folder + username + directory)
             else:
                 print("Something went wrong!")
                 breaking = input("Would you like to Stop?(Y/N)")
