@@ -2,7 +2,7 @@
 
 import sys
 import mysql.connector
-from shutil import copy2 as copier
+import shutil
 from os.path import exists
 import os
 from dotenv import load_dotenv
@@ -36,14 +36,14 @@ def get_list_user_files(username, class_name):
 def copy_files_to_download_folder(files):
     for x in files:
         title = x['title']
-        filename = x['filename']
+        directory = x['filename']
         copy_move = input('Would you like to copy:(Y/N) ' + title)
         copy_move = copy_move.lower()
         if copy_move == 'y':
-            copier(avideo_root_videos + filename, download_folder)
-            file_exists = exists(download_folder + filename)
+            shutil.copytree(avideo_root_videos + directory, download_folder)
+            file_exists = exists(download_folder + directory)
             if file_exists:
-                print("Copied", title, "to", download_folder + filename)
+                print("Copied", title, "to", download_folder + directory)
             else:
                 print("Something went wrong!")
                 breaking = input("Would you like to Stop?(Y/N)")
