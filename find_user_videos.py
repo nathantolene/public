@@ -37,6 +37,7 @@ def copy_files_to_download_folder(files, username):
     for x in files:
         title = x['title']
         directory = x['filename']
+        username = username + "/"
         copy_move = input('Would you like to copy:(Y/N) ' + title)
         copy_move = copy_move.lower()
         if copy_move == 'y':
