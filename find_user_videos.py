@@ -34,13 +34,13 @@ def get_list_user_files(username, class_name):
 
 
 def copy_files_to_download_folder(files, username):
-    for x in files:
-        title = x['title']
-        directory = x['filename']
-        username = username + "/"
-        copy_move = input('Would you like to copy:(Y/N) ' + title)
-        copy_move = copy_move.lower()
-        if copy_move == 'y':
+    gogo = input('Would you like to copy all files for(Y/N) ' + username + " ")
+    gogo = gogo.lower()
+    if gogo == 'y':
+        for x in files:
+            title = x['title']
+            directory = x['filename']
+            username = username + "/"
             shutil.copytree(avideo_root_videos + directory, download_folder + username + directory)
             file_exists = exists(download_folder + username + directory)
             if file_exists:
@@ -51,8 +51,26 @@ def copy_files_to_download_folder(files, username):
                 breaking = breaking.lower()
                 if breaking == 'y':
                     sys.exit()
-        else:
-            continue
+    if gogo == 'n':
+        for x in files:
+            title = x['title']
+            directory = x['filename']
+            username = username + "/"
+            copy_move = input('Would you like to copy:(Y/N) ' + title + " ")
+            copy_move = copy_move.lower()
+            if copy_move == 'y':
+                shutil.copytree(avideo_root_videos + directory, download_folder + username + directory)
+                file_exists = exists(download_folder + username + directory)
+                if file_exists:
+                    print("Copied", title, "to", download_folder + username + directory)
+                else:
+                    print("Something went wrong!")
+                    breaking = input("Would you like to Stop?(Y/N)")
+                    breaking = breaking.lower()
+                    if breaking == 'y':
+                        sys.exit()
+            else:
+                continue
 
 
 def main():
