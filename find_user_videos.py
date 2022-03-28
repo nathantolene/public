@@ -27,6 +27,7 @@ def get_list_user_files(username, class_name):
     mycursor = mydb.cursor(dictionary=True)
     select_sql = "select filename, title from videos where title like '" \
                  + username + "' and title like '" + class_name + "'"
+    print(select_sql)
     mycursor.execute(select_sql)
     response = mycursor.fetchall()
     return response
