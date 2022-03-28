@@ -40,7 +40,7 @@ def copy_files_to_download_folder(files):
         copy_move = input('Would you like to copy:(Y/N) ' + title)
         copy_move = copy_move.lower()
         if copy_move == 'y':
-            shutil.copytree(avideo_root_videos + directory, download_folder)
+            shutil.copytree(avideo_root_videos + directory, download_folder + directory)
             file_exists = exists(download_folder + directory)
             if file_exists:
                 print("Copied", title, "to", download_folder + directory)
