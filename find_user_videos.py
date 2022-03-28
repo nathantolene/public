@@ -71,12 +71,16 @@ def copy_files_to_download_folder(files, username):
                 continue
 
 
-def create_symlink_to_files(files):
+def create_symlink_to_files(files, username):
     for x in files:
         title = x['title']
         directory = x['filename']
         #os.symlink(avideo_root_videos + directory, os.path.join(download_folder, os.path.dirname(avideo_root_videos)))
-        os.symlink(avideo_root_videos + directory, download_folder + directory)
+        new_path = download_folder + username + title + directory
+        isExist = os.path.exists(new_path)
+        if not isExist:
+            os.makedirs(new_path)
+        os.symlink(avideo_root_videos + directory, new_path)
 
 
 def main():
@@ -84,7 +88,7 @@ def main():
     class_name = input("Class Name? ")
     files = get_list_user_files(username, class_name)
     # copy_files_to_download_folder(files, username)
-    create_symlink_to_files(files)
+    create_symlink_to_files(files, username)
 
 
 if __name__ == "__main__":
