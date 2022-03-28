@@ -6,9 +6,7 @@ import shutil
 from os.path import exists
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
-
 host = os.environ.get('avideo_host')
 user = os.environ.get('avideo_dbuser')
 password = os.environ.get('avideo_dbpass')
@@ -73,11 +71,19 @@ def copy_files_to_download_folder(files, username):
                 continue
 
 
+def create_symlink_to_files(files):
+    for x in files:
+        title = x['title']
+        directory = x['filename']
+        os.symlink(avideo_root_videos, os.path.join(download_folder, os.path.dirname(avideo_root_videos)))
+
+
 def main():
     username = input("User? ")
     class_name = input("Class Name? ")
     files = get_list_user_files(username, class_name)
-    copy_files_to_download_folder(files, username)
+    # copy_files_to_download_folder(files, username)
+    create_symlink_to_files(files)
 
 
 if __name__ == "__main__":
