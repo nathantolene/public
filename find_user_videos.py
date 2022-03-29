@@ -77,9 +77,7 @@ def create_symlink_to_files(files, username):
         directory = x['filename']
         #os.symlink(avideo_root_videos + directory, os.path.join(download_folder, os.path.dirname(avideo_root_videos)))
         new_path = download_folder + username + "/" + title + directory
-        isExist = os.path.exists(new_path)
-        if not isExist:
-            os.makedirs(new_path)
+        os.makedirs(new_path, exist_ok=True)
         os.symlink(avideo_root_videos + directory, new_path)
 
 
