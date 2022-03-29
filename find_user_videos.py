@@ -78,8 +78,8 @@ def create_symlink_to_files(files, username):
         #os.symlink(avideo_root_videos + directory, os.path.join(download_folder, os.path.dirname(avideo_root_videos)))
         new_path = download_folder + username + "/" + title + directory
         os.makedirs(new_path, exist_ok=True)
-        os.symlink(avideo_root_videos + directory, new_path)
-
+        #os.symlink(avideo_root_videos + directory, new_path)
+        os.symlink(os.path.join(avideo_root_videos, directory), os.path.join(download_folder, username, "/" + title + directory))
 
 def main():
     username = input("User? ")
