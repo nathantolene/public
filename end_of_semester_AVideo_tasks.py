@@ -34,8 +34,9 @@ def get_list_of_video_ids(not_this_cat_id):
 
 def change_cat_id_to_new_cat_id(new_cat_id, list_of_video_ids):
     for x in list_of_video_ids:
-        print(x['id'])
-        update_sql = "update videos set categories_id = " + new_cat_id + " where id  = " + x['id']
+        video_id = str(x['id'])
+        print(video_id)
+        update_sql = "update videos set categories_id = " + new_cat_id + " where id  = " + video_id
         response = mysql_runner(update_sql)
         print(response)
 
