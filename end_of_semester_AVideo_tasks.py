@@ -10,7 +10,7 @@ password = os.environ.get('avideo_dbpass')
 database = os.environ.get('avideo_db')
 
 
-def mysql_runner(sql):
+def mysql_runner(sql, sql_type):
     db = mysql.connector.connect(
         host=host,
         user=user,
@@ -20,15 +20,19 @@ def mysql_runner(sql):
     cursor = db.cursor(dictionary=True)
     print(sql)
     cursor.execute(sql)
-    response = cursor.fetchall()
-    db.commit()
+    response = 'NOTHING'
+    if sql_type == 's':
+        response = cursor.fetchall()
+    if sql_type == 'u' or sql_type == 'i':
+        db.commit()
+        response = ''
     db.close()
     return response
 
 
 def get_list_of_video_ids(not_this_cat_id):
     select_sql = "select id from videos where categories_id != " + not_this_cat_id
-    response = mysql_runner(select_sql)
+    response = mysql_runner(select_sql, 's')
     return response
 
 
@@ -36,7 +40,7 @@ def change_cat_id_to_new_cat_id(new_cat_id, list_of_video_ids):
     for x in list_of_video_ids:
         video_id = str(x['id'])
         update_sql = "update videos set categories_id = " + new_cat_id + " where id  = " + video_id
-        response = mysql_runner(update_sql)
+        response = mysql_runner(update_sql, 'u')
         print(response)
 
 
@@ -44,7 +48,7 @@ def add_video_to_off_group(list_of_video_ids, off_group):
     for x in list_of_video_ids:
         video_id = str(x['id'])
         insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + video_id + ")"
-        response = mysql_runner(insert_sql)
+        response = mysql_runner(insert_sql, 'i')
         print(response)
 
 
