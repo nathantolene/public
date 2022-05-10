@@ -35,7 +35,6 @@ def get_list_of_video_ids(not_this_cat_id):
 def change_cat_id_to_new_cat_id(new_cat_id, list_of_video_ids):
     for x in list_of_video_ids:
         video_id = str(x['id'])
-        print(video_id)
         update_sql = "update videos set categories_id = " + new_cat_id + " where id  = " + video_id
         response = mysql_runner(update_sql)
         print(response)
@@ -43,7 +42,8 @@ def change_cat_id_to_new_cat_id(new_cat_id, list_of_video_ids):
 
 def add_video_to_off_group(list_of_video_ids, off_group):
     for x in list_of_video_ids:
-        insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + x + ")"
+        video_id = str(x['id'])
+        insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + video_id + ")"
         response = mysql_runner(insert_sql)
         print(response)
 
