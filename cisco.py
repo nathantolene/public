@@ -57,9 +57,9 @@ def get_bookins_list(building, room):
 
 def disconnect_from_current_call(building, room, call_id):
     #xCommand Call Disconnect [CallId: CallId]
-    xml_string = tostring(E.Command(E.Call(E.Disconnect(call_id))),
+    xml_string = tostring(E.Command(E.Call(E.Disconnect(E.CallId(call_id)))),
                           pretty_print=True, xml_declaration=True, encoding='utf-8')
-    # print(xml_string)
+    print(xml_string)
     gather = starter + building + room + domain + post_path
     post = requests.post(gather, data=xml_string, auth=(cisco_user, cisco_pass))
     # print(post.content)
