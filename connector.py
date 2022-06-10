@@ -123,7 +123,7 @@ def deactivate_events():
                 call_id = cisco.get_call_id(building, room)
                 cisco_response = cisco.disconnect_from_current_call(building, room, call_id)
                 print(cisco_response)
-                syslog.syslog("Cisco response" + cisco_response)
+                syslog.syslog("Cisco response " + cisco_response)
     except IndexError:
         pass
     my_database.close()
@@ -138,11 +138,11 @@ def main():
         now = datetime.now()
         now = now.strftime('%Y-%m-%dT%H:%M:%S-05:00')
         print('Starting...', now)
-        syslog.syslog("Checking" + now)
+        syslog.syslog("Checking " + now)
         activate_events()
         deactivate_events()
         print('Restarting...', now)
-        syslog.syslog("Restarting" + now)
+        syslog.syslog("Restarting " + now)
         if counter == 15:
             print('Updating Google Calendar events')
             syslog.syslog("Updating Google Calendar events")
