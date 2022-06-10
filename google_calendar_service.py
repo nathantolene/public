@@ -127,6 +127,7 @@ def check_for_changes_to_events(events):
     my_cursor = my_database.cursor(dictionary=True)
     #print(current_events)
     for z in events:
+        check = ''
         try:
             recurring_id = z['recurringEventId']
             check = check_if_recurring_id_in_db(recurring_id)
