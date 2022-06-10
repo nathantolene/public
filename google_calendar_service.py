@@ -99,7 +99,10 @@ def put_event_in_database(event):
     st_tz = event['start']['timeZone']
     end_time = event['end']['dateTime']
     et_tz = event['end']['timeZone']
-    recurring_id = event['recurringEventId']
+    try:
+        recurring_id = event['recurringEventId']
+    except KeyError:
+        pass
     updated = event['updated']
     insert_sql = "insert into gcal(gcal_id, " \
                  "summary, " \
