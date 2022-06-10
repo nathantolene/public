@@ -93,7 +93,7 @@ def put_event_in_database(event):
     try:
         description = event['description']
     except KeyError:
-        pass
+        description = ''
     location = event['location']
     start_time = event['start']['dateTime']
     st_tz = event['start']['timeZone']
@@ -102,7 +102,7 @@ def put_event_in_database(event):
     try:
         recurring_id = event['recurringEventId']
     except KeyError:
-        pass
+        recurring_id = ''
     updated = event['updated']
     insert_sql = "insert into gcal(gcal_id, " \
                  "summary, " \
