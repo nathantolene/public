@@ -129,11 +129,11 @@ def check_for_changes_to_events(events):
     for z in events:
         try:
             recurring_id = z['recurringEventId']
+            check = check_if_recurring_id_in_db(recurring_id)
         except KeyError:
             pass
         #print('r_id', recurring_id)
         updated = z['updated']
-        check = check_if_recurring_id_in_db(recurring_id)
         #print(check[0]['id'])
         if not check:
             put_event_in_database(z)
