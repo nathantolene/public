@@ -128,6 +128,8 @@ def deactivate_events():
 
 
 def main():
+    print('Updating Google Calendar events')
+    google_calendar_service.main()
     counter = 0
     while True:
         now = datetime.now()
