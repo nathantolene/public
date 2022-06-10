@@ -145,7 +145,7 @@ def main():
         syslog.syslog("Restarting " + now)
         if counter == 15:
             print('Updating Google Calendar events')
-            syslog.syslog("Updating Google Calendar events")
+            syslog.syslog("Updating Google Calendar events" + now)
             google_calendar_service.main()
             counter = 0
         else:
