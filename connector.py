@@ -123,7 +123,7 @@ def deactivate_events():
                 call_id = cisco.get_call_id(building, room)
                 cisco_response = cisco.disconnect_from_current_call(building, room, call_id)
                 print(cisco_response)
-                syslog.syslog("Cisco response " + cisco_response)
+                #syslog.syslog("Cisco response " + cisco_response)
     except IndexError:
         pass
     my_database.close()
