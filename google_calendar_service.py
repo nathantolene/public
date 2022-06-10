@@ -90,7 +90,10 @@ def put_event_in_database(event):
     now = str(datetime.now())
     gcal_id = event['id']
     summary = event['summary']
-    description = event['description']
+    try:
+        description = event['description']
+    except KeyError:
+        pass
     location = event['location']
     start_time = event['start']['dateTime']
     st_tz = event['start']['timeZone']
