@@ -4,6 +4,7 @@ import mysql.connector
 from datetime import datetime
 import cisco
 import yaml
+import google_calendar_service
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -127,6 +128,7 @@ def deactivate_events():
 
 
 def main():
+    counter = 0
     while True:
         now = datetime.now()
         now = now.strftime('%Y-%m-%dT%H:%M:%S-05:00')
@@ -134,6 +136,12 @@ def main():
         activate_events()
         deactivate_events()
         print('Restarting...', now)
+        if counter == 15:
+            print('Updating Google Calendar events')
+            google_calendar_service.main()
+            counter = 0
+        else:
+            counter += 1
         time.sleep(delay)
 
 
