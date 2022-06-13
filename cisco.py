@@ -1,7 +1,7 @@
 import os
+import syslog
 import requests
 import xmltodict
-import xml.etree.ElementTree as ET
 from lxml.etree import tostring
 from lxml.builder import E
 
@@ -31,6 +31,7 @@ def join_call(building, room, sip_number, passcode):
     #print(xml_string)
     gather = starter + building + room + domain + post_path
     post = requests.post(gather, data=xml_string, auth=(cisco_user, cisco_pass))
+    syslog.syslog('Connecting' + building + ' ' + room)
     #print(post.content)
     return post
 
@@ -62,6 +63,7 @@ def disconnect_from_current_call(building, room, call_id):
     print(xml_string)
     gather = starter + building + room + domain + post_path
     post = requests.post(gather, data=xml_string, auth=(cisco_user, cisco_pass))
+    syslog.syslog("Disconnecting " + building + ' ' + room)
     # print(post.content)
     return post
     pass
