@@ -96,7 +96,7 @@ def activate_events():
             db_id = str(x['id'])
             select_sql = "select location from gcal where id = " + q + db_id + q
             my_cursor.execute(select_sql)
-            syslog.syslog(select_sql)
+            syslog.syslog("Getting rooms for connection")
             location = my_cursor.fetchall()
             try:
                 syslog.syslog(location)
