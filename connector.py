@@ -123,7 +123,10 @@ def activate_events():
                     call_id = cisco.get_call_id(building, room)
                     disconnect = cisco.disconnect_from_current_call(building, room, call_id)
                     print(disconnect)
-                    syslog.syslog(disconnect)
+                    try:
+                        syslog.syslog(disconnect)
+                    except TypeError:
+                        pass
                     time.sleep(1)
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
