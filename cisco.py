@@ -75,7 +75,6 @@ def disconnect_from_current_call(building, room, call_id):
         syslog.syslog(building + room + " Already Disconnected")
 
 
-
 def get_call_id(building, room):
     string = '/Status/Call'
     gather = starter + building + room + domain + get_path + string
@@ -87,7 +86,7 @@ def get_call_id(building, room):
     print(converted_root)
     try:
         call_id = converted_root['Status']['Call']['@item']
-        syslog.syslog(syslog.LOG_ALERT,call_id + " Connected")
+        syslog.syslog("Call id = " + call_id)
         print(call_id)
         return call_id
     except KeyError:
