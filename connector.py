@@ -83,7 +83,7 @@ def activate_events():
     now = now.strftime("%Y-%m-%dT%H:%M:00-05:00")
     select_sql = "select id from gcal where start_time = " + q + now + q
     #print(select_sql)
-    syslog.syslog(select_sql)
+    syslog.syslog("Checking for event START at " + now)
     my_cursor.execute(select_sql)
     response_activate = my_cursor.fetchall()
     #print(response_activate)
