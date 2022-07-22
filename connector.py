@@ -111,7 +111,7 @@ def activate_events():
                 room = z['room']
                 passcode = 'Skyhawks!'
                 connected = cisco.get_current_sip_number(building, room)
-                if connected == "None":
+                if connected is None:
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
                 else:
