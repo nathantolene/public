@@ -26,6 +26,11 @@ def check_if_in_call(building, room):
     print(connected)
 
 
+def connect_cisco_room(building, room, zoom_number, passcode):
+    cisco_response = cisco.join_call(building, room, zoom_number, passcode)
+    return cisco_response
+
+
 def find_cisco_rooms(zoom_part):
     connect_me = []
     for n in zoom_part:
@@ -105,8 +110,19 @@ def activate_events():
                 building = z['building']
                 room = z['room']
                 passcode = 'Skyhawks!'
-                cisco_response = cisco.join_call(building, room, zoom_number, passcode)
-                print(cisco_response)
+                connected = cisco.get_current_sip_number(building, room)
+                if connected == "None":
+                    cisco_response = cisco.join_call(building, room, zoom_number, passcode)
+                    print(cisco_response)
+                else:
+                    call_id = cisco.get_call_id(building, room)
+                    disconnect = cisco.disconnect_from_current_call(building, room, call_id)
+                    print(disconnect)
+                    syslog.syslog(syslog.LOG_ALERT, disconnect)
+                    time.sleep(1)
+                    cisco_response = cisco.join_call(building, room, zoom_number, passcode)
+                    print(cisco_response)
+                    syslog.syslog(syslog.LOG_ALERT, cisco_response)
     except IndexError:
         pass
     my_database.close()

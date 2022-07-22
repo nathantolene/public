@@ -31,7 +31,7 @@ def join_call(building, room, sip_number, passcode):
     #print(xml_string)
     gather = starter + building + room + domain + post_path
     post = requests.post(gather, data=xml_string, auth=(cisco_user, cisco_pass))
-    syslog.syslog('Connecting' + building + ' ' + room)
+    syslog.syslog(syslog.LOG_ALERT, 'Connecting ' + building + ' ' + room)
     #print(post.content)
     return post
 
