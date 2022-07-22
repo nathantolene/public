@@ -147,7 +147,7 @@ def deactivate_events():
     now = datetime.now()
     now = now.strftime("%Y-%m-%dT%H:%M:00-05:00")
     select_sql = "select id from gcal where end_time = " + q + now + q
-    syslog.syslog("Checking if events END at " + now)
+    syslog.syslog("Checking for event END at " + now)
     my_cursor.execute(select_sql)
     response_deactivate = my_cursor.fetchall()
     try:
