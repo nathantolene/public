@@ -83,12 +83,12 @@ def activate_events():
     now = now.strftime("%Y-%m-%dT%H:%M:00-05:00")
     select_sql = "select id from gcal where start_time = " + q + now + q
     #print(select_sql)
-    syslog.syslog(syslog.LOG_ALERT, select_sql)
+    syslog.syslog(select_sql)
     my_cursor.execute(select_sql)
     response_activate = my_cursor.fetchall()
     #print(response_activate)
     try:
-        syslog.syslog(syslog.LOG_ALERT, response_activate)
+        syslog.syslog(response_activate)
     except TypeError:
         pass
     try:
@@ -96,10 +96,10 @@ def activate_events():
             db_id = str(x['id'])
             select_sql = "select location from gcal where id = " + q + db_id + q
             my_cursor.execute(select_sql)
-            syslog.syslog(syslog.LOG_ALERT, select_sql)
+            syslog.syslog(select_sql)
             location = my_cursor.fetchall()
             try:
-                syslog.syslog(syslog.LOG_ALERT, location)
+                syslog.syslog(location)
             except TypeError:
                 pass
             location = location[0]['location']
@@ -111,7 +111,7 @@ def activate_events():
                 room = z['room']
                 passcode = 'Skyhawks!'
                 connected = cisco.get_current_sip_number(building, room)
-                syslog.syslog(syslog.LOG_ALERT, "Connetion status: " + connected)
+                syslog.syslog("Connetion status: " + connected)
                 if connected is None:
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
@@ -119,11 +119,11 @@ def activate_events():
                     call_id = cisco.get_call_id(building, room)
                     disconnect = cisco.disconnect_from_current_call(building, room, call_id)
                     print(disconnect)
-                    syslog.syslog(syslog.LOG_ALERT, disconnect)
+                    syslog.syslog(disconnect)
                     time.sleep(1)
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
-                    syslog.syslog(syslog.LOG_ALERT, cisco_response)
+                    syslog.syslog(cisco_response)
     except IndexError:
         pass
     my_database.close()
