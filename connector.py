@@ -111,7 +111,10 @@ def activate_events():
                 room = z['room']
                 passcode = 'Skyhawks!'
                 connected = cisco.get_current_sip_number(building, room)
-                syslog.syslog("Connetion status: " + connected)
+                try:
+                    syslog.syslog(building + room + " Connected to " + connected)
+                except TypeError:
+                    syslog.syslog("Not Connected to a Call " + building + room)
                 if connected is None:
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
