@@ -110,30 +110,36 @@ def activate_events():
                 building = z['building']
                 room = z['room']
                 passcode = 'Skyhawks!'
-                connected = cisco.get_current_sip_number(building, room)
                 try:
+                    connected = cisco.get_current_sip_number(building, room)
                     syslog.syslog(building + room + " Connected to " + connected)
+                    connection = str(connected)
+                    connection = connection.split(':')
+                    connection = connection[1]
+                    connection = connection.split('@')
+                    connection = connection[0]
+                    if connected is None:
+                        cisco_response = cisco.join_call(building, room, zoom_number, passcode)
+                        print(cisco_response)
+                    else:
+                        if connection == zoom_number:
+                            continue
+                        else:
+                            call_id = cisco.get_call_id(building, room)
+                            disconnect = cisco.disconnect_from_current_call(building, room, call_id)
+                            print(disconnect)
+                            try:
+                                syslog.syslog(disconnect)
+                            except TypeError:
+                                pass
+                            time.sleep(2)
+                            cisco_response = cisco.join_call(building, room, zoom_number, passcode)
+                            print(cisco_response)
                 except TypeError:
                     pass
                     #syslog.syslog("Not Connected to a Call " + building + room)
-                if connected is None:
-                    cisco_response = cisco.join_call(building, room, zoom_number, passcode)
-                    print(cisco_response)
-                else:
-                    call_id = cisco.get_call_id(building, room)
-                    disconnect = cisco.disconnect_from_current_call(building, room, call_id)
-                    print(disconnect)
-                    try:
-                        syslog.syslog(disconnect)
-                    except TypeError:
-                        pass
-                    time.sleep(2)
-                    cisco_response = cisco.join_call(building, room, zoom_number, passcode)
-                    print(cisco_response)
-                    try:
-                        syslog.syslog(cisco_response)
-                    except TypeError:
-                        pass
+
+
     except IndexError:
         pass
     my_database.close()
