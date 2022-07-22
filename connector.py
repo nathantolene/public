@@ -130,7 +130,10 @@ def activate_events():
                     time.sleep(1)
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
-                    syslog.syslog(cisco_response)
+                    try:
+                        syslog.syslog(cisco_response)
+                    except TypeError:
+                        pass
     except IndexError:
         pass
     my_database.close()
