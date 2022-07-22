@@ -114,7 +114,8 @@ def activate_events():
                 try:
                     syslog.syslog(building + room + " Connected to " + connected)
                 except TypeError:
-                    syslog.syslog("Not Connected to a Call " + building + room)
+                    pass
+                    #syslog.syslog("Not Connected to a Call " + building + room)
                 if connected is None:
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
@@ -160,7 +161,7 @@ def deactivate_events():
                 call_id = cisco.get_call_id(building, room)
                 cisco_response = cisco.disconnect_from_current_call(building, room, call_id)
                 print(cisco_response)
-                #syslog.syslog("Cisco response " + cisco_response)
+                syslog.syslog("Cisco response " + cisco_response)
     except IndexError:
         pass
     my_database.close()
