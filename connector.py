@@ -127,7 +127,7 @@ def activate_events():
                         syslog.syslog(disconnect)
                     except TypeError:
                         pass
-                    time.sleep(1)
+                    time.sleep(3)
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
                     try:
