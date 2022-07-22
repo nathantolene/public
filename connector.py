@@ -21,6 +21,11 @@ q = "'"
 delay = 60
 
 
+def check_if_in_call(building, room):
+    connected = cisco.get_current_sip_number(building, room)
+    print(connected)
+
+
 def find_cisco_rooms(zoom_part):
     connect_me = []
     for n in zoom_part:
@@ -72,14 +77,26 @@ def activate_events():
     now = datetime.now()
     now = now.strftime("%Y-%m-%dT%H:%M:00-05:00")
     select_sql = "select id from gcal where start_time = " + q + now + q
+    #print(select_sql)
+    syslog.syslog(syslog.LOG_ALERT, select_sql)
     my_cursor.execute(select_sql)
     response_activate = my_cursor.fetchall()
+    #print(response_activate)
+    try:
+        syslog.syslog(syslog.LOG_ALERT, response_activate)
+    except TypeError:
+        pass
     try:
         for x in response_activate:
             db_id = str(x['id'])
             select_sql = "select location from gcal where id = " + q + db_id + q
             my_cursor.execute(select_sql)
+            syslog.syslog(syslog.LOG_ALERT, select_sql)
             location = my_cursor.fetchall()
+            try:
+                syslog.syslog(syslog.LOG_ALERT, location)
+            except TypeError:
+                pass
             location = location[0]['location']
             zoom_number = find_sip_number_from_gcal_location(location)
             attendees = get_participants_from_gcal_location(location)
@@ -144,7 +161,7 @@ def main():
         print('Restarting...', now)
         syslog.syslog("Restarting " + now)
         if counter == 15:
-            print('Updating Google Calendar events')
+            print('Updating Google Calendar events -- service')
             syslog.syslog("Updating Google Calendar events" + now)
             google_calendar_service.main()
             counter = 0

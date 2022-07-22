@@ -45,9 +45,13 @@ def get_current_sip_number(building, room):
     data = response.content
     converted_root = xmltodict.parse(data)
     print(converted_root)
-    CallbackNumber = converted_root['Status']['Call']['CallbackNumber']
-    print(CallbackNumber)
-    return CallbackNumber
+    try:
+        CallbackNumber = converted_root['Status']['Call']['CallbackNumber']
+        print(CallbackNumber)
+        return CallbackNumber
+    except KeyError:
+        syslog.syslog(syslog.LOG_ALERT, building + room + " Not in a call")
+        return None
 
 
 def get_bookins_list(building, room):
@@ -78,6 +82,10 @@ def get_call_id(building, room):
     data = response.content
     converted_root = xmltodict.parse(data)
     print(converted_root)
-    call_id = converted_root['Status']['Call']['@item']
-    print(call_id)
-    return call_id
+    try:
+        call_id = converted_root['Status']['Call']['@item']
+        syslog.syslog(syslog.LOG_ALERT,call_id + " Connected")
+        print(call_id)
+        return call_id
+    except KeyError:
+        syslog.syslog(syslog.LOG_ALERT,building + room + " Not Connected")
