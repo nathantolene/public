@@ -127,7 +127,7 @@ def activate_events():
                         syslog.syslog(disconnect)
                     except TypeError:
                         pass
-                    time.sleep(3)
+                    time.sleep(2)
                     cisco_response = cisco.join_call(building, room, zoom_number, passcode)
                     print(cisco_response)
                     try:
@@ -187,8 +187,8 @@ def main():
         now = now.strftime('%Y-%m-%dT%H:%M:%S-05:00')
         print('Starting...', now)
         syslog.syslog("Checking " + now)
-        activate_events()
         deactivate_events()
+        activate_events()
         print('Restarting...', now)
         syslog.syslog("Restarting " + now)
         if counter == 15:
