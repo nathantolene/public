@@ -159,6 +159,7 @@ def check_for_changes_to_events(events):
 
 
 def main():
+    google_calendar_api.get_calendar_service()
     events = get_calendar_events()
     check_for_changes_to_events(events)
     clean_db_from_old_events()
