@@ -49,7 +49,7 @@ def find_duplicates():
                  "and count(MTWRFS) > 1 " \
                  "and count(TIME) >1 " \
                  "and count(INSTRUCTOR) > 1;"
-    print(select_sql)
+    #print(select_sql)
     result = mysql_select(select_sql)
     #print(result)
     for x in result:
@@ -64,6 +64,7 @@ def find_duplicates():
         for x in repeater:
             ID = str(x['ID'])
             select_sql = "select 'Center Room #', 'SITE' from importer where ID = " + ID + "';"
+            print(select_sql)
             rooms = mysql_select(select_sql)
             print(rooms)
 
