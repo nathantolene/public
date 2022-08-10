@@ -92,7 +92,6 @@ def get_classes(IDS):
         ID = str(x['ID'])
         select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
         result = mysql_select(select_sql)
-        print(z)
         for z in result:
             room = z['Center Room #']
             site = z['SITE']
