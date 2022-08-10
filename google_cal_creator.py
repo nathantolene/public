@@ -120,7 +120,10 @@ def get_classes(IDS):
 def update_main_campus_rooms():
     select_sql = "SELECT * FROM `importer` WHERE `Main Campus Rm #` != ''"
     result = mysql_select(select_sql)
-    print(result)
+    #print(result)
+    for x in result:
+        main_campues_room = x['Main Campus Rm #']
+        print(main_campues_room)
 
 
 def main():
