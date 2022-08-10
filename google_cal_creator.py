@@ -63,7 +63,7 @@ def find_duplicates():
         #print(repeater)
         for y in repeater:
             ID = str(y['ID'])
-            select_sql = "select `Center Room #`, `SITE`, `Main Campus Rm #` from importer where ID = '" + ID + "';"
+            select_sql = "select `Center Room #`, `SITE`, `Main Campus Rm #`, 'TITLE', 'INSTRUCTOR' from importer where ID = '" + ID + "';"
             #print(select_sql)
             rooms = mysql_select(select_sql)
             for z in rooms:
