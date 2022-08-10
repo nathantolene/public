@@ -89,10 +89,10 @@ def find_duplicates():
 def get_classes(IDS):
     #print(IDS)
     ID1 = str(IDS[0]['ID'])
-    print(ID1)
+    #print(ID1)
     select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID1 + "';"
     result = mysql_select(select_sql)
-    print(result[0]['SUBJ'])
+    print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'])
     for x in IDS:
         ID = str(x['ID'])
         select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
