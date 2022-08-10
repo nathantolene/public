@@ -69,7 +69,7 @@ def find_duplicates():
             for z in rooms:
                 room = z['Center Room #']
                 site = z['SITE']
-                if room != "TBA" and site != 'Online Crse':
+                if room != "TBA" or site != 'Online Crse':
                     print(room + site)
         print('***')
 
