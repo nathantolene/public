@@ -67,7 +67,7 @@ def find_duplicates():
             #print(select_sql)
             rooms = mysql_select(select_sql)
             print(rooms)
-            print('***')
+        print('***')
 
 
 def main():
