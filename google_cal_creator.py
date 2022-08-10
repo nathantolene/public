@@ -92,7 +92,7 @@ def get_classes(IDS):
     print(ID1)
     select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID1 + "';"
     result = mysql_select(select_sql)
-    print(result)
+    print(result[0]['SUBJ'])
     for x in IDS:
         ID = str(x['ID'])
         select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
@@ -109,7 +109,7 @@ def get_classes(IDS):
             coarse = z['CRS']
             if room != "TBA":
                 if site != 'Online Crse':
-                    print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
+                    #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                     print(room + " " + site + " " + main_campus)
 
 def main():
