@@ -114,7 +114,9 @@ def get_classes(IDS):
                     if room != "TBA":
                         if site != 'Online Crse':
                             #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
-                            print(room + " " + site + " " + main_campus)
+                            #print(room + " " + site + " " + main_campus)
+                            print(room + " " + site)
+
 
 
 def update_main_campus_rooms():
