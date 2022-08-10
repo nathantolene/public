@@ -116,9 +116,16 @@ def get_classes(IDS):
                             #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                             print(room + " " + site + " " + main_campus)
 
-def main():
-    find_duplicates()
 
+def update_main_campus_rooms():
+    select_sql = "SELECT * FROM `importer` WHERE `Main Campus Rm #` != ''"
+    result = mysql_select(select_sql)
+    print(result)
+
+
+def main():
+    #find_duplicates()
+    update_main_campus_rooms()
 
 if __name__ == "__main__":
     main()
