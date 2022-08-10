@@ -61,8 +61,7 @@ def find_duplicates():
         INSTRUCTOR = x['INSTRUCTOR']
         select_sql = "select ID from importer where SUBJ ='" + SUBJ + "' and CRS = '" + CRS + "' and TITLE = '" + TITLE + "' and INSTRUCTOR = '" + INSTRUCTOR + "'"
         repeater = mysql_select(select_sql)
-        counting = counting + 1
-        get_classes(repeater)
+        get_classes(repeater, counting)
         #print(repeater)
         #for y in repeater:
         #    ID = str(y['ID'])
@@ -85,10 +84,10 @@ def find_duplicates():
         #            if site != 'Online Crse':
         #                print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
         #                print(room + " " + site + " " + main_campus)
-        print('***', counting)
+        print('***')
 
 
-def get_classes(IDS):
+def get_classes(IDS, counting):
     #print(IDS)
     ID1 = str(IDS[0]['ID'])
     #print(ID1)
@@ -99,6 +98,7 @@ def get_classes(IDS):
     if site != 'Online Crse':
         if room != "TBA":
             print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'], result[0]['ID'])
+            counting = counting + 1
             for x in IDS:
                 ID = str(x['ID'])
                 select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
