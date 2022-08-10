@@ -74,9 +74,11 @@ def find_duplicates():
                 instructor = z['INSTRUCTOR']
                 days = z['MTWRFS']
                 time = z['TIME']
+                subject = z['SUBJ']
+                coarse = z['CRS']
                 if room != "TBA":
                     if site != 'Online Crse':
-                        print(title + ' ' + instructor + ' ' + days + ' ' + time)
+                        print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                         print(room + " " + site + " " + main_campus)
         print('***')
 
