@@ -52,6 +52,7 @@ def find_duplicates():
     #print(select_sql)
     result = mysql_select(select_sql)
     #print(result)
+    counting = 0
     for x in result:
         #print(x)
         SUBJ = x['SUBJ']
@@ -60,6 +61,7 @@ def find_duplicates():
         INSTRUCTOR = x['INSTRUCTOR']
         select_sql = "select ID from importer where SUBJ ='" + SUBJ + "' and CRS = '" + CRS + "' and TITLE = '" + TITLE + "' and INSTRUCTOR = '" + INSTRUCTOR + "'"
         repeater = mysql_select(select_sql)
+        counting =+ 1
         get_classes(repeater)
         #print(repeater)
         #for y in repeater:
@@ -83,7 +85,7 @@ def find_duplicates():
         #            if site != 'Online Crse':
         #                print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
         #                print(room + " " + site + " " + main_campus)
-        print('***')
+        print('***', counting)
 
 
 def get_classes(IDS):
