@@ -51,3 +51,10 @@ def find_duplicates():
                  "and count(INSTRUCTOR) > 1;"
     print(select_sql)
     result = mysql_select(select_sql)
+
+def main():
+    find_duplicates()
+
+
+if __name__ == "__main__":
+    main()
