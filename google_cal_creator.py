@@ -91,21 +91,22 @@ def get_classes(IDS):
     for x in IDS:
         ID = str(x['ID'])
         select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
-        z = mysql_select(select_sql)
+        result = mysql_select(select_sql)
         print(z)
-        room = z['Center Room #']
-        site = z['SITE']
-        main_campus = z['Main Campus Rm #']
-        title = z['TITLE']
-        instructor = z['INSTRUCTOR']
-        days = z['MTWRFS']
-        time = z['TIME']
-        subject = z['SUBJ']
-        coarse = z['CRS']
-        if room != "TBA":
-            if site != 'Online Crse':
-                print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
-                print(room + " " + site + " " + main_campus)
+        for z in result:
+            room = z['Center Room #']
+            site = z['SITE']
+            main_campus = z['Main Campus Rm #']
+            title = z['TITLE']
+            instructor = z['INSTRUCTOR']
+            days = z['MTWRFS']
+            time = z['TIME']
+            subject = z['SUBJ']
+            coarse = z['CRS']
+            if room != "TBA":
+                if site != 'Online Crse':
+                    print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
+                    print(room + " " + site + " " + main_campus)
 
 def main():
     find_duplicates()
