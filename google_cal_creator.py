@@ -60,28 +60,29 @@ def find_duplicates():
         INSTRUCTOR = x['INSTRUCTOR']
         select_sql = "select ID from importer where SUBJ ='" + SUBJ + "' and CRS = '" + CRS + "' and TITLE = '" + TITLE + "' and INSTRUCTOR = '" + INSTRUCTOR + "'"
         repeater = mysql_select(select_sql)
-        print(repeater)
-        for y in repeater:
-            ID = str(y['ID'])
-            select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
-            #print(select_sql)
-            rooms = mysql_select(select_sql)
+        get_classes(repeater)
+        #print(repeater)
+        #for y in repeater:
+        #    ID = str(y['ID'])
+        #    select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
+        #    #print(select_sql)
+        #    rooms = mysql_select(select_sql)
             #print(rooms[0]['SUBJ'])
             #print(rooms)
-            for z in rooms:
-                room = z['Center Room #']
-                site = z['SITE']
-                main_campus = z['Main Campus Rm #']
-                title = z['TITLE']
-                instructor = z['INSTRUCTOR']
-                days = z['MTWRFS']
-                time = z['TIME']
-                subject = z['SUBJ']
-                coarse = z['CRS']
-                if room != "TBA":
-                    if site != 'Online Crse':
-                        print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
-                        print(room + " " + site + " " + main_campus)
+        #    for z in rooms:
+        #        room = z['Center Room #']
+        #        site = z['SITE']
+        #        main_campus = z['Main Campus Rm #']
+        #        title = z['TITLE']
+        #        instructor = z['INSTRUCTOR']
+        #        days = z['MTWRFS']
+        #        time = z['TIME']
+        #        subject = z['SUBJ']
+        #        coarse = z['CRS']
+        #        if room != "TBA":
+        #            if site != 'Online Crse':
+        #                print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
+        #                print(room + " " + site + " " + main_campus)
         print('***')
 
 
@@ -89,7 +90,20 @@ def get_classes(IDS):
     for x in IDS:
         ID = str(IDS)
         select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
-
+        z = mysql_select(select_sql)
+        room = z['Center Room #']
+        site = z['SITE']
+        main_campus = z['Main Campus Rm #']
+        title = z['TITLE']
+        instructor = z['INSTRUCTOR']
+        days = z['MTWRFS']
+        time = z['TIME']
+        subject = z['SUBJ']
+        coarse = z['CRS']
+        if room != "TBA":
+            if site != 'Online Crse':
+                print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
+                print(room + " " + site + " " + main_campus)
 
 def main():
     find_duplicates()
