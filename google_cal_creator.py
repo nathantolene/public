@@ -67,9 +67,10 @@ def find_duplicates():
             #print(select_sql)
             rooms = mysql_select(select_sql)
             for z in rooms:
-                center = z['Center Room #']
+                room = z['Center Room #']
                 site = z['SITE']
-                print(center + site)
+                if room != "TBA":
+                    print(room + site)
         print('***')
 
 
