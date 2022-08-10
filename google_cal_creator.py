@@ -66,7 +66,9 @@ def find_duplicates():
             select_sql = "select `Center Room #`, `SITE` from importer where ID = '" + ID + "';"
             #print(select_sql)
             rooms = mysql_select(select_sql)
-            print(rooms)
+            center = rooms['Center Room #']
+            site = rooms['SITE']
+            print(center + site)
         print('***')
 
 
