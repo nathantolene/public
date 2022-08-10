@@ -128,8 +128,8 @@ def update_main_campus_rooms():
 
 
 def main():
-    #find_duplicates()
-    update_main_campus_rooms()
+    find_duplicates()
+    #update_main_campus_rooms()
 
 if __name__ == "__main__":
     main()
