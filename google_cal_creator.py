@@ -60,7 +60,12 @@ def find_duplicates():
         INSTRUCTOR = x['INSTRUCTOR']
         select_sql = "select ID from importer where SUBJ ='" + SUBJ + "' and CRS = '" + CRS + "' and TITLE = '" + TITLE + "' and INSTRUCTOR = '" + INSTRUCTOR + "'"
         repeater = mysql_select(select_sql)
-        print(repeater)
+        #print(repeater)
+        for x in repeater:
+            ID = x['ID']
+            select_sql = "select 'Center Room #', 'SITE' from importer where ID = " + ID + "';"
+            rooms = mysql_select(select_sql)
+            print(rooms)
 
 
 def main():
