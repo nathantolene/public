@@ -123,7 +123,8 @@ def update_main_campus_rooms():
     #print(result)
     for x in result:
         main_campues_room = x['Main Campus Rm #']
-        print(main_campues_room)
+        if main_campues_room == "BH 107":
+            print(main_campues_room)
 
 
 def main():
