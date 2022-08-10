@@ -53,8 +53,8 @@ def find_duplicates():
     result = mysql_select(select_sql)
     #print(result)
     for x in result:
-        print(x)
-
+        #print(x)
+        print(x['SUBJ'])
 
 
 def main():
