@@ -87,8 +87,8 @@ def find_duplicates():
 
 
 def get_classes(IDS):
+    print(IDS)
     for x in IDS:
-        ID = str(IDS)
         select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
         z = mysql_select(select_sql)
         room = z['Center Room #']
