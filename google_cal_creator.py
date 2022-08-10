@@ -66,6 +66,8 @@ def find_duplicates():
             select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
             #print(select_sql)
             rooms = mysql_select(select_sql)
+            roomer = rooms['Center Room #']
+            print(roomer)
             #print(rooms)
             for z in rooms:
                 room = z['Center Room #']
@@ -82,6 +84,12 @@ def find_duplicates():
                         print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                         print(room + " " + site + " " + main_campus)
         print('***')
+
+
+def get_classes(IDS):
+    for x in IDS:
+        ID = str(IDS)
+        select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
 
 
 def main():
