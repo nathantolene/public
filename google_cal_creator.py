@@ -60,13 +60,13 @@ def find_duplicates():
         INSTRUCTOR = x['INSTRUCTOR']
         select_sql = "select ID from importer where SUBJ ='" + SUBJ + "' and CRS = '" + CRS + "' and TITLE = '" + TITLE + "' and INSTRUCTOR = '" + INSTRUCTOR + "'"
         repeater = mysql_select(select_sql)
-        #print(repeater)
+        print(repeater)
         for y in repeater:
             ID = str(y['ID'])
             select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
             #print(select_sql)
             rooms = mysql_select(select_sql)
-            print(rooms[0]['SUBJ'])
+            #print(rooms[0]['SUBJ'])
             #print(rooms)
             for z in rooms:
                 room = z['Center Room #']
