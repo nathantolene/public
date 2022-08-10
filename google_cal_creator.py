@@ -115,7 +115,7 @@ def get_classes(IDS):
                         if site != 'Online Crse':
                             #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                             #print(room + " " + site + " " + main_campus)
-                            print(room + " " + site)
+                            print(room, site)
 
 
 
