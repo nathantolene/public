@@ -92,25 +92,29 @@ def get_classes(IDS):
     #print(ID1)
     select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID1 + "';"
     result = mysql_select(select_sql)
-    print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'], result[0]['ID'])
-    for x in IDS:
-        ID = str(x['ID'])
-        select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
-        result = mysql_select(select_sql)
-        for z in result:
-            room = z['Center Room #']
-            site = z['SITE']
-            main_campus = z['Main Campus Rm #']
-            title = z['TITLE']
-            instructor = z['INSTRUCTOR']
-            days = z['MTWRFS']
-            time = z['TIME']
-            subject = z['SUBJ']
-            coarse = z['CRS']
-            if room != "TBA":
-                if site != 'Online Crse':
-                    #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
-                    print(room + " " + site + " " + main_campus)
+    site = result[0]['SITE']
+    room = result[0]['Center Room #']
+    if site != 'Online Crse':
+        if room != "TBA":
+            print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'], result[0]['ID'])
+            for x in IDS:
+                ID = str(x['ID'])
+                select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
+                result = mysql_select(select_sql)
+                for z in result:
+                    room = z['Center Room #']
+                    site = z['SITE']
+                    main_campus = z['Main Campus Rm #']
+                    title = z['TITLE']
+                    instructor = z['INSTRUCTOR']
+                    days = z['MTWRFS']
+                    time = z['TIME']
+                    subject = z['SUBJ']
+                    coarse = z['CRS']
+                    if room != "TBA":
+                        if site != 'Online Crse':
+                            #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
+                            print(room + " " + site + " " + main_campus)
 
 def main():
     find_duplicates()
