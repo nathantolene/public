@@ -166,7 +166,7 @@ def zoom_info_maker(subj, crs, name):
 def zoom_info_add_attendees(location, row_id):
     select_sql = "select zoom_location from zoom_info where ID = '" + row_id + "'"
     old_location = mysql_select(select_sql)
-    old_location = old_location['zoom_location']
+    old_location = old_location[0]
     print(old_location, row_id)
     if old_location is None:
         update_sql = "update zoom_info set zoom_location = '" + location + "'"
