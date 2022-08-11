@@ -76,7 +76,8 @@ def find_duplicates():
         CRS = x['CRS']
         TITLE = x['TITLE']
         INSTRUCTOR = x['INSTRUCTOR']
-        select_sql = "select ID from importer where SUBJ ='" + SUBJ + "' and CRS = '" + CRS + "' and TITLE = '" + TITLE + "' and INSTRUCTOR = '" + INSTRUCTOR + "'"
+        time = x['TIME']
+        select_sql = "select ID from importer where SUBJ ='" + SUBJ + "' and CRS = '" + CRS + "' and TITLE = '" + TITLE + "' and INSTRUCTOR = '" + INSTRUCTOR + "' and TIME = '" + time + "'"
         repeater = mysql_select(select_sql)
         get_classes(repeater)
         print('***')
