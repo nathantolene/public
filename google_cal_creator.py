@@ -96,6 +96,8 @@ def get_classes(IDS):
             name = name.split(" ")
             name = name[0]
             print(subj, crs, name)
+            # send info to zoom_info
+            zoom_info_maker(subj, crs, name)
             #print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'], result[0]['ID'])
             for x in IDS:
                 ID = str(x['ID'])
@@ -150,9 +152,15 @@ def host_load(changer):
     return host_id_load[changer]
 
 
+def zoom_info_maker(subj, crs, name):
+    update_sql = "insert into zoom_info (zoom_title) values (" + subj + " " + crs + " " + name + ")"
+    mysql_update(update_sql)
+
+
 def main():
     find_duplicates()
     #clean_days()
+
 
 if __name__ == "__main__":
     main()
