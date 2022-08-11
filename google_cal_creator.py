@@ -169,10 +169,10 @@ def zoom_info_add_attendees(location, row_id):
     old_location = str(old_location[0]['zoom_location'])
     print(old_location, row_id)
     if old_location is None:
-        update_sql = "update zoom_info set zoom_location = '" + location + "'"
+        update_sql = "update zoom_info set zoom_location = '" + location + "' where ID = '" + row_id + "'"
         print(update_sql)
     else:
-        update_sql = "update zoom_info set zoom_location = '" + old_location + ", " + location + "'"
+        update_sql = "update zoom_info set zoom_location = '" + old_location + ", " + location + "' where ID = '" + row_id + "'"
         print(update_sql)
     mysql_update(update_sql)
 
