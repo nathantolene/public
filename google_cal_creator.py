@@ -129,7 +129,7 @@ def get_classes(IDS):
                         if site != 'Online Crse':
                             #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                             #print(room + " " + site + " " + main_campus)
-                            print(room, site)
+                            print(site, room)
 
 
 def clean_days():
@@ -145,8 +145,8 @@ def clean_days():
 
 
 def main():
-    #find_duplicates()
-    clean_days()
+    find_duplicates()
+    #clean_days()
 
 if __name__ == "__main__":
     main()
