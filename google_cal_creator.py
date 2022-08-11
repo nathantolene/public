@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from create_zoom_meeting import create_zoom_meeting
+#from create_zoom_meeting import create_zoom_meeting
 import os
 import datetime
 import mysql.connector
