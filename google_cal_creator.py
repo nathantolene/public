@@ -24,7 +24,21 @@ def mysql_select(sql):
     my_cursor = my_database.cursor(dictionary=True)
     my_cursor.execute(sql)
     my_result = my_cursor.fetchall()
+    my_database.close()
     return my_result
+
+
+def mysql_update(sql):
+    my_database = mysql.connector.connect(
+        host=utm_host,
+        user=utm_user,
+        password=utm_password,
+        database=utm_database
+    )
+    my_cursor = my_database.cursor(dictionary=True)
+    my_cursor.execute(sql)
+    my_database.commit()
+    my_database.close()
 
 
 def find_duplicates():
@@ -119,12 +133,15 @@ def get_classes(IDS):
 
 
 def clean_days():
-    select_sql = "select MTWRFS from importer"
+    select_sql = "select ID, MTWRFS from importer"
     result = mysql_select(select_sql)
     for x in result:
+        ID = x['ID']
         day = x['MTWRFS']
         day = day.replace(" ", "")
         print(day)
+        update_sql = "update importer set MTWRFS = '" + day + "' where ID = '" + ID + "'"
+        mysql_update(update_sql)
 
 
 def main():
