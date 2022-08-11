@@ -153,7 +153,7 @@ def host_load(changer):
 
 
 def zoom_info_maker(subj, crs, name):
-    update_sql = "insert into zoom_info (zoom_title) values (" + subj + " " + crs + " " + name + ")"
+    update_sql = "insert into zoom_info (zoom_title) values ('" + subj + " " + crs + " " + name + "')"
     mysql_update(update_sql)
 
 
