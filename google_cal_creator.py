@@ -128,8 +128,8 @@ def clean_days():
 
 
 def main():
-    find_duplicates()
-    #update_main_campus_rooms()
+    #find_duplicates()
+    clean_days()
 
 if __name__ == "__main__":
     main()
