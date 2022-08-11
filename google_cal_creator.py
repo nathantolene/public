@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from create_zoom_meeting import create_zoom_meeting
 import os
 import datetime
 import mysql.connector
@@ -10,6 +11,7 @@ utm_host = os.environ.get('utm_host')
 utm_user = os.environ.get('utm_user')
 utm_password = os.environ.get('utm_password')
 utm_database = os.environ.get('utm_database')
+changer = 0
 # all fields "ID, PTRM, CRN, SUBJ, CRS, SEC, IM, TITLE, CRHRS, MTWRFS, TIME, INSTRUCTOR, ENRL, SITE, Center Room #, Main Campus Rm #,
 # Off Campus School, Share link with student, Note"
 
@@ -75,28 +77,6 @@ def find_duplicates():
         select_sql = "select ID from importer where SUBJ ='" + SUBJ + "' and CRS = '" + CRS + "' and TITLE = '" + TITLE + "' and INSTRUCTOR = '" + INSTRUCTOR + "'"
         repeater = mysql_select(select_sql)
         get_classes(repeater)
-        #print(repeater)
-        #for y in repeater:
-        #    ID = str(y['ID'])
-        #    select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
-        #    #print(select_sql)
-        #    rooms = mysql_select(select_sql)
-            #print(rooms[0]['SUBJ'])
-            #print(rooms)
-        #    for z in rooms:
-        #        room = z['Center Room #']
-        #        site = z['SITE']
-        #        main_campus = z['Main Campus Rm #']
-        #        title = z['TITLE']
-        #        instructor = z['INSTRUCTOR']
-        #        days = z['MTWRFS']
-        #        time = z['TIME']
-        #        subject = z['SUBJ']
-        #        coarse = z['CRS']
-        #        if room != "TBA":
-        #            if site != 'Online Crse':
-        #                print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
-        #                print(room + " " + site + " " + main_campus)
         print('***')
 
 
@@ -110,7 +90,13 @@ def get_classes(IDS):
     room = result[0]['Center Room #']
     if site != 'Online Crse':
         if room != "TBA":
-            print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'], result[0]['ID'])
+            subj = result[0]['SUBJ']
+            crs = result[0]['CRS']
+            name = result[0]['INSTRUCTOR']
+            name = name.split(" ")
+            name = name[0]
+            print(subj, crs, name)
+            #print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'], result[0]['ID'])
             for x in IDS:
                 ID = str(x['ID'])
                 select_sql = "SELECT `SUBJ`, `CRS`,`TITLE`, `MTWRFS`, `TIME`, `INSTRUCTOR`, `SITE`, `Center Room #`, `Main Campus Rm #`, `Off Campus School`, `ID` FROM `importer` WHERE ID = '" + ID + "';"
@@ -142,6 +128,26 @@ def clean_days():
         print(day)
         update_sql = "update importer set MTWRFS = '" + day + "' where ID = '" + ID + "'"
         mysql_update(update_sql)
+
+
+def host_load(changer):
+    host_id_load = ['dlzoom2@ut.utm.edu',
+                    'dlzoom3@ut.utm.edu',
+                    'dlzoom4@ut.utm.edu',
+                    'dlzoom5@ut.utm.edu',
+                    'dlzoom6@ut.utm.edu',
+                    'dlzoom7@ut.utm.edu',
+                    'dlzoom8@ut.utm.edu',
+                    'dlzoom9@ut.utm.edu',
+                    'dlzoom10@ut.utm.edu',
+                    'dlzoom11@ut.utm.edu',
+                    'dlzoom12@ut.utm.edu',
+                    'dlzoom13@ut.utm.edu',
+                    'dlzoom14@ut.utm.edu',
+                    'dlzoom15@ut.utm.edu'
+                    ]
+    #print(host_id_load[changer])
+    return host_id_load[changer]
 
 
 def main():
