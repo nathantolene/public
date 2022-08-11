@@ -118,15 +118,13 @@ def get_classes(IDS):
                             print(room, site)
 
 
-
-def update_main_campus_rooms():
-    select_sql = "SELECT * FROM `importer` WHERE `Main Campus Rm #` != ''"
+def clean_days():
+    select_sql = "select MTWRFS from importer"
     result = mysql_select(select_sql)
-    #print(result)
     for x in result:
-        main_campues_room = x['Main Campus Rm #']
-        if main_campues_room == "BH 107":
-            print(main_campues_room)
+        day = x['MTWRFS']
+        day = day.replace(" ", "")
+        print(day)
 
 
 def main():
