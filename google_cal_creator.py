@@ -170,8 +170,10 @@ def zoom_info_add_attendees(location, row_id):
     print(old_location, row_id)
     if old_location is None:
         update_sql = "update zoom_info set zoom_location = '" + location + "'"
+        print(update_sql)
     else:
         update_sql = "update zoom_info set zoom_location = '" + old_location + ", " + location + "'"
+        print(update_sql)
     mysql_update(update_sql)
 
 
