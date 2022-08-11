@@ -136,7 +136,7 @@ def clean_days():
     select_sql = "select ID, MTWRFS from importer"
     result = mysql_select(select_sql)
     for x in result:
-        ID = x['ID']
+        ID = str(x['ID'])
         day = x['MTWRFS']
         day = day.replace(" ", "")
         print(day)
