@@ -40,7 +40,9 @@ def mysql_update(sql):
     my_cursor = my_database.cursor(dictionary=True)
     my_cursor.execute(sql)
     my_database.commit()
+    row_id = my_cursor.lastrowid
     my_database.close()
+    return row_id
 
 
 def find_duplicates():
@@ -97,7 +99,7 @@ def get_classes(IDS):
             name = name[0]
             print(subj, crs, name)
             # send info to zoom_info
-            zoom_info_maker(subj, crs, name)
+            row_id = zoom_info_maker(subj, crs, name)
             #print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'], result[0]['ID'])
             for x in IDS:
                 ID = str(x['ID'])
@@ -118,6 +120,8 @@ def get_classes(IDS):
                             #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                             #print(room + " " + site + " " + main_campus)
                             print(site, room)
+                            location = site + " " + room
+                            zoom_info_add_attendees(location, row_id)
 
 
 def clean_days():
@@ -154,6 +158,17 @@ def host_load(changer):
 
 def zoom_info_maker(subj, crs, name):
     update_sql = "insert into zoom_info (zoom_title) values ('" + subj + " " + crs + " " + name + "')"
+    row_id = mysql_update(update_sql)
+    return row_id
+
+
+def zoom_info_add_attendees(location, row_id):
+    select_sql = "select zoom_location from zoom_info where ID = '" + row_id + "'"
+    old_location = mysql_select(select_sql)
+    if old_location is None:
+        update_sql = "update zoom_info set zoom_location = '" + location + "'"
+    else:
+        update_sql = "update zoom_info set zoom_location = '" + old_location + ", " + location + "'"
     mysql_update(update_sql)
 
 
