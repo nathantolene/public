@@ -5,7 +5,7 @@ import os
 import datetime
 import mysql.connector
 import yaml
-#import create_recurring_gcal_event
+import create_recurring_gcal_event
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -223,7 +223,9 @@ def zoom_info_add_rrule(row_id):
     result = mysql_select(select_sql)
     print(result)
     for x in result:
-        print(x)
+        days = create_recurring_gcal_event.convert_days_rrules(x)
+        result = create_recurring_gcal_event.cal_rrule(days)
+        print(result)
 
 
 def main():
