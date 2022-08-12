@@ -5,7 +5,7 @@ import os
 import datetime
 import mysql.connector
 import yaml
-import create_recurring_gcal_event
+#import create_recurring_gcal_event
 from dotenv import load_dotenv
 load_dotenv()
 
