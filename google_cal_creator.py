@@ -125,16 +125,12 @@ def get_classes(IDS):
                             #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                             #print(room + " " + site + " " + main_campus)
                             print(site, room)
-                            #try:
                             location = get_display_name_from_building_room(site, room)
                             print('location 1', location)
-                            #except KeyError:
-                            #    location = site + " " + room
-                            #    print('location2', location)
                             if location == 'None':
-                                continue
-                            else:
-                                zoom_info_add_attendees(location, row_id)
+                                location = site + " " + room
+                                print('location2', location)
+                            zoom_info_add_attendees(location, row_id)
 
 
 def clean_days():
