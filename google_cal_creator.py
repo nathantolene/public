@@ -127,7 +127,7 @@ def get_classes(IDS):
                             print(site, room)
                             location = get_display_name_from_building_room(site, room)
                             print('location 1', location)
-                            if location == 'None':
+                            if location is None:
                                 location = site + " " + room
                                 print('location2', location)
                             zoom_info_add_attendees(location, row_id)
