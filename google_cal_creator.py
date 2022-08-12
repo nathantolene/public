@@ -4,6 +4,7 @@
 import os
 import datetime
 import mysql.connector
+import yaml
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -122,7 +123,10 @@ def get_classes(IDS):
                             #print(subject + ' ' + coarse + ' ' + title + ' ' + instructor + ' ' + days + ' ' + time)
                             #print(room + " " + site + " " + main_campus)
                             print(site, room)
-                            location = site + " " + room
+                            try:
+                                location = get_display_name_from_building_room(site, room)
+                            except KeyError:
+                                location = site + " " + room
                             zoom_info_add_attendees(location, row_id)
 
 
@@ -176,6 +180,22 @@ def zoom_info_add_attendees(location, row_id):
         update_sql = "update zoom_info set zoom_location = '" + old_location + ", " + location + "' where ID = '" + row_id + "'"
         print(update_sql)
     mysql_update(update_sql)
+
+
+def get_display_name_from_building_room(building, room):
+    with open(r'room_info.yaml') as file:
+        rooms = yaml.load(file, Loader=yaml.FullLoader)
+        #print(rooms)
+        for x in rooms:
+            f_building = x['building']
+            f_room = x['room']
+            #print(x['building'])
+            if building == f_building:
+                #print('HAPPY')
+                if room == f_room:
+                    f_displayName = x['displayName']
+                    print(f_displayName)
+                    return f_displayName
 
 
 def main():
