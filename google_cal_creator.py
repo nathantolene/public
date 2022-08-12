@@ -180,7 +180,7 @@ def zoom_info_add_attendees(location, row_id):
     if old_location != 'None':
         update_sql = "update zoom_info set zoom_location = '" + old_location + ", " + location + "' where ID = '" + row_id + "'"
         print(update_sql)
-    mysql_update(update_sql)
+        mysql_update(update_sql)
 
 
 def get_display_name_from_building_room(building, room):
