@@ -192,9 +192,11 @@ def zoom_info_add_attendees(location, row_id):
 def get_display_name_from_building_room(building, room):
     with open(r'room_info.yaml') as file:
         rooms = yaml.load(file, Loader=yaml.FullLoader)
+        print(rooms)
         for x in rooms:
             f_building = x['building']
             f_room = x['room']
+            print(f_building, f_room)
             if building == 'Jackson':
                 if room == '239':
                     return 'Jackson-2-222 (10)'
@@ -202,6 +204,8 @@ def get_display_name_from_building_room(building, room):
                 building = 'Brehm Hall'
             if building == 'Gooch':
                 building = 'Gooch Hall'
+            if building == 'BA':
+                building = 'Business Admin'
             if building == f_building:
                 if room == f_room:
                     f_displayName = x['displayName']
