@@ -199,6 +199,8 @@ def get_display_name_from_building_room(building, room):
                     return 'Jackson-2-222 (10)'
             if building == 'Brehm':
                 building = 'Brehm Hall'
+            if building == 'Gooch':
+                building = 'Gooch Hall'
             if building == f_building:
                 if room == f_room:
                     f_displayName = x['displayName']
