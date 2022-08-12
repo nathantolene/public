@@ -128,6 +128,7 @@ def get_classes(IDS):
                             location = get_display_name_from_building_room(site, room)
                             print('location 1', location)
                             if location is None:
+                                putter = input('Location not in File' + site + ' ' + room)
                                 location = site + " " + room
                                 print('location2', location)
                             zoom_info_add_attendees(location, row_id)
