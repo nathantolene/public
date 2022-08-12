@@ -103,6 +103,7 @@ def get_classes(IDS):
             # send info to zoom_info
             row_id = zoom_info_maker(subj, crs, name)
             row_id = str(row_id)
+            print('row_id', row_id)
             #print(result[0]['SUBJ'], result[0]['CRS'], result[0]['TITLE'], result[0]['INSTRUCTOR'], result[0]['MTWRFS'], result[0]['TIME'], result[0]['ID'])
             for x in IDS:
                 ID = str(x['ID'])
