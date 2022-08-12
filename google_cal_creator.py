@@ -5,6 +5,7 @@ import os
 import datetime
 import mysql.connector
 import yaml
+import create_recurring_gcal_event
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -132,6 +133,7 @@ def get_classes(IDS):
                                 location = site + " " + room
                                 print('location2', location)
                             zoom_info_add_attendees(location, row_id)
+                            zoom_info_add_rrule(row_id)
 
 
 def clean_days():
@@ -202,8 +204,10 @@ def get_display_name_from_building_room(building, room):
                     return 'Jackson-2-222 (10)'
             if building == 'Brehm':
                 building = 'Brehm Hall'
-            if building == 'Gooch':
+            if building == 'Gooch' or 'GH':
                 building = 'Gooch Hall'
+            if building == 'HU':
+                building = 'Humanities'
             if building == 'BA':
                 building = 'Business Admin'
             if building == f_building:
@@ -211,6 +215,15 @@ def get_display_name_from_building_room(building, room):
                     f_displayName = x['displayName']
                     print(f_displayName)
                     return f_displayName
+
+
+def zoom_info_add_rrule(row_id):
+    select_sql = "select MTWRFS from importer where ID = '" + row_id + "'"
+    print(select_sql)
+    result = mysql_select(select_sql)
+    print(result)
+    for x in result:
+        print(x)
 
 
 def main():
