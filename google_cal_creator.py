@@ -224,7 +224,7 @@ def zoom_info_add_rrule(row_id):
     print(result)
     for x in result:
         days = create_recurring_gcal_event.convert_days_rrules(x)
-        days = days['MTWRFS']
+#        days = days['MTWRFS']
         result = create_recurring_gcal_event.cal_rrule(days)
         print(result)
 
