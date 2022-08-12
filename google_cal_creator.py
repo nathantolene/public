@@ -177,9 +177,9 @@ def zoom_info_add_attendees(location, row_id):
     old_location = str(old_location[0]['zoom_location'])
     print(old_location, row_id)
     if old_location == 'None':
-        #update_sql = "update zoom_info set zoom_location = '" + location + "' where ID = '" + row_id + "'"
-        #print(update_sql)
-        print('Skipping')
+        update_sql = "update zoom_info set zoom_location = '" + location + "' where ID = '" + row_id + "'"
+        print(update_sql)
+        #print('Skipping')
     else:
     #if
     #    old_location != 'None':
