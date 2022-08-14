@@ -129,11 +129,13 @@ def cal_time(time):
     month = datetime.today().month
     day = datetime.today().day
     sec = datetime.today().second
-    st_format = st_format.replace(year=year, month=month, day=day, second=sec)
-    st_format = st_format.isoformat('%Y')
+    st_format = st_format.replace(year=year, month=month, day=day)
+    st_format = st_format.isoformat()
+    st_format = st_format + "-05:00"
     et_format = et_format + timedelta(minutes=3)
-    et_format = et_format.replace(year=year, month=month, day=day, second=sec)
+    et_format = et_format.replace(year=year, month=month, day=day)
     et_format = et_format.isoformat()
+    et_format = et_format + "-05:00"
     #print(st_format, et_format)
     times = (st_format, et_format)
     return times
