@@ -129,7 +129,7 @@ def get_classes(IDS):
                             location = get_display_name_from_building_room(site, room)
                             print('location 1', location)
                             if location is None:
-                                putter = input('Location not in File' + site + ' ' + room)
+                                putter = input('Location not in File ' + site + ' ' + room)
                                 location = site + " " + room
                                 print('location2', location)
                             zoom_info_add_attendees(location, row_id)
@@ -195,11 +195,11 @@ def zoom_info_add_attendees(location, row_id):
 def get_display_name_from_building_room(building, room):
     with open(r'room_info.yaml') as file:
         rooms = yaml.load(file, Loader=yaml.FullLoader)
-        print(rooms)
+        #print(rooms)
         for x in rooms:
             f_building = x['building']
             f_room = x['room']
-            print(f_building, f_room)
+            #print(f_building, f_room)
             if building == 'Jackson':
                 if room == '239':
                     return 'Jackson-2-222 (10)'
@@ -214,7 +214,7 @@ def get_display_name_from_building_room(building, room):
             if building == f_building:
                 if room == f_room:
                     f_displayName = x['displayName']
-                    print(f_displayName)
+                   # print(f_displayName)
                     return f_displayName
 
 
