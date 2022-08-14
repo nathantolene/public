@@ -199,8 +199,8 @@ def get_display_name_from_building_room(building, room):
         for x in rooms:
             f_building = x['building']
             f_room = x['room']
-            print(f_building, f_room)
-            print(building, room)
+            #print(f_building, f_room)
+            #print(building, room)
             if building == 'Jackson':
                 if room == '239':
                     return 'Jackson-2-222 (10)'
@@ -214,11 +214,11 @@ def get_display_name_from_building_room(building, room):
                 building = 'Business Admin'
             if building == f_building:
                 print('Found Building')
-            if room == f_room:
-                print('Found Room')
-                    #f_displayName = x['displayName']
+                if room == f_room:
+                    print('Found Room')
+                    f_displayName = x['displayName']
                     #print(f_displayName)
-                    #return f_displayName
+                    return f_displayName
 
 
 def zoom_info_add_rrule(row_id):
