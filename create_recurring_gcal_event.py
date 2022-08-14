@@ -139,7 +139,7 @@ def cal_time(time):
 
 def test_recurring_gcal_event():
     # summary, description, start_time, start_tz, end_time, end_tz, location, attendees, recurrence
-    select_sql = "select importer_key, ID from zoom_info where ID = '2044'"
+    select_sql = "select importer_key, ID from zoom_info"
     result = mysql_select(select_sql)
     for x in result:
         zoom_info_id = str(x['ID'])
