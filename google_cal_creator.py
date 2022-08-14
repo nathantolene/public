@@ -138,6 +138,7 @@ def get_classes(IDS):
 
 
 
+
 def clean_days():
     select_sql = "select ID, MTWRFS from importer"
     result = mysql_select(select_sql)
@@ -238,6 +239,7 @@ def zoom_info_add_rrule(ID, row_id):
 
 def main():
     find_duplicates()
+    create_recurring_gcal_event.test_recurring_gcal_event()
     #clean_days()
 
 
