@@ -132,7 +132,7 @@ def get_classes(IDS):
                                 putter = input('Location not in File ' + site + ' ' + room)
                                 location = site + " " + room
                                 print('location2', location)
-                            zoom_info_add_attendees(location, row_id)
+                            zoom_info_add_attendees(location, row_id, ID)
                             rrule = zoom_info_add_rrule(ID, row_id)
 
 
@@ -175,13 +175,13 @@ def zoom_info_maker(subj, crs, name):
     return row_id
 
 
-def zoom_info_add_attendees(location, row_id):
+def zoom_info_add_attendees(location, row_id, ID):
     select_sql = "select zoom_location from zoom_info where ID = '" + row_id + "'"
     old_location = mysql_select(select_sql)
     old_location = str(old_location[0]['zoom_location'])
     print(old_location, row_id)
     if old_location == 'None':
-        update_sql = "update zoom_info set zoom_location = '" + location + "' where ID = '" + row_id + "'"
+        update_sql = "update zoom_info set zoom_location = '" + location + "' , importer_key = '" + ID + "' where ID = '" + row_id + "'"
         print(update_sql)
         #print('Skipping')
     else:
