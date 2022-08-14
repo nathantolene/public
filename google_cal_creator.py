@@ -213,10 +213,11 @@ def get_display_name_from_building_room(building, room):
                 building = 'Business Admin'
             if building == f_building:
                 print('Found Building')
-                if room == f_room:
-                    f_displayName = x['displayName']
-                    print(f_displayName)
-                    return f_displayName
+            if room == f_room:
+                print('Found Room')
+                    #f_displayName = x['displayName']
+                    #print(f_displayName)
+                    #return f_displayName
 
 
 def zoom_info_add_rrule(row_id):
