@@ -136,7 +136,6 @@ def get_classes(IDS):
                             zoom_info_add_rrule(ID)
 
 
-
 def clean_days():
     select_sql = "select ID, MTWRFS from importer"
     result = mysql_select(select_sql)
@@ -228,7 +227,6 @@ def zoom_info_add_rrule(row_id):
     print(result)
     for x in result:
         days = create_recurring_gcal_event.convert_days_rrules(x)
-#        days = days['MTWRFS']
         result = create_recurring_gcal_event.cal_rrule(days)
         print(result)
 
