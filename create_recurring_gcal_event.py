@@ -128,10 +128,11 @@ def cal_time(time):
     year = datetime.today().year
     month = datetime.today().month
     day = datetime.today().day
-    st_format = st_format.replace(year=year, month=month, day=day)
+    ms = datetime.today().microsecond
+    st_format = st_format.replace(year=year, month=month, day=day, microsecond=ms)
     st_format = st_format.isoformat()
     et_format = et_format + timedelta(minutes=3)
-    et_format = et_format.replace(year=year, month=month, day=day)
+    et_format = et_format.replace(year=year, month=month, day=day, microsecond=ms)
     et_format = et_format.isoformat()
     #print(st_format, et_format)
     times = (st_format, et_format)
