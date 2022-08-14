@@ -38,6 +38,7 @@ def make_recurring_gcal_event(summary, description, start_time, start_tz, end_ti
 
 def convert_days_rrules(days):
     #days = 'MWF'
+    print(days)
     r_days = []
     for x in days:
         if x == 'U':
@@ -55,6 +56,7 @@ def convert_days_rrules(days):
         if x == 'S':
             x = 'SA'
         r_days.append(x)
+    print(r_days)
     return r_days
 
 
