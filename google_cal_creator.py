@@ -130,8 +130,9 @@ def get_classes(IDS):
                             print('location 1', location)
                             if location is None:
                                 #putter = input('Location not in File ' + site + ' ' + room)
-                                location = site + " " + room
-                                print('location2', location)
+                                #location = site + " " + room
+                                #print('location2', location)
+                                continue
                             zoom_info_add_attendees(location, row_id, ID)
                             rrule = zoom_info_add_rrule(ID, row_id)
 
