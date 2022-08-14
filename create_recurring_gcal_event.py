@@ -133,7 +133,7 @@ def cal_time(time):
     et_format = et_format + timedelta(minutes=3)
     et_format = et_format.replace(year=year, month=month, day=day)
     et_format = et_format.isoformat()
-    print(st_format, et_format)
+    #print(st_format, et_format)
     times = (st_format, et_format)
     return times
 
@@ -172,4 +172,5 @@ def test_recurring_gcal_event():
             #print(time_tup, location, attendees, recurrence)
             start_time = time_tup[0]
             end_time = time_tup[1]
-            print(start_time, end_time)
+            print(start_time)
+            print(end_time)
