@@ -231,6 +231,7 @@ def zoom_info_add_rrule(ID, row_id):
         result = create_recurring_gcal_event.cal_rrule(x)
         print(result)
         update_sql = "update zoom_info set recurring_settings = '" + result + "' where ID = '" + row_id + "'"
+        mysql_update(update_sql)
         return result
 
 
