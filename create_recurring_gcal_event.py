@@ -37,27 +37,29 @@ def make_recurring_gcal_event(summary, description, start_time, start_tz, end_ti
 
 
 def convert_days_rrules(days):
-    #days = 'MWF'
-    print(days)
+    #print(days['MTWRFS'])
     r_days = []
     for x in days:
-        print(x)
         day = x['MTWRFS']
-        if day == 'U':
-            day = 'SU'
-        if day == 'M':
-            day = 'MO'
-        if day == 'T':
-            day = 'TU'
-        if day == 'W':
-            day = 'WE'
-        if day == 'R':
-            day = 'TH'
-        if day == 'F':
-            day = 'FR'
-        if day == 'S':
-            day = 'SA'
-        r_days.append(day)
+        print(day)
+        for y in day:
+            print(y)
+            if y == 'U':
+                y = 'SU'
+            if y == 'M':
+                y = 'MO'
+            if y == 'T':
+                y = 'TU'
+            if y == 'W':
+                y = 'WE'
+            if y == 'R':
+                y = 'TH'
+            if y == 'F':
+                y = 'FR'
+            if y == 'S':
+                y = 'SA'
+            print(y)
+            r_days.append(y)
     print(r_days)
     return r_days
 
