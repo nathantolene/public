@@ -145,7 +145,7 @@ def test_recurring_gcal_event():
         select_sql = "select * from importer where ID ='" + key + "'"
         result = mysql_select(select_sql)
         for y in result:
-            print(y)
+            #print(y)
             start_tz = tz
             end_tz = tz
             crn = y['CRN']
@@ -158,6 +158,7 @@ def test_recurring_gcal_event():
             name = name[0]
             surmmary = subj + " " + crs + " " + name
             description = title
+            print(start_tz, end_tz, crn, subj, crs, title, time, name, surmmary, description)
             time_tup = cal_time(time)
             select_sql = "select zoom_number from zoom_info where ID = '" + zoom_info_id + "'"
             location = mysql_select(select_sql)
