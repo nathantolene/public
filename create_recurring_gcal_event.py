@@ -39,9 +39,9 @@ def make_recurring_gcal_event(summary, description, start_time, start_tz, end_ti
 def convert_days_rrules(days):
     #days = 'MWF'
     print(days)
-    days = days['MTWRFS']
     r_days = []
     for x in days:
+        print(x)
         if x == 'U':
             x = 'SU'
         if x == 'M':
