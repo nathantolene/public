@@ -140,7 +140,7 @@ def test_recurring_gcal_event():
     result = mysql_select(select_sql)
     for x in result:
         zoom_info_id = x['ID']
-        key = x['importer_key']
+        key = str(x['importer_key'])
         select_sql = "select * from importer where ID ='" + key + "'"
         result = mysql_select(select_sql)
         for y in result:
