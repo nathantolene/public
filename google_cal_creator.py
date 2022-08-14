@@ -136,6 +136,7 @@ def get_classes(IDS):
                             zoom_info_add_rrule(row_id)
 
 
+
 def clean_days():
     select_sql = "select ID, MTWRFS from importer"
     result = mysql_select(select_sql)
