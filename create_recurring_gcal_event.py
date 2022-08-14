@@ -134,7 +134,8 @@ def cal_time(time):
     et_format = et_format.replace(year=year, month=month, day=day)
     et_format = et_format.isoformat()
     print(st_format, et_format)
-    return st_format, et_format
+    times = (st_format, et_format)
+    return times
 
 
 def test_recurring_gcal_event():
