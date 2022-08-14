@@ -109,31 +109,32 @@ def cal_rrule(days):
 def cal_time(time):
     #time = [{'TIME': '04:00-05:50p'}]
     print(time)
-    for x in time:
-        print(x)
-        timing = x[0]
-        am_pm = timing[-1]
-        if am_pm == 'p':
-            am_pm = 'PM'
-        if am_pm == 'a':
-            am_pm = 'AM'
-        timing = timing[:-1]
-        ts = timing.split('-')
-        start_time = ts[0] + am_pm
-        st_format = datetime.strptime(start_time, "%I:%M%p")
-        end_time = ts[1] + am_pm
-        et_format = datetime.strptime(end_time, "%I:%M%p")
-        st_format = st_format + timedelta(minutes=-3)
-        year = datetime.today().year
-        month = datetime.today().month
-        day = datetime.today().day
-        st_format = st_format.replace(year=year, month=month, day=day)
-        st_format = st_format.isoformat()
-        et_format = et_format + timedelta(minutes=3)
-        et_format = et_format.replace(year=year, month=month, day=day)
-        et_format = et_format.isoformat()
-        print(st_format, et_format)
-        return st_format, et_format
+    #for x in time:
+    #print(x)
+    #timing = x[0]
+    timing = time
+    am_pm = timing[-1]
+    if am_pm == 'p':
+        am_pm = 'PM'
+    if am_pm == 'a':
+        am_pm = 'AM'
+    timing = timing[:-1]
+    ts = timing.split('-')
+    start_time = ts[0] + am_pm
+    st_format = datetime.strptime(start_time, "%I:%M%p")
+    end_time = ts[1] + am_pm
+    et_format = datetime.strptime(end_time, "%I:%M%p")
+    st_format = st_format + timedelta(minutes=-3)
+    year = datetime.today().year
+    month = datetime.today().month
+    day = datetime.today().day
+    st_format = st_format.replace(year=year, month=month, day=day)
+    st_format = st_format.isoformat()
+    et_format = et_format + timedelta(minutes=3)
+    et_format = et_format.replace(year=year, month=month, day=day)
+    et_format = et_format.isoformat()
+    print(st_format, et_format)
+    return st_format, et_format
 
 
 def test_recurring_gcal_event():
