@@ -133,7 +133,7 @@ def get_classes(IDS):
                                 location = site + " " + room
                                 print('location2', location)
                             zoom_info_add_attendees(location, row_id)
-                            zoom_info_add_rrule(row_id)
+                            zoom_info_add_rrule(ID)
 
 
 
