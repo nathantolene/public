@@ -171,7 +171,4 @@ def test_recurring_gcal_event():
             #print(time_tup, location, attendees, recurrence)
             start_time = time_tup[0]
             end_time = time_tup[1]
-            all = start_tz + end_tz + str(crn) + subj + str(crs) + title + time + name + str(surmmary) + str(description) + str(location) + str(attendees) + str(recurrence)
-            print(all)
-            update_sql = "update zoom_info set gcal = '" + all +"' where ID = '" + zoom_info_id + "'"
-            result = mysql_update(update_sql)
+            print(start_time, end_time)
