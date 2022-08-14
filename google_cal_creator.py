@@ -200,6 +200,7 @@ def get_display_name_from_building_room(building, room):
             f_building = x['building']
             f_room = x['room']
             print(f_building, f_room)
+            print(building, room)
             if building == 'Jackson':
                 if room == '239':
                     return 'Jackson-2-222 (10)'
