@@ -133,7 +133,8 @@ def get_classes(IDS):
                                 location = site + " " + room
                                 print('location2', location)
                             zoom_info_add_attendees(location, row_id)
-                            zoom_info_add_rrule(ID)
+                            rrule = zoom_info_add_rrule(ID)
+
 
 
 def clean_days():
@@ -226,9 +227,10 @@ def zoom_info_add_rrule(row_id):
     result = mysql_select(select_sql)
     print(result)
     for x in result:
-        days = create_recurring_gcal_event.convert_days_rrules(x)
-        result = create_recurring_gcal_event.cal_rrule(days)
+        #days = create_recurring_gcal_event.convert_days_rrules(x)
+        result = create_recurring_gcal_event.cal_rrule(x)
         print(result)
+        return result
 
 
 def main():
