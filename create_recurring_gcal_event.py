@@ -42,21 +42,22 @@ def convert_days_rrules(days):
     r_days = []
     for x in days:
         print(x)
-        if x == 'U':
-            x = 'SU'
-        if x == 'M':
-            x = 'MO'
-        if x == 'T':
-            x = 'TU'
-        if x == 'W':
-            x = 'WE'
-        if x == 'R':
-            x = 'TH'
-        if x == 'F':
-            x = 'FR'
-        if x == 'S':
-            x = 'SA'
-        r_days.append(x)
+        day = x['MTWRFS']
+        if day == 'U':
+            day = 'SU'
+        if day == 'M':
+            day = 'MO'
+        if day == 'T':
+            day = 'TU'
+        if day == 'W':
+            day = 'WE'
+        if day == 'R':
+            day = 'TH'
+        if day == 'F':
+            day = 'FR'
+        if day == 'S':
+            day = 'SA'
+        r_days.append(day)
     print(r_days)
     return r_days
 
