@@ -211,7 +211,7 @@ def get_display_name_from_building_room(building, room):
                 building = 'Humanities'
             if building == 'BA':
                 building = 'Business Admin'
-            if building == f_building:
+            if building == f_building and room == f_room:
                 print('Found Building')
             if room == f_room:
                 print('Found Room')
