@@ -39,8 +39,8 @@ def make_recurring_gcal_event(summary, description, start_time, start_tz, end_ti
 def convert_days_rrules(days):
     #print(days['MTWRFS'])
     r_days = []
-    for x in days:
-        day = x['MTWRFS']
+    for x in days['MTWRFS']:
+        day = x
         print(day)
         for y in day:
             print(y)
