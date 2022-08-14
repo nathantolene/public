@@ -109,7 +109,7 @@ def cal_rrule(days):
 def cal_time(time):
     #time = [{'TIME': '04:00-05:50p'}]
     for x in time:
-        timing = x['TIME']
+        timing = x[0]
         am_pm = timing[-1]
         if am_pm == 'p':
             am_pm = 'PM'
