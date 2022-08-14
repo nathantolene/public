@@ -108,6 +108,7 @@ def cal_rrule(days):
 
 def cal_time(time):
     #time = [{'TIME': '04:00-05:50p'}]
+    print(time)
     for x in time:
         print(x)
         timing = x[0]
