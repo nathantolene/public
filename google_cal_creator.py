@@ -133,7 +133,7 @@ def get_classes(IDS):
                                 location = site + " " + room
                                 print('location2', location)
                             zoom_info_add_attendees(location, row_id)
-                            rrule = zoom_info_add_rrule(ID)
+                            rrule = zoom_info_add_rrule(ID, row_id)
 
 
 
@@ -221,8 +221,8 @@ def get_display_name_from_building_room(building, room):
                     return f_displayName
 
 
-def zoom_info_add_rrule(row_id):
-    select_sql = "select MTWRFS from importer where ID = '" + row_id + "'"
+def zoom_info_add_rrule(ID, row_id):
+    select_sql = "select MTWRFS from importer where ID = '" + ID + "'"
     print(select_sql)
     result = mysql_select(select_sql)
     print(result)
@@ -230,6 +230,7 @@ def zoom_info_add_rrule(row_id):
         #days = create_recurring_gcal_event.convert_days_rrules(x)
         result = create_recurring_gcal_event.cal_rrule(x)
         print(result)
+        update_sql = "update zoom_info set recurring_settings = '" + result + "' where ID = '" + row_id + "'"
         return result
 
 
