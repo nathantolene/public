@@ -145,6 +145,7 @@ def test_recurring_gcal_event():
         select_sql = "select * from importer where ID ='" + key + "'"
         result = mysql_select(select_sql)
         for y in result:
+            print(y)
             start_tz = tz
             end_tz = tz
             crn = y['CRN']
