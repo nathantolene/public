@@ -40,7 +40,7 @@ def convert_days_rrules(days):
     #print(days['MTWRFS'])
     r_days = []
     for x in days:
-        day = x[0]
+        day = x['MTWRFS']
         print(day)
         for y in day:
             print(y)
