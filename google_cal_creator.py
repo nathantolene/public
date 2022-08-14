@@ -212,6 +212,7 @@ def get_display_name_from_building_room(building, room):
             if building == 'BA':
                 building = 'Business Admin'
             if building == f_building:
+                print('HAPPY')
                 if room == f_room:
                     f_displayName = x['displayName']
                    # print(f_displayName)
