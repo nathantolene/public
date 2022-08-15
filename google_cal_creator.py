@@ -6,6 +6,7 @@ import datetime
 import mysql.connector
 import yaml
 import create_recurring_gcal_event
+import create_zoom_meeting
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -235,6 +236,16 @@ def zoom_info_add_rrule(ID, row_id):
         update_sql = "update zoom_info set recurring_settings = '" + result + "' where ID = '" + row_id + "'"
         mysql_update(update_sql)
         return result
+
+
+def zoom_meeting_maker():
+    select_sql = "select zoom_title from zoom_info"
+    result = mysql_select(select_sql)
+    for x in result['zoom_title']:
+        topic = x
+        host = host_load(changer)
+        changer = changer + 1
+        #create_zoom_meeting.create_zoom_meeting(host, topic, None)
 
 
 def main():
