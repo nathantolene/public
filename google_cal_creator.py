@@ -251,7 +251,7 @@ def zoom_meeting_maker():
             changer = 0
         print(topic, changer, host)
         meeting_link = create_zoom_meeting.create_zoom_meeting(host, topic, None)
-        update_sql = "update zoom_info set zoom_number = '" + meeting_link + "', set host ='" + host + "' where ID = '" + ID + "'"
+        update_sql = "update zoom_info set zoom_number = '" + meeting_link + "', host ='" + host + "' where ID = '" + ID + "'"
         print(update_sql)
         mysql_update(update_sql)
 
