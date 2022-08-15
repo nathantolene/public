@@ -245,6 +245,7 @@ def zoom_meeting_maker():
         topic = x
         host = host_load(changer)
         changer = changer + 1
+        print(topic, changer, host)
         #create_zoom_meeting.create_zoom_meeting(host, topic, None)
 
 
