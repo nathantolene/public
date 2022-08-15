@@ -70,6 +70,7 @@ def create_zoom_meeting(host_id, topic, pmi):
                                        #            "end_times": 30}
                                        )
         listing = yaml.safe_load(create.content)
+        print(listing)
         zoom_join = listing['join_url']
         print(zoom_join)
         return zoom_join
