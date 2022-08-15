@@ -241,6 +241,7 @@ def zoom_info_add_rrule(ID, row_id):
 def zoom_meeting_maker():
     select_sql = "select zoom_title from zoom_info"
     result = mysql_select(select_sql)
+    changer = 0
     for x in result:
         topic = x['zoom_title']
         host = host_load(changer)
