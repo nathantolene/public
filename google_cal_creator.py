@@ -239,17 +239,20 @@ def zoom_info_add_rrule(ID, row_id):
 
 
 def zoom_meeting_maker():
-    select_sql = "select zoom_title from zoom_info"
+    select_sql = "select zoom_title, ID from zoom_info"
     result = mysql_select(select_sql)
     changer = 0
     for x in result:
         topic = x['zoom_title']
+        ID = x['ID']
         host = host_load(changer)
         changer = changer + 1
         if changer == 14:
             changer = 0
         print(topic, changer, host)
-        #create_zoom_meeting.create_zoom_meeting(host, topic, None)
+        meeting_link = create_zoom_meeting.create_zoom_meeting(host, topic, None)
+        update_sql = "update zoom_info set zoom_number = '" + meeting_link + "', set host ='" + host + "' where ID = '" + ID + "'"
+        mysql_update(update_sql)
 
 
 def main():
