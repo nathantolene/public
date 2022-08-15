@@ -152,4 +152,4 @@ def list_all_meetings():
 # delete_zoom_meeting('98283443230')
 # list_zoom_meetings('dlzoom10@ut.utm.edu')
 #delete_all_meetings()
-#list_all_meetings()
+list_all_meetings()
