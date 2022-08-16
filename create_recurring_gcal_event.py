@@ -170,6 +170,7 @@ def test_recurring_gcal_event():
             location = mysql_select(select_sql)
             select_sql = "select zoom_location from zoom_info where ID = '" + zoom_info_id + "'"
             attendees = mysql_select(select_sql)
+            print(attendees)
             select_sql = "select recurring_settings from zoom_info where ID ='" + zoom_info_id + "'"
             recurrence = mysql_select(select_sql)
             #print(time_tup, location, attendees, recurrence)
@@ -177,4 +178,4 @@ def test_recurring_gcal_event():
             end_time = time_tup[1]
             print(start_time)
             print(end_time)
-            make_recurring_gcal_event(surmmary, description, start_time, start_tz,end_time,end_tz,location,attendees,recurrence)
+            #make_recurring_gcal_event(surmmary, description, start_time, start_tz,end_time,end_tz,location,attendees,recurrence)
