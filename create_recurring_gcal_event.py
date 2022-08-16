@@ -177,3 +177,4 @@ def test_recurring_gcal_event():
             end_time = time_tup[1]
             print(start_time)
             print(end_time)
+            make_recurring_gcal_event(surmmary, description, start_time, start_tz,end_time,end_tz,location,attendees,recurrence)
