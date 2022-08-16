@@ -13,7 +13,7 @@ utm_host = os.environ.get('utm_host')
 utm_user = os.environ.get('utm_user')
 utm_password = os.environ.get('utm_password')
 utm_database = os.environ.get('utm_database')
-cal_id = os.environ.get('cal_id')
+cal_id = os.environ.get('gcal_host_email')
 tz = 'America/Chicago'
 until_equals = 'UNTIL='
 end_of_semester = '20221203T170000Z'
