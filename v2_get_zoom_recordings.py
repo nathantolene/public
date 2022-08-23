@@ -6,6 +6,7 @@ import urllib.parse
 from zoomus import ZoomClient
 from datetime import date, datetime
 import os
+import zoom_api
 import mysql.connector
 import zoom_auto_delete
 from dotenv import load_dotenv
@@ -109,7 +110,8 @@ def get_list_of_recordings_from_email_list(group_list):
         if debug:
             print(x)
         email = x['email']
-        recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
+        #recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
+        recording_list_response = zoom_api.list_user_recordings(email)
         recording_list = json.loads(recording_list_response.content)
         if debug:
             print(recording_list)
