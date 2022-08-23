@@ -9,6 +9,13 @@ headers = {'authorization': 'Bearer %s' % zoom_api_token.generate_token(),
            'content-type': 'application/json'}
 
 
+def list_user_in_group(groupId):
+    end_point = f'/groups/{groupId}/members'
+    get = requests.get(endpoint_base + end_point, headers=headers)
+    get = json.loads(get.content)
+    return get
+
+
 def list_user_meetings(userId):
     end_point = f'/users/{userId}/meetings'
     get = requests.get(endpoint_base + end_point, headers=headers)
