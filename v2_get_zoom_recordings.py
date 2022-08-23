@@ -411,6 +411,7 @@ def check_time_diff(r_id):
 
 def main():
     group_list = get_zoom_group_emails()
+    print(group_list)
     get_list_of_recordings_from_email_list(group_list)
     check_db_and_download_all()
     update_recording_count()
