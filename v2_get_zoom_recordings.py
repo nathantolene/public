@@ -111,8 +111,8 @@ def get_list_of_recordings_from_email_list(group_list):
             print(x)
         email = x['email']
         #recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
-        recording_list_response = zoom_api.list_user_recordings(email)
-        recording_list = json.loads(recording_list_response.content)
+        recording_list = zoom_api.list_user_recordings(email)
+        #recording_list = json.loads(recording_list_response.content)
         if debug:
             print(recording_list)
         for meetings in recording_list['meetings']:
