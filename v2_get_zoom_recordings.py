@@ -65,7 +65,9 @@ group_list = ['dlzoom2@ut.utm.edu',
                     'dlzoom27@ut.utm.edu',
                     'dlzoom28@ut.utm.edu',
                     'dlzoom29@ut.utm.edu',
-                    'dlzoom30@ut.utm.edu'
+                    'dlzoom30@ut.utm.edu',
+                    'dresdenhs@ut.utm.edu',
+                    'Gleasonhs@ut.utm.edu'
                     ]
 
 
