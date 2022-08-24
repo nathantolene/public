@@ -21,12 +21,9 @@ def page_checker(endpoint, get):
 
 
 def list_user_in_group(groupId):
-    get = []
     end_point = f'/groups/{groupId}/members?page_size=300'
     req = requests.get(endpoint_base + end_point, headers=headers)
     get = json.loads(req.content)
-    print(get)
-    #get = page_checker(end_point, get)
     return get
 
 
