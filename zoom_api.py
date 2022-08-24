@@ -9,10 +9,24 @@ headers = {'authorization': 'Bearer %s' % zoom_api_token.generate_token(),
            'content-type': 'application/json'}
 
 
+def page_checker(endpoint, get):
+    pager = get[0]['next_page_token']
+    endpoint = endpoint + '?next_page_token=' + pager
+    #endpoint = endpoint + '?page_size='
+    print(endpoint)
+    req = requests.get(endpoint_base + endpoint, headers=headers)
+    get.append(json.loads(req.content))
+    print(get)
+    return get
+
+
 def list_user_in_group(groupId):
-    end_point = f'/groups/{groupId}/members'
-    get = requests.get(endpoint_base + end_point, headers=headers)
-    get = json.loads(get.content)
+    get = []
+    end_point = f'/groups/{groupId}/members?page_size=300'
+    req = requests.get(endpoint_base + end_point, headers=headers)
+    get = json.loads(req.content)
+    print(get)
+    #get = page_checker(end_point, get)
     return get
 
 

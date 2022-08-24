@@ -37,49 +37,18 @@ cm = "', '"
 changer = 0
 
 
-group_list = ['dlzoom2@ut.utm.edu',
-                    'dlzoom3@ut.utm.edu',
-                    'dlzoom4@ut.utm.edu',
-                    'dlzoom5@ut.utm.edu',
-                    'dlzoom6@ut.utm.edu',
-                    'dlzoom7@ut.utm.edu',
-                    'dlzoom8@ut.utm.edu',
-                    'dlzoom9@ut.utm.edu',
-                    'dlzoom10@ut.utm.edu',
-                    'dlzoom11@ut.utm.edu',
-                    'dlzoom12@ut.utm.edu',
-                    'dlzoom13@ut.utm.edu',
-                    'dlzoom14@ut.utm.edu',
-                    'dlzoom15@ut.utm.edu',
-                    'dlzoom16@ut.utm.edu',
-                    'dlzoom17@ut.utm.edu',
-                    'dlzoom18@ut.utm.edu',
-                    'dlzoom19@ut.utm.edu',
-                    'dlzoom20@ut.utm.edu',
-                    'dlzoom21@ut.utm.edu',
-                    'dlzoom22@ut.utm.edu',
-                    'dlzoom23@ut.utm.edu',
-                    'dlzoom24@ut.utm.edu',
-                    'dlzoom25@ut.utm.edu',
-                    'dlzoom26@ut.utm.edu',
-                    'dlzoom27@ut.utm.edu',
-                    'dlzoom28@ut.utm.edu',
-                    'dlzoom29@ut.utm.edu',
-                    'dlzoom30@ut.utm.edu',
-                    'dresdenhs@ut.utm.edu',
-                    'Gleasonhs@ut.utm.edu'
-                    ]
+
 
 
 def get_zoom_group_emails():
-    group_list_response = client.group.list_members(groupid=group_id)
-    group_list = json.loads(group_list_response.content)
+    #group_list_response = client.group.list_members(groupid=group_id)
+    #group_list = json.loads(group_list_response.content)
+    group_list = zoom_api.list_user_in_group(group_id)
     return group_list
 
 
 def update_recording_count():
-    #group_list = get_zoom_group_emails()
-
+    group_list = get_zoom_group_emails()
     mydb = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
@@ -87,10 +56,10 @@ def update_recording_count():
         database=zdl_database
     )
     mycursor = mydb.cursor(dictionary=True)
-    #for x in group_list['members']:
-    for x in group_list:
-        #email = x['email']
-        email = x
+    for x in group_list['members']:
+    #for x in group_list:
+        email = x['email']
+        #email = x
         print(email)
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
@@ -146,11 +115,11 @@ def get_list_of_recordings_from_email_list(group_list):
     # Purpose of this function is to insert recording info into zdl_database db for later processing
     if debug:
         print('get_list_of_recordings_from_email_list')
-    for x in group_list:
+    for x in group_list['members']:
         if debug:
             print(x)
-       # email = x['email']
-        email = x
+        email = x['email']
+        #email = x
         #recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = zoom_api.list_user_recordings(email)
         #recording_list = json.loads(recording_list_response.content)
@@ -389,9 +358,9 @@ def update_to_downloaded(r_id):
 
 
 def delete_recordings_from_zoom(group_list):
-    for x in group_list:
-        #email = x['email']
-        email = x
+    for x in group_list['members']:
+        email = x['email']
+        #email = x
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
         print(recording_list)
@@ -452,8 +421,8 @@ def check_time_diff(r_id):
 
 
 def main():
-    #group_list = get_zoom_group_emails()
-    #print(group_list)
+    group_list = get_zoom_group_emails()
+    print(group_list)
     get_list_of_recordings_from_email_list(group_list)
     check_db_and_download_all()
     update_recording_count()
