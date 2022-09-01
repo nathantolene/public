@@ -81,14 +81,15 @@ def change_gcal_event_color(events, color, gcal_id):
             ).execute()
 
 
-def get_events_from_gcal():
+def get_events_from_gcal(host):
     timeMin = datetime.now().isoformat() + 'Z'
     dt = datetime.today() + timedelta(days=1)
     timeMax = datetime.combine(dt, datetime.min.time())
     timeMax = timeMax.isoformat() + 'Z'
     service = get_calendar_service()
     events_result = service.events().list(
-        calendarId=gcal_host_email,
+        #calendarId=gcal_host_email,
+        calendarId=host,
         timeMin=timeMin,
         timeMax=timeMax,
         maxResults=50,
@@ -132,3 +133,13 @@ def is_event_currently_active(begin_time, end_time, current_time):
         return begin_time <= current_time <= end_time
     else:  # crosses midnight
         return current_time >= begin_time or current_time <= end_time
+
+
+def find_sip_number_from_gcal_location(location):
+    zoom_number = location.split('/')
+    zoom_number = zoom_number[4]
+    zoom_number = zoom_number.split(',')
+    zoom_number = zoom_number[0].split('?')
+    zoom_number = zoom_number[0]
+    # print(zoom_number)
+    return zoom_number
