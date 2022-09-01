@@ -19,6 +19,20 @@ headers = {'authorization': 'Bearer %s' % zoom_api_token.generate_token(),
 #    print(get)
 #    return get
 
+# def set_host_key(userId):
+#     host_key = '359666'
+#     end_point = f'/users/{userId}'
+#     change_host_key = {
+#         "host_key": host_key
+#     }
+#     put = requests.put(endpoint_base + end_point, headers=headers, data=json.dumps(change_host_key))
+#     if put.status_code == 204:
+#         print("Changed Host Code to:", host_key)
+#         return True
+#     if put.status_code != 204:
+#         print(put.status_code)
+#         return False
+
 
 def list_user_in_group(groupId):
     end_point = f'/groups/{groupId}/members?page_size=300'
