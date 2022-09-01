@@ -20,7 +20,7 @@ headers = {'authorization': 'Bearer %s' % zoom_api_token.generate_token(),
 #    return get
 
 # def set_host_key(userId):
-#     host_key = '359666'
+#     host_key = ''
 #     end_point = f'/users/{userId}'
 #     change_host_key = {
 #         "host_key": host_key
