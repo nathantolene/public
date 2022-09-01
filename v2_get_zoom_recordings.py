@@ -129,14 +129,17 @@ def get_list_of_recordings_from_email_list(group_list):
             uuid_status = check_uuid(meetings['uuid'])
             if not uuid_status:
                 insert_new_meeting_info(meetings)
-            for recordings in meetings['recording_files']:
-                status = recordings['status']
-                if status == 'processing':
-                    continue
-                recording_id = recordings['id']
-                new_recording = check_for_recording_id(recording_id)
-                if not new_recording:
-                    insert_new_recording_info(recordings)
+            try:
+                for recordings in meetings['recording_files']:
+                    status = recordings['status']
+                    if status == 'processing':
+                        continue
+                    recording_id = recordings['id']
+                    new_recording = check_for_recording_id(recording_id)
+                    if not new_recording:
+                        insert_new_recording_info(recordings)
+            except KeyError:
+                continue
 
 
 def check_uuid(uuid):
