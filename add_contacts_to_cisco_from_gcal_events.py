@@ -12,7 +12,7 @@ room_file = os.environ.get('rooms_info_abspath')
 
 
 def load_rooms():
-    with open(r'room_file') as file:
+    with open(room_file) as file:
         all_rooms = yaml.full_load(file)
     #print(all_rooms)
     return all_rooms
