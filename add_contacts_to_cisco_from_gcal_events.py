@@ -8,10 +8,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 passcode = os.environ.get('zoom_passcode')
+room_file = os.environ.get('rooms_info_abspath')
 
 
 def load_rooms():
-    with open(r'room_info.yaml') as file:
+    with open(r'room_file') as file:
         all_rooms = yaml.full_load(file)
     #print(all_rooms)
     return all_rooms
