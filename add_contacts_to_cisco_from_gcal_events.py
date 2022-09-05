@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import google_calendar_api
 import cisco
 import os
