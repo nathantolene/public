@@ -362,6 +362,13 @@ def check_db_and_download_all():
                     print(zoomname)
                     if check is True:
                         update_to_downloaded(r_id)
+                if r_type == 'CC':
+                    zoomname = topic + space + start_time + space + r_type + dot + file_type.lower()
+                    check = download_recording(zoomname, download_url, r_type)
+                    print(zoomname)
+                    if check is True:
+                        update_to_downloaded(r_id)
+
 
 def update_to_downloaded(r_id):
     mydb = mysql.connector.connect(
