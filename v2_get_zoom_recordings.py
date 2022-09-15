@@ -397,7 +397,9 @@ def delete_recordings_from_zoom(group_list):
             print(meeting_id)
             sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
             if sswsv is False:
-                pass
+                check = move_active_speaker_to_upload_dir(meeting_id)
+                if check is False:
+                    print("This Meeting doesn't have a recording to upload to AVideo")
             mydb = mysql.connector.connect(
                 host=zdl_host,
                 user=zdl_user,
@@ -484,11 +486,14 @@ def move_active_speaker_to_upload_dir(meeting_id):
     for x in result:
         topic = x['topic']
         start_time = str(x['start_time'])
-        recording = topic + space +start_time + space + 'active_speaker.mp4'
+        recording = topic + space + start_time + space + 'active_speaker.mp4'
         path = home_path + 'active_speaker/' + recording
         check = exists(path)
-        print(path)
-        print(check)
+        if check is True:
+            move_to = home_path + 'shared_screen_with_speaker_view/' + recording
+            os.rename(path, move_to)
+            return True
+        return False
 
 
 def main():
