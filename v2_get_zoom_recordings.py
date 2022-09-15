@@ -463,7 +463,7 @@ def check_for_shared_screen_with_speaker_view(meeting_id):
             return True
         else:
             continue
-
+    return False
 
 
 def main():
