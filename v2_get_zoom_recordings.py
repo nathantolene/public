@@ -447,6 +447,25 @@ def check_time_diff(r_id):
         return False
 
 
+def check_for_shared_screen_with_speaker_view(meeting_id):
+    mydb = mysql.connector.connect(
+        host=zdl_host,
+        user=zdl_user,
+        password=zdl_password,
+        database=zdl_database
+    )
+    mycursor = mydb.cursor(dictionary=True)
+    select_sql = "select recording_type from recordings where meeting_id = '" + meeting_id + "';"
+    mycursor.execute(select_sql)
+    result = mycursor.fetchall()
+    for x in result:
+        if x['recording_type'] == 'shared_screen_with_speaker_view':
+            return True
+        else:
+            continue
+
+
+
 def main():
     group_list = get_zoom_group_emails()
     print(group_list)
