@@ -6,6 +6,7 @@ import urllib.parse
 from zoomus import ZoomClient
 from datetime import date, datetime
 import os
+from os.path import exists
 import zoom_api
 import mysql.connector
 import zoom_auto_delete
@@ -394,6 +395,9 @@ def delete_recordings_from_zoom(group_list):
         for meetings in recording_list['meetings']:
             meeting_id = meetings['uuid']
             print(meeting_id)
+            sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
+            if sswsv is False:
+                pass
             mydb = mysql.connector.connect(
                 host=zdl_host,
                 user=zdl_user,
@@ -464,6 +468,25 @@ def check_for_shared_screen_with_speaker_view(meeting_id):
         else:
             continue
     return False
+
+
+def move_active_speaker_to_upload_dir(meeting_id):
+    mydb = mysql.connector.connect(
+        host=zdl_host,
+        user=zdl_user,
+        password=zdl_password,
+        database=zdl_database
+    )
+    mycursor = mydb.cursor(dictionary=True)
+    select_sql = "select topic, start_time from meetings where meeting_id = '" + meeting_id + "'"
+    mycursor.execute(select_sql)
+    result = mycursor.fetchall()
+    for x in result:
+        topic = x['topice']
+        start_time = x['start_time']
+        recording = topic + start_time + 'active_speaker.mp4'
+        path = exists(home_path + '/active_speaker/' + recording)
+        print(path)
 
 
 def main():
