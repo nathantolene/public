@@ -482,7 +482,7 @@ def move_active_speaker_to_upload_dir(meeting_id):
     mycursor.execute(select_sql)
     result = mycursor.fetchall()
     for x in result:
-        topic = x['topice']
+        topic = x['topic']
         start_time = x['start_time']
         recording = topic + start_time + 'active_speaker.mp4'
         path = exists(home_path + '/active_speaker/' + recording)
