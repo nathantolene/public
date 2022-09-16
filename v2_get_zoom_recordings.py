@@ -125,7 +125,7 @@ def get_list_of_recordings_from_email_list(group_list):
         for meetings in recording_list['meetings']:
             uuid_status = check_uuid(meetings['uuid'])
             if not uuid_status:
-                print('inserting new meeting info for' + meetings)
+                print('inserting new meeting info for' + str(meetings))
                 insert_new_meeting_info(meetings)
             try:
                 for recordings in meetings['recording_files']:
