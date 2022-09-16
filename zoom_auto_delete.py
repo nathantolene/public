@@ -95,6 +95,7 @@ def check_for_specials_now():
 
 
 def main():
+    print('Starting Zoom auto delete!')
     group_list = list_all_zoom_users()
     strip_emails_from_group_list(group_list)
     check_for_specials_now()
