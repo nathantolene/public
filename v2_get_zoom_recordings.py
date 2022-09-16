@@ -38,34 +38,51 @@ cm = "', '"
 changer = 0
 
 
-
-
-
-def get_zoom_group_emails():
-    #group_list_response = client.group.list_members(groupid=group_id)
-    #group_list = json.loads(group_list_response.content)
-    group_list = zoom_api.list_user_in_group(group_id)
-    print('Getting Zoom Group List')
-    return group_list
-
-
-def update_recording_count():
-    group_list = get_zoom_group_emails()
-    mydb = mysql.connector.connect(
+def mysql_insert_update(select_sql):
+    db = mysql.connector.connect(
         host=zdl_host,
         user=zdl_user,
         password=zdl_password,
         database=zdl_database
     )
-    mycursor = mydb.cursor(dictionary=True)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(select_sql)
+    db.commit()
+    db.close()
+
+
+def mysql_select(select_sql):
+    db = mysql.connector.connect(
+        host=zdl_host,
+        user=zdl_user,
+        password=zdl_password,
+        database=zdl_database
+    )
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(select_sql)
+    result = cursor.fetchall()
+    db.close()
+    return result
+
+
+def get_zoom_group_emails():
+    group_list = zoom_api.list_user_in_group(group_id)
+    print('Getting Zoom Group List')
+    return group_list
+
+
+def update_recording_count(group_list):
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     for x in group_list['members']:
-    #for x in group_list:
         email = x['email']
-        #email = x
-        #print(email)
         recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = json.loads(recording_list_response.content)
-        #print(recording_list)
         for meetings in recording_list['meetings']:
             recording_count = meetings['recording_count']
             if recording_count == 0:
@@ -73,26 +90,25 @@ def update_recording_count():
             zoom_meeting_id = meetings['id']
             meeting_id = meetings['uuid'] # key to meeting id
             select_sql = "select recording_count from meetings where meeting_id ='" + meeting_id + "'"
-            mycursor.execute(select_sql)
-            myresult = mycursor.fetchall()
-            for x in myresult:
-                if not str(x['recording_count']) == recording_count:
-                    select_sql = "update meetings set recording_count ='" \
+            myresult = mysql_select(select_sql)
+            #mycursor.execute(select_sql)
+            #myresult = mycursor.fetchall()
+            for y in myresult:
+                if not str(y['recording_count']) == recording_count:
+                    update_sql = "update meetings set recording_count ='" \
                                  + str(recording_count) + "' where meeting_id ='" + meeting_id + "'"
-                    mycursor.execute(select_sql)
-                    mydb.commit()
-            #print(zoom_meeting_id)
-            #print(meeting_id)
+                    mysql_insert_update(update_sql)
+                    # mycursor.execute(select_sql)
+                    # mydb.commit()
             select_sql = "select downloaded from recordings where meeting_id = '" + meeting_id + "'"
-            mycursor.execute(select_sql)
-            myr = mycursor.fetchall()
+            result = mysql_select(select_sql)
+            # mycursor.execute(select_sql)
+            # myr = mycursor.fetchall()
             full_download = 0
-            for y in myr:
-                #print(y)
+            for y in result:
                 if y['downloaded'] is None:
                     continue
                 full_download = full_download + y['downloaded']
-                #print(str(full_download))
             if full_download == recording_count:
                 print('Full Downloaded: ' + str(full_download))
                 print('Recording Count: ' + str(recording_count))
@@ -103,14 +119,16 @@ def update_recording_count():
                 print('Check Status Code: ' + str(check.status_code))
                 if str(check.status_code) == '204':
                     print("Status Code is 204 marking as downloaded")
-                    select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
-                    mycursor.execute(select_sql)
-                    mydb.commit()
+                    update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
+                    mysql_insert_update(update_sql)
+                    # mycursor.execute(select_sql)
+                    # mydb.commit()
                 if str(check.status_code) == '404':
                     print("Status code is 404 marking as downloaded")
-                    select_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
-                    mycursor.execute(select_sql)
-                    mydb.commit()
+                    update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
+                    mysql_insert_update(update_sql)
+                    # mycursor.execute(select_sql)
+                    # mydb.commit()
 
 
 def get_list_of_recordings_from_email_list(group_list):
@@ -143,31 +161,31 @@ def get_list_of_recordings_from_email_list(group_list):
 
 
 def check_uuid(uuid):
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     select_sql = "select id, meeting_id from meetings where meeting_id = '" + uuid + "'"
-    mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
-    for x in myresult:
+    result = mysql_select(select_sql)
+    # mycursor.execute(select_sql)
+    # myresult = mycursor.fetchall()
+    for x in result:
         if x['meeting_id'] == uuid:
             return True
     return False
 
 
 def insert_new_meeting_info(meetings):
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    comma = "', '"
-    mycursor = mydb.cursor(dictionary=True)
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     start_time = meetings['start_time']
     sql_time = start_time
     sql_time = datetime.fromisoformat(sql_time[:-1])
@@ -185,23 +203,25 @@ def insert_new_meeting_info(meetings):
     duration = str(meetings['duration'])
     recording_count = str(meetings['recording_count'])
     share_url = str(meetings['share_url'])
-    select_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
+    insert_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
                  "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
                  + meetings_id + cm + meetings_zoom_number + cm + account_id + \
                  cm + host_id + cm + topic + cm + meetings_type + \
                  cm + sql_time + cm + timezone + cm + duration + \
                  cm + recording_count + cm + share_url + cm + timestamp + "')"
-    mycursor.execute(select_sql)
-    mydb.commit()
+    mysql_insert_update(insert_sql)
+    # mycursor.execute(select_sql)
+    # mydb.commit()
 
 
 def insert_new_recording_info(recordings):
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     status = str(recordings['status'])
     recording_id = str(recordings['id'])
     meeting_id = str(recordings['meeting_id'])
@@ -216,7 +236,6 @@ def insert_new_recording_info(recordings):
         play_url = 'TRANSCRIPT'
     download_url = str(recordings['download_url'])
     recording_type = str(recordings['recording_type'])
-    mycursor = mydb.cursor(dictionary=True)
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
     sql_time = recording_start
@@ -225,27 +244,29 @@ def insert_new_recording_info(recordings):
     end_time = recording_end
     end_time = datetime.fromisoformat(end_time[:-1])
     end_time = end_time.strftime('%Y-%m-%d %H:%M:%S')
-    select_sql = "insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
+    insert_sql = "insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
                  " file_type, file_extension, file_size, play_url, download_url, recording_type, modified) " \
                  "values ( '" + status + cm + recording_id + cm + meeting_id + cm + \
                  start_time + cm + end_time + cm + file_type + cm + file_extension + cm + \
                  file_size + cm + play_url + cm + download_url + cm + recording_type + cm + timestamp + "')"
-    mycursor.execute(select_sql)
-    mydb.commit()
+    mysql_insert_update(insert_sql)
+    # mycursor.execute(select_sql)
+    # mydb.commit()
 
 
 def check_for_recording_id(recording_id):
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     select_sql = "select recording_id from recordings where recording_id ='" + recording_id + "'"
-    mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
-    for x in myresult:
+    result = mysql_select(select_sql)
+    # mycursor.execute(select_sql)
+    # myresult = mycursor.fetchall()
+    for x in result:
         if x['recording_id'] == recording_id:
             return True
     return False
@@ -270,26 +291,29 @@ def download_recording(zoomname, download_url, r_type):
     file_exist = os.path.exists(dl_path)
     if file_exist:
         return True
+    else:
+        return False
 
 
 def check_db_and_download_all():
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     #select_sql = "select recordings.downloaded, recordings.id, recordings.download_url," \
     #             " recordings.recording_start, recordings.recording_type, recordings.file_type," \
     #             " meetings.topic from recordings, meetings where" \
     #             " recordings.downloaded is Null"
     select_sql = "select id, meeting_id, download_url, recording_start, recording_type," \
                  " file_type from recordings where downloaded is null;"
-    mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
+    result = mysql_select(select_sql)
+    # mycursor.execute(select_sql)
+    # myresult = mycursor.fetchall()
     #print(myresult)
-    for x in myresult:
+    for x in result:
         r_id = str(x['id'])
         #print(r_id)
         m_id = str(x['meeting_id'])
@@ -298,10 +322,11 @@ def check_db_and_download_all():
         start_time = str(x['recording_start'])
         file_type = str(x['file_type'])
         select_sql2 = "select topic from meetings where meeting_id ='" + m_id + "'"
+        result2 = mysql_select(select_sql2)
         #print(select_sql2)
-        mycursor.execute(select_sql2)
-        myselect = mycursor.fetchall()
-        for y in myselect:
+        # mycursor.execute(select_sql2)
+        # myselect = mycursor.fetchall()
+        for y in result2:
             topic = str(y['topic'])
             if not check_time_diff(r_id):
                 print(topic)
@@ -362,17 +387,18 @@ def check_db_and_download_all():
 
 
 def update_to_downloaded(r_id):
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
-    select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
+    update_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
+    mysql_insert_update(update_sql)
     #print(select_sql)
-    mycursor.execute(select_sql)
-    mydb.commit()
+    # mycursor.execute(select_sql)
+    # mydb.commit()
 
 
 def delete_recordings_from_zoom(group_list):
@@ -390,17 +416,18 @@ def delete_recordings_from_zoom(group_list):
                 check = move_active_speaker_to_upload_dir(meeting_id)
                 if check is False:
                     print("This Meeting doesn't have a recording to upload to AVideo", meetings['topic'])
-            mydb = mysql.connector.connect(
-                host=zdl_host,
-                user=zdl_user,
-                password=zdl_password,
-                database=zdl_database
-            )
-            mycursor = mydb.cursor(dictionary=True)
+            # mydb = mysql.connector.connect(
+            #     host=zdl_host,
+            #     user=zdl_user,
+            #     password=zdl_password,
+            #     database=zdl_database
+            # )
+            # mycursor = mydb.cursor(dictionary=True)
             select_sql = "select downloaded from meetings where meeting_id = '" + meeting_id + "'"
-            mycursor.execute(select_sql)
-            myresult = mycursor.fetchall()
-            for y in myresult:
+            result = mysql_select(select_sql)
+            # mycursor.execute(select_sql)
+            # myresult = mycursor.fetchall()
+            for y in result:
                 #print(y)
                 if str(y['downloaded']) == '1':
                     if '/' in meeting_id:
@@ -411,19 +438,20 @@ def delete_recordings_from_zoom(group_list):
 
 
 def check_time_diff(r_id):
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     select_sql = "select recording_start, recording_end from recordings where id ='" + r_id + "'"
+    result = mysql_select(select_sql)
     #print(select_sql)
-    mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
+    # mycursor.execute(select_sql)
+    # myresult = mycursor.fetchall()
     #print(myresult)
-    for x in myresult:
+    for x in result:
         start = str(x['recording_start'])
         #print(start)
         end = str(x['recording_end'])
@@ -435,25 +463,27 @@ def check_time_diff(r_id):
         diff_in_minutes = diff.total_seconds() / 60
         #print(diff_in_minutes)
         if diff_in_minutes < 10:
-            select_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
+            update_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
+            mysql_insert_update(update_sql)
             #print(select_sql)
-            mycursor.execute(select_sql)
-            mydb.commit()
+            # mycursor.execute(select_sql)
+            # mydb.commit()
             return True
         return False
 
 
 def check_for_shared_screen_with_speaker_view(meeting_id):
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     select_sql = "select recording_type from recordings where meeting_id = '" + meeting_id + "';"
-    mycursor.execute(select_sql)
-    result = mycursor.fetchall()
+    result = mysql_select(select_sql)
+    # mycursor.execute(select_sql)
+    # result = mycursor.fetchall()
     for x in result:
         if x['recording_type'] == 'shared_screen_with_speaker_view':
             return True
@@ -463,16 +493,17 @@ def check_for_shared_screen_with_speaker_view(meeting_id):
 
 
 def move_active_speaker_to_upload_dir(meeting_id):
-    mydb = mysql.connector.connect(
-        host=zdl_host,
-        user=zdl_user,
-        password=zdl_password,
-        database=zdl_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
+    # mydb = mysql.connector.connect(
+    #     host=zdl_host,
+    #     user=zdl_user,
+    #     password=zdl_password,
+    #     database=zdl_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     select_sql = "select topic, start_time from meetings where meeting_id = '" + meeting_id + "'"
-    mycursor.execute(select_sql)
-    result = mycursor.fetchall()
+    result = mysql_select(select_sql)
+    # mycursor.execute(select_sql)
+    # result = mycursor.fetchall()
     for x in result:
         topic = x['topic']
         start_time = str(x['start_time'])
@@ -489,10 +520,9 @@ def move_active_speaker_to_upload_dir(meeting_id):
 
 def main():
     group_list = get_zoom_group_emails()
-   # print(group_list)
     get_list_of_recordings_from_email_list(group_list)
     check_db_and_download_all()
-    update_recording_count()
+    update_recording_count(group_list)
     delete_recordings_from_zoom(group_list)
     zoom_auto_delete.main()
 
