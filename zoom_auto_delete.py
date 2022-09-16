@@ -66,7 +66,7 @@ def find_old_recordings(email):
         meeting_id = ''
         if debug:
             print('Topic: ' + topic)
-            print('Start_time' + str(start_time))
+            print('Start_time', str(start_time))
             print('Number of days old: ' + str(delta.days))
             #syslog(topic)
             #syslog(start_time)
