@@ -45,6 +45,7 @@ def get_zoom_group_emails():
     #group_list_response = client.group.list_members(groupid=group_id)
     #group_list = json.loads(group_list_response.content)
     group_list = zoom_api.list_user_in_group(group_id)
+    print('Getting Zoom Group List')
     return group_list
 
 
@@ -116,6 +117,7 @@ def get_list_of_recordings_from_email_list(group_list):
     # Purpose of this function is to insert recording info into zdl_database db for later processing
     for x in group_list['members']:
         email = x['email']
+        print('Checking for recordings for user:' + email)
         #email = x
         #recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         recording_list = zoom_api.list_user_recordings(email)
@@ -123,15 +125,18 @@ def get_list_of_recordings_from_email_list(group_list):
         for meetings in recording_list['meetings']:
             uuid_status = check_uuid(meetings['uuid'])
             if not uuid_status:
+                print('inserting new meeting info for' + meetings)
                 insert_new_meeting_info(meetings)
             try:
                 for recordings in meetings['recording_files']:
                     status = recordings['status']
                     if status == 'processing':
+                        print('Recording still processing on Zoom' + recordings)
                         continue
                     recording_id = recordings['id']
                     new_recording = check_for_recording_id(recording_id)
                     if not new_recording:
+                        print('Inserting new recording info for' + recordings)
                         insert_new_recording_info(recordings)
             except KeyError:
                 continue
@@ -247,6 +252,7 @@ def check_for_recording_id(recording_id):
 
 
 def download_recording(zoomname, download_url, r_type):
+    print('Downloading' + zoomname)
     dl_url = download_url
     sub_path = r_type
     filename = zoomname
