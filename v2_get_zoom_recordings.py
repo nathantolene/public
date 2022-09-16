@@ -136,7 +136,7 @@ def get_list_of_recordings_from_email_list(group_list):
                     recording_id = recordings['id']
                     new_recording = check_for_recording_id(recording_id)
                     if not new_recording:
-                        print('Inserting new recording info for' + str(recordings))
+                        print('Inserting new recording info for' + meetings['topic'])
                         insert_new_recording_info(recordings)
             except KeyError:
                 continue
@@ -252,7 +252,7 @@ def check_for_recording_id(recording_id):
 
 
 def download_recording(zoomname, download_url, r_type):
-    print('Downloading' + zoomname)
+    print('Downloading', zoomname)
     dl_url = download_url
     sub_path = r_type
     filename = zoomname
@@ -389,7 +389,7 @@ def delete_recordings_from_zoom(group_list):
             if sswsv is False:
                 check = move_active_speaker_to_upload_dir(meeting_id)
                 if check is False:
-                    print("This Meeting doesn't have a recording to upload to AVideo")
+                    print("This Meeting doesn't have a recording to upload to AVideo", meetings['topic'])
             mydb = mysql.connector.connect(
                 host=zdl_host,
                 user=zdl_user,
