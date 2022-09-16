@@ -131,7 +131,7 @@ def get_list_of_recordings_from_email_list(group_list):
                 for recordings in meetings['recording_files']:
                     status = recordings['status']
                     if status == 'processing':
-                        print('Recording still processing on Zoom' + recordings)
+                        print('Recording still processing on Zoom' + str(recordings))
                         continue
                     recording_id = recordings['id']
                     new_recording = check_for_recording_id(recording_id)
