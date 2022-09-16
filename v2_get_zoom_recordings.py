@@ -136,7 +136,7 @@ def get_list_of_recordings_from_email_list(group_list):
                     recording_id = recordings['id']
                     new_recording = check_for_recording_id(recording_id)
                     if not new_recording:
-                        print('Inserting new recording info for' + recordings)
+                        print('Inserting new recording info for' + str(recordings))
                         insert_new_recording_info(recordings)
             except KeyError:
                 continue
