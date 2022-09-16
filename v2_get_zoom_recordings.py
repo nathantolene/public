@@ -481,6 +481,7 @@ def move_active_speaker_to_upload_dir(meeting_id):
         check = exists(path)
         if check is True:
             move_to = home_path + 'shared_screen_with_speaker_view/' + recording
+            print('Moving Active Speaker to upload dir', topic)
             os.rename(path, move_to)
             return True
         return False
