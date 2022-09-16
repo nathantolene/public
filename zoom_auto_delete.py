@@ -36,8 +36,8 @@ def delete_zoom_recording(meeting_id):
 def list_all_zoom_users():
     group_response = client.user.list()
     group_list = json.loads(group_response.content)
-    if debug:
-        print(group_list)
+    #if debug:
+        #print(group_list)
         #syslog.syslog(syslog.LOG_INFO, group_list)
     return group_list
 
