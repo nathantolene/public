@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import json
+import sys
 import requests
 import urllib.parse
 from zoomus import ZoomClient
@@ -18,9 +19,9 @@ api_key = os.environ.get('zoom_api_key')
 api_sec = os.environ.get('zoom_api_sec')
 home_path = os.environ.get('home_path')
 #sub_path = os.environ.get('sub_path')
-year = "2022"
-day = "01"
-month = "01"
+year = str(date.today().year)
+month = str(date.today().month)
+day = str(date.today().day)
 convert_time = datetime.fromisoformat(year + "-" + month + '-' + day)
 today = date.today()
 today = today.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -287,7 +288,20 @@ def download_recording(zoomname, download_url, r_type):
     dl_path = os.path.join(path, filename)
     r = requests.get(dl_url, allow_redirects=True, stream=True)
     with requests.get(dl_url, allow_redirects=True, stream=True) as r, open(dl_path, "wb") as f:
-        f.write(r.content)
+        print("Downloading %s" % filename)
+        total_length = r.headers.get('content-length')
+        # f.write(r.content)
+        if total_length is None:  # no content length header
+            f.write(r.content)
+        else:
+            dl = 0
+            total_length = int(total_length)
+            for data in r.iter_content(chunk_size=4096):
+                dl += len(data)
+                f.write(data)
+                done = int(50 * dl / total_length)
+                sys.stdout.write("\r[%s%s]" % ('=' * done, ' ' * (50 - done)))
+                sys.stdout.flush()
     file_exist = os.path.exists(dl_path)
     if file_exist:
         return True
