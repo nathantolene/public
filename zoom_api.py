@@ -14,29 +14,16 @@ last_month = first - timedelta(days=1)
 from_date = last_month.strftime("%Y-%m-%d")
 
 
-#def page_checker(endpoint, get):
-#    pager = get[0]['next_page_token']
-#    endpoint = endpoint + '?next_page_token=' + pager
-#    #endpoint = endpoint + '?page_size='
-#    print(endpoint)
-#    req = requests.get(endpoint_base + endpoint, headers=headers)
-#    get.append(json.loads(req.content))
-#    print(get)
-#    return get
-
-# def set_host_key(userId):
-#     host_key = ''
-#     end_point = f'/users/{userId}'
-#     change_host_key = {
-#         "host_key": host_key
-#     }
-#     put = requests.put(endpoint_base + end_point, headers=headers, data=json.dumps(change_host_key))
-#     if put.status_code == 204:
-#         print("Changed Host Code to:", host_key)
-#         return True
-#     if put.status_code != 204:
-#         print(put.status_code)
-#         return False
+def delete_recordings(meetingId):
+    end_point = f'/meetings/{meetingId}/recordings'
+    delete = requests.delete(endpoint_base + end_point, headers=headers)
+    # print(delete.status_code)
+    if delete.status_code == 200 or delete.status_code == 204:
+        print('Meeting:', meetingId, 'Deleted')
+        return True
+    if delete.status_code == 404:
+        print('ERROR: Meeting recording not found or There is no recording for this meeting.', meetingId)
+        return False
 
 
 def list_user_in_group(groupId):
