@@ -42,6 +42,7 @@ def insert_all_rooms_to_zdb(room_list):
 
 def list_rooms():
     list_of_rooms = client.room.list()
+    print(list_of_rooms)
     room_list = json.loads(list_of_rooms.content)
     return room_list
 
