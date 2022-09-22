@@ -107,12 +107,12 @@ def update_recording_count(group_list):
                     meeting_id = urllib.parse.quote(encoded, safe='')
                 # check = client.recording.delete(meeting_id=zoom_meeting_id)
                 check = zoom_api.delete_recordings(zoom_meeting_id)
-                print('Check Status Code: ' + str(check.status_code))
-                if str(check.status_code) == '204':
+                print('Check Status Code: ' + check)
+                if check[1] == '204':
                     print("Status Code is 204 marking as downloaded")
                     update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
                     mysql_insert_update(update_sql)
-                if str(check.status_code) == '404':
+                if check[1] == '404':
                     print("Status code is 404 marking as downloaded")
                     update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
                     mysql_insert_update(update_sql)
@@ -267,7 +267,7 @@ def check_db_and_download_all():
         file_type = str(x['file_type'])
         select_sql2 = "select topic from meetings where meeting_id ='" + m_id + "'"
         result2 = mysql_select(select_sql2)
-        print(result2)
+        # print(result2)
         # print(select_sql2)
         # topic = str(result2['topic'])
         for y in result2:

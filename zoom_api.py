@@ -20,10 +20,10 @@ def delete_recordings(meetingId):
     # print(delete.status_code)
     if delete.status_code == 200 or delete.status_code == 204:
         print('Meeting:', meetingId, 'Deleted')
-        return True
+        return True, delete.status_code
     if delete.status_code == 404:
         print('ERROR: Meeting recording not found or There is no recording for this meeting.', meetingId)
-        return False
+        return False, delete.status_code
 
 
 def list_user_in_group(groupId):
