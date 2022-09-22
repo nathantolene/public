@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import zoom_api_token
 
@@ -7,6 +7,11 @@ import zoom_api_token
 endpoint_base = 'https://api.zoom.us/v2'
 headers = {'authorization': 'Bearer %s' % zoom_api_token.generate_token(),
            'content-type': 'application/json'}
+
+today = datetime.today()
+first = today.replace(day=1)
+last_month = first - timedelta(days=1)
+from_date = last_month.strftime("%Y-%m-%d")
 
 
 #def page_checker(endpoint, get):
@@ -80,7 +85,11 @@ def list_all_zoom_meetings():
 
 def list_user_recordings(user_id):
     endpoint = f'/users/{user_id}/recordings/'
-    get = requests.get(endpoint_base + endpoint, headers=headers)
+    add_from_date = {
+        "from": from_date,
+        "to": today
+    }
+    get = requests.get(endpoint_base + endpoint, headers=headers, params=add_from_date)
     get = json.loads(get.content)
     return get
 
@@ -158,6 +167,13 @@ def get_meeting_participant_reports(meeting_id):
 
 def get_meeting_detail_reports(meeting_id):
     endpoint = f'/report/meetings/{meeting_id}/'
+    get = requests.get(endpoint_base + endpoint, headers=headers)
+    get = json.loads(get.content)
+    return get
+
+
+def get_meeting_recordings(meeting_id):
+    endpoint = f'/meetings/{meeting_id}/recordings'
     get = requests.get(endpoint_base + endpoint, headers=headers)
     get = json.loads(get.content)
     return get
