@@ -4,7 +4,7 @@ import json
 import sys
 import requests
 import urllib.parse
-from zoomus import ZoomClient
+# from zoomus import ZoomClient
 from datetime import date, datetime
 import os
 from os.path import exists
@@ -26,7 +26,7 @@ month = "01"
 convert_time = datetime.fromisoformat(year + "-" + month + '-' + day)
 today = date.today()
 today = today.strftime("%Y-%m-%dT%H:%M:%SZ")
-client = ZoomClient(api_key, api_sec)
+# client = ZoomClient(api_key, api_sec)
 group_id = os.environ.get('zoom_group_id')
 zdl_host = os.environ.get('zdl_host')
 zdl_user = os.environ.get('zdl_user')
@@ -76,8 +76,9 @@ def get_zoom_group_emails():
 def update_recording_count(group_list):
     for x in group_list['members']:
         email = x['email']
-        recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
-        recording_list = json.loads(recording_list_response.content)
+        # recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
+        recording_list = zoom_api.list_user_recordings(email)
+        # recording_list = json.loads(recording_list_response.content)
         for meetings in recording_list['meetings']:
             recording_count = meetings['recording_count']
             if recording_count == 0:
@@ -104,7 +105,8 @@ def update_recording_count(group_list):
                 if '/' in meeting_id:
                     encoded = urllib.parse.quote(meeting_id, safe='')
                     meeting_id = urllib.parse.quote(encoded, safe='')
-                check = client.recording.delete(meeting_id=zoom_meeting_id)
+                # check = client.recording.delete(meeting_id=zoom_meeting_id)
+                check = zoom_api.delete_recordings(zoom_meeting_id)
                 print('Check Status Code: ' + str(check.status_code))
                 if str(check.status_code) == '204':
                     print("Status Code is 204 marking as downloaded")
@@ -219,7 +221,6 @@ def check_for_recording_id(recording_id):
 
 
 def download_recording(zoomname, download_url, r_type):
-    #print('Downloading', zoomname)
     dl_url = download_url
     sub_path = r_type
     filename = zoomname
@@ -342,12 +343,13 @@ def update_to_downloaded(r_id):
 def delete_recordings_from_zoom(group_list):
     for x in group_list['members']:
         email = x['email']
-        recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
-        recording_list = json.loads(recording_list_response.content)
-        #print(recording_list)
+        recording_list = zoom_api.list_user_recordings(email)
+        # recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
+        # recording_list = json.loads(recording_list_response.content)
+        # print(recording_list)
         for meetings in recording_list['meetings']:
             meeting_id = meetings['uuid']
-            #print(meeting_id)
+            # print(meeting_id)
             sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
             if sswsv is False:
                 check = move_active_speaker_to_upload_dir(meeting_id)
@@ -356,13 +358,16 @@ def delete_recordings_from_zoom(group_list):
             select_sql = "select downloaded from meetings where meeting_id = '" + meeting_id + "'"
             result = mysql_select(select_sql)
             for y in result:
-                #print(y)
+                # print(y)
                 if str(y['downloaded']) == '1':
                     if '/' in meeting_id:
                         encoded = urllib.parse.quote(meeting_id, safe='')
                         meeting_id = urllib.parse.quote(encoded, safe='')
-                    check = client.recording.delete(meeting_id=meeting_id)
-                    print('Check Status Code: ' + str(check.status_code))
+                    check = zoom_api.delete_recordings(meeting_id)
+                    if check is False:
+                        print('ERROR!!!')
+                    # check = client.recording.delete(meeting_id=meeting_id)
+                    # print('Check Status Code: ' + str(check.status_code))
 
 
 def check_time_diff(r_id):
