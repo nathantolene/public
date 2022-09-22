@@ -268,7 +268,8 @@ def check_db_and_download_all():
         select_sql2 = "select topic from meetings where meeting_id ='" + m_id + "'"
         result2 = mysql_select(select_sql2)
         # print(select_sql2)
-        topic = str(result2['topic'])
+        # topic = str(result2['topic'])
+        topic = result2['topic']
         print(topic)
         print(r_type)
         zoomname = topic + space + start_time + dot + file_type.lower()
