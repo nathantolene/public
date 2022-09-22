@@ -107,7 +107,7 @@ def update_recording_count(group_list):
                     meeting_id = urllib.parse.quote(encoded, safe='')
                 # check = client.recording.delete(meeting_id=zoom_meeting_id)
                 check = zoom_api.delete_recordings(zoom_meeting_id)
-                print('Check Status Code: ' + check)
+                print('Check Status Code: ' + str(check))
                 if check[1] == '204':
                     print("Status Code is 204 marking as downloaded")
                     update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
