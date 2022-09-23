@@ -122,7 +122,7 @@ def update_recording_count(group_list):
                     encoded = urllib.parse.quote(meeting_id, safe='')
                     meeting_id = urllib.parse.quote(encoded, safe='')
                 # check = client.recording.delete(meeting_id=zoom_meeting_id)
-                get_active_speaker_if_needed(zoom_meeting_id, topic)
+                get_active_speaker_if_needed(meeting_id, topic)
                 check = zoom_api.delete_recordings(zoom_meeting_id)
                 print('Check Status Code: ' + str(check))
                 if check[1] == '204':
