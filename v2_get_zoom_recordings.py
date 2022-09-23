@@ -409,6 +409,7 @@ def check_time_diff(r_id):
 
 def check_for_shared_screen_with_speaker_view(meeting_id):
     select_sql = "select recording_type from recordings where meeting_id = '" + meeting_id + "';"
+    print(select_sql)
     result = mysql_select(select_sql)
     print(result)
     for x in result:
@@ -421,6 +422,7 @@ def check_for_shared_screen_with_speaker_view(meeting_id):
 
 def move_active_speaker_to_upload_dir(meeting_id):
     select_sql = "select topic, start_time from meetings where meeting_id = '" + meeting_id + "'"
+    print(select_sql)
     result = mysql_select(select_sql)
     print(result)
     for x in result:
