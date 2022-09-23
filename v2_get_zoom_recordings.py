@@ -101,6 +101,7 @@ def update_recording_count(group_list):
             meeting_id = meetings['uuid']  # key to meeting id
             select_sql = "select recording_count, topic from meetings where meeting_id ='" + meeting_id + "'"
             result = mysql_select(select_sql)
+            topic = ''
             for y in result:
                 topic = y['topic']
                 if not str(y['recording_count']) == recording_count:
