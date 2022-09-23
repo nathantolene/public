@@ -429,7 +429,7 @@ def move_active_speaker_to_upload_dir(meeting_id):
     result2 = mysql_select(select_sql2)
     start_time = ''
     for y in result2:
-        start_time = y['recording_start']
+        start_time = str(y['recording_start'])
     for x in result:
         topic = x['topic']
         # start_time = str(x['start_time'])
