@@ -101,7 +101,7 @@ def update_recording_count(group_list):
             select_sql = "select recording_count, topic from meetings where meeting_id ='" + meeting_id + "'"
             result = mysql_select(select_sql)
             for y in result:
-                topic = result['topic']
+                topic = y['topic']
                 if not str(y['recording_count']) == recording_count:
                     update_sql = "update meetings set recording_count ='" \
                                  + str(recording_count) + "' where meeting_id ='" + meeting_id + "'"
