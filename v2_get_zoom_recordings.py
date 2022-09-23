@@ -42,6 +42,7 @@ slash = '/'
 
 
 def get_active_speaker_if_needed(meeting_id, topic):
+    meeting_id = str(meeting_id)
     sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
     # if sswsv is False:
     print('sswsv', sswsv)
