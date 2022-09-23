@@ -41,6 +41,18 @@ changer = 0
 slash = '/'
 
 
+def get_active_speaker_if_needed(meeting_id, topic):
+    sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
+    # if sswsv is False:
+    print('sswsv', sswsv)
+    if not sswsv:
+        check = move_active_speaker_to_upload_dir(meeting_id)
+        print('check', check)
+        # if check is False:
+        if not check:
+            print("This Meeting doesn't have a recording to upload to AVideo", topic)
+
+
 def mysql_insert_update(select_sql):
     db = mysql.connector.connect(
         host=zdl_host,
@@ -86,8 +98,9 @@ def update_recording_count(group_list):
                 continue
             zoom_meeting_id = meetings['id']
             meeting_id = meetings['uuid']  # key to meeting id
-            select_sql = "select recording_count from meetings where meeting_id ='" + meeting_id + "'"
+            select_sql = "select recording_count, topic from meetings where meeting_id ='" + meeting_id + "'"
             result = mysql_select(select_sql)
+            topic = result['topic']
             for y in result:
                 if not str(y['recording_count']) == recording_count:
                     update_sql = "update meetings set recording_count ='" \
@@ -107,6 +120,7 @@ def update_recording_count(group_list):
                     encoded = urllib.parse.quote(meeting_id, safe='')
                     meeting_id = urllib.parse.quote(encoded, safe='')
                 # check = client.recording.delete(meeting_id=zoom_meeting_id)
+                get_active_speaker_if_needed(zoom_meeting_id, topic)
                 check = zoom_api.delete_recordings(zoom_meeting_id)
                 print('Check Status Code: ' + str(check))
                 if check[1] == '204':
@@ -353,15 +367,6 @@ def delete_recordings_from_zoom(group_list):
         for meetings in recording_list['meetings']:
             meeting_id = meetings['uuid']
             # print(meeting_id)
-            sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
-            # if sswsv is False:
-            print('sswsv', sswsv)
-            if not sswsv:
-                check = move_active_speaker_to_upload_dir(meeting_id)
-                print('check', check)
-                # if check is False:
-                if not check:
-                    print("This Meeting doesn't have a recording to upload to AVideo", meetings['topic'])
             select_sql = "select downloaded from meetings where meeting_id = '" + meeting_id + "'"
             result = mysql_select(select_sql)
             for y in result:
