@@ -435,7 +435,7 @@ def move_active_speaker_to_upload_dir(meeting_id):
             print('Moving Active Speaker to upload dir', topic)
             os.rename(path, move_to)
             return True
-        return False
+    return False
 
 
 def main():
