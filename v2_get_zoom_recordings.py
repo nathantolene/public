@@ -38,6 +38,7 @@ dot = "."
 comma = ", "
 cm = "', '"
 changer = 0
+slash = '/'
 
 
 def mysql_insert_update(select_sql):
@@ -224,7 +225,6 @@ def download_recording(zoomname, download_url, r_type):
     dl_url = download_url
     sub_path = r_type
     filename = zoomname
-    slash = '/'
     path = home_path + sub_path + slash
     path_exist = os.path.exists(path)
     if not path_exist:
@@ -354,9 +354,11 @@ def delete_recordings_from_zoom(group_list):
             meeting_id = meetings['uuid']
             # print(meeting_id)
             sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
-            if sswsv is False:
+            # if sswsv is False:
+            if not sswsv:
                 check = move_active_speaker_to_upload_dir(meeting_id)
-                if check is False:
+                # if check is False:
+                if not check:
                     print("This Meeting doesn't have a recording to upload to AVideo", meetings['topic'])
             select_sql = "select downloaded from meetings where meeting_id = '" + meeting_id + "'"
             result = mysql_select(select_sql)
@@ -417,6 +419,7 @@ def move_active_speaker_to_upload_dir(meeting_id):
         start_time = str(x['start_time'])
         recording = topic + space + start_time + space + 'active_speaker.mp4'
         path = home_path + 'active_speaker/' + recording
+        path = str(path)
         print(path)
         check = exists(path)
         if check is True:
