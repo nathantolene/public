@@ -18,7 +18,7 @@ load_dotenv()
 api_key = os.environ.get('zoom_api_key')
 api_sec = os.environ.get('zoom_api_sec')
 home_path = os.environ.get('home_path')
-#sub_path = os.environ.get('sub_path')
+# sub_path = os.environ.get('sub_path')
 # year = "2022"
 year = str(date.today().year)
 day = "01"
@@ -84,10 +84,10 @@ def update_recording_count(group_list):
             if recording_count == 0:
                 continue
             zoom_meeting_id = meetings['id']
-            meeting_id = meetings['uuid'] # key to meeting id
+            meeting_id = meetings['uuid']  # key to meeting id
             select_sql = "select recording_count from meetings where meeting_id ='" + meeting_id + "'"
-            myresult = mysql_select(select_sql)
-            for y in myresult:
+            result = mysql_select(select_sql)
+            for y in result:
                 if not str(y['recording_count']) == recording_count:
                     update_sql = "update meetings set recording_count ='" \
                                  + str(recording_count) + "' where meeting_id ='" + meeting_id + "'"
@@ -376,22 +376,22 @@ def delete_recordings_from_zoom(group_list):
 def check_time_diff(r_id):
     select_sql = "select recording_start, recording_end from recordings where id ='" + r_id + "'"
     result = mysql_select(select_sql)
-    #print(result)
+    # print(result)
     for x in result:
         start = str(x['recording_start'])
-        #print(start)
+        # print(start)
         end = str(x['recording_end'])
-        #print(end)
+        # print(end)
         date_format_str = '%Y-%m-%d %H:%M:%S'
         start_time = datetime.strptime(start, date_format_str)
         end_time = datetime.strptime(end, date_format_str)
         diff = end_time - start_time
         diff_in_minutes = diff.total_seconds() / 60
-        #print(diff_in_minutes)
+        # print(diff_in_minutes)
         if diff_in_minutes < 10:
             update_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
             result = mysql_insert_update(update_sql)
-            #print(result)
+            # print(result)
             return True
         return False
 
@@ -417,6 +417,7 @@ def move_active_speaker_to_upload_dir(meeting_id):
         start_time = str(x['start_time'])
         recording = topic + space + start_time + space + 'active_speaker.mp4'
         path = home_path + 'active_speaker/' + recording
+        print(path)
         check = exists(path)
         if check is True:
             move_to = home_path + 'shared_screen_with_speaker_view/' + recording
