@@ -355,8 +355,10 @@ def delete_recordings_from_zoom(group_list):
             # print(meeting_id)
             sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
             # if sswsv is False:
+            print(sswsv)
             if not sswsv:
                 check = move_active_speaker_to_upload_dir(meeting_id)
+                print(check)
                 # if check is False:
                 if not check:
                     print("This Meeting doesn't have a recording to upload to AVideo", meetings['topic'])
