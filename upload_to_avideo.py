@@ -5,11 +5,12 @@ import json
 import syslog
 import datetime
 from datetime import datetime
-import mysql.connector
-import get_status_of_video_from_avideo_db
+# import mysql.connector
+# import get_status_of_video_from_avideo_db
 import re
 import shutil
 import sendemail_v3
+import thk
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -36,17 +37,18 @@ def insert_into_utm_db(video_id, cat_id):
     nt_date = str(datetime.today().replace(microsecond=0))
     video_id = str(video_id)
     cat_id = str(cat_id)
-    mydb = mysql.connector.connect(
-        host=utm_host,
-        user=utm_user,
-        password=utm_password,
-        database=utm_database
-    )
-    mycursor = mydb.cursor(dictionary=True)
-    select_sql = 'INSERT INTO videos (av_id, created, categories_id) VALUES (' + \
+    # mydb = mysql.connector.connect(
+    #     host=utm_host,
+    #     user=utm_user,
+    #     password=utm_password,
+    #     database=utm_database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
+    insert_sql = 'INSERT INTO videos (av_id, created, categories_id) VALUES (' + \
                  video_id + ", '" + nt_date + "', " + cat_id + ')'
-    mycursor.execute(select_sql)
-    mydb.commit()
+    thk.mysql_insert_update(insert_sql, utm_host, utm_user, utm_password, utm_database)
+    # mycursor.execute(select_sql)
+    # mydb.commit()
 
 
 def upload(pass_file_name, cat_id, cat_des, cat_title):
@@ -70,17 +72,18 @@ def upload(pass_file_name, cat_id, cat_des, cat_title):
 
 
 def get_cat_id(cat_name):
-    mydb = mysql.connector.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=database
-    )
-    mycursor = mydb.cursor(dictionary=True)
+    # mydb = mysql.connector.connect(
+    #     host=host,
+    #     user=user,
+    #     password=password,
+    #     database=database
+    # )
+    # mycursor = mydb.cursor(dictionary=True)
     select_sql = 'SELECT id, name FROM categories'
-    mycursor.execute(select_sql)
-    myresult = mycursor.fetchall()
-    for x in myresult:
+    result = thk.mysql_select(select_sql, host, user, password, database)
+    # mycursor.execute(select_sql)
+    # myresult = mycursor.fetchall()
+    for x in result:
         if x['name'] == cat_name:
             cat_id = x['id']
             return cat_id
@@ -236,26 +239,27 @@ def check_for_special(file, upload_path, full_path):
 
 
 def insert_cat_into_avideo_db(name):
-    mydb = mysql.connector.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=database,
-        autocommit=True
-    )
+    # mydb = mysql.connector.connect(
+    #     host=host,
+    #     user=user,
+    #     password=password,
+    #     database=database,
+    #     autocommit=True
+    # )
     clean_name = name.replace(" ", "_")
     clean_name = clean_name.lower()
     timestamp = str(datetime.today().replace(microsecond=0))
     parser = '"'
-    mycursor = mydb.cursor()
+    # mycursor = mydb.cursor()
     insert_sql = 'INSERT INTO categories (name, clean_name, created, modified) values (' \
         + parser + name + parser + ', ' + parser + clean_name + parser + ',' + parser + timestamp + parser + ', ' \
                  + parser + timestamp + parser + ')'
-    #print(insert_sql)
+    # print(insert_sql)
+    thk.mysql_insert_update(insert_sql, host, user, password, database)
     syslog.syslog('Updated: ' + database + ' with: ' + insert_sql)
-    mycursor.execute(insert_sql)
-    mydb.commit()
-    #mycursor.execute(commit)
+    # mycursor.execute(insert_sql)
+    # mydb.commit()
+    # mycursor.execute(commit)
 
 
 def move_transcripts():
@@ -268,18 +272,19 @@ def move_transcripts():
             cat_name = file.split(" ", 2)[0] + " " + file.split()[1] + " " + file.split()[2]
             #print(cat_name)
             cat_title = get_cat_title(file, cat_name)
-            mydb = mysql.connector.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=database,
-                autocommit=True
-            )
-            mycursor = mydb.cursor(dictionary=True)
+            # mydb = mysql.connector.connect(
+            #     host=host,
+            #     user=user,
+            #     password=password,
+            #     database=database,
+            #     autocommit=True
+            # )
+            # mycursor = mydb.cursor(dictionary=True)
             select_sql = "select status, filename from videos where title = '" + cat_title + "'"
-            mycursor.execute(select_sql)
-            myresult = mycursor.fetchall()
-            for x in myresult:
+            result = thk.mysql_select(select_sql, host, user, password, database)
+            # mycursor.execute(select_sql)
+            # myresult = mycursor.fetchall()
+            for x in result:
                 if x['status'] == 'a':
                     trans_sub_path = x['filename']
                     avideo_path = '/nfs/web/AVideo/videos/'
@@ -287,10 +292,47 @@ def move_transcripts():
                     upload_path = avideo_path + trans_sub_path + "/" + trans_sub_path + add_to_name + ".vtt"
                     shutil.move(full_path, upload_path)
 
+# below was moved from separate file ****
+
+
+def get_status_of_video_from_avideo_db(video_id):
+    video_id = str(video_id)
+    select_sql = 'select status from videos where id = ' + video_id
+    result = thk.mysql_select(select_sql, host, user, password, database)
+    for x in result:
+        status = x['status']
+        return status
+
+
+def update_status_of_video_in_utm_db(status, video_id):
+    status = str(status)
+    video_id = str(video_id)
+    update_sql = "update videos set status = '" + status + "' where av_id = '" + video_id + "'"
+    # print(update_sql)
+    thk.mysql_insert_update(update_sql, utm_host, utm_user, utm_password, utm_database)
+
+
+
+def get_video_id_to_check_status():
+    select_sql = 'select * from videos'
+    result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
+    for x in result:
+        #print(x['av_id'])
+        status = get_status_of_video_from_avideo_db(x['av_id'])
+        update_status_of_video_in_utm_db(status, x['av_id'])
+
+
+def delete_from_utm_videos_if_status_is_a(av_id):
+    av_id = str(av_id)
+    delete_sql = 'delete from videos where av_id = ' + av_id
+    thk.mysql_insert_update(delete_sql, utm_host, utm_user, utm_password, utm_database)
+
+
+# Above was from separate file
 
 def main():
     list_files_get_cat_id()
-    get_status_of_video_from_avideo_db.get_video_id_to_check_status()
+    get_video_id_to_check_status()
     move_transcripts()
     sendemail_v3.main()
 
