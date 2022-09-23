@@ -421,13 +421,18 @@ def check_for_shared_screen_with_speaker_view(meeting_id):
 
 
 def move_active_speaker_to_upload_dir(meeting_id):
-    select_sql = "select topic, start_time from meetings where meeting_id = '" + meeting_id + "'"
+    select_sql = "select topic from meetings where meeting_id = '" + meeting_id + "'"
     print(select_sql)
     result = mysql_select(select_sql)
     print(result)
+    select_sql2 = "select start_time from recordings where meeting_id = '" + meeting_id + "'"
+    result2 = mysql_select(select_sql2)
+    start_time = ''
+    for y in result2:
+        start_time = y['start_time']
     for x in result:
         topic = x['topic']
-        start_time = str(x['start_time'])
+        # start_time = str(x['start_time'])
         recording = topic + space + start_time + '.mp4' #+ space + 'active_speaker.mp4'
         path = home_path + 'active_speaker/' + recording
         path = str(path)
