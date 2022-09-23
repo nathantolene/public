@@ -425,7 +425,7 @@ def move_active_speaker_to_upload_dir(meeting_id):
     for x in result:
         topic = x['topic']
         start_time = str(x['start_time'])
-        recording = topic + space + start_time + space + 'active_speaker.mp4'
+        recording = topic + space + start_time + '.mp4' #+ space + 'active_speaker.mp4'
         path = home_path + 'active_speaker/' + recording
         path = str(path)
         print(path)
