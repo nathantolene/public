@@ -288,12 +288,13 @@ def check_db_and_download_all():
         # topic = str(result2['topic'])
         for y in result2:
             topic = y['topic']
-            print(topic)
-            print(r_type)
-            zoomname = topic + space + start_time + dot + file_type.lower()
-            check = download_recording(zoomname, download_url, r_type)
-            if check is True:
-                update_to_downloaded(r_id)
+            if not check_time_diff(r_id):
+                print(topic)
+                print(r_type)
+                zoomname = topic + space + start_time + dot + file_type.lower()
+                check = download_recording(zoomname, download_url, r_type)
+                if check is True:
+                    update_to_downloaded(r_id)
         # for y in result2:
         #     topic = str(y['topic'])
         #     if not check_time_diff(r_id):
