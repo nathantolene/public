@@ -22,4 +22,4 @@ def find_non_shared_screen_recordings():
             select_sql = "select topic from meetings where meeting_id ='" + meeting_id + "'"
             result2 = thk.mysql_select(select_sql, host, user, password, database)
             for y in result2:
-                print(y)
+                print(y, meeting_id)
