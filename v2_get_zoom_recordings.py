@@ -42,12 +42,12 @@ slash = '/'
 
 
 def get_zoom_rooms_list_convert_to_group_list_type(group_list):
-    print(group_list[0])
+    # print(group_list[0])
     z_rooms = zoom_api.list_zoom_rooms()
     for x in z_rooms['result']['data']:
         # print(x['zr_id'])
         email = x['zr_id']
-        group_list[0]['members'].append({'email': email})
+        group_list['members'].append({'email': email})
     return group_list
 
 
