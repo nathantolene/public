@@ -41,6 +41,15 @@ changer = 0
 slash = '/'
 
 
+def get_zoom_rooms_list_convert_to_group_list_type(group_list):
+    z_rooms = zoom_api.list_zoom_rooms()
+    for x in z_rooms['result']['data']:
+        # print(x['zr_id'])
+        email = x['zr_id']
+        group_list[0]['members'].append({'email': email})
+    return group_list
+
+
 def get_active_speaker_if_needed(meeting_id, topic):
     meeting_id = str(meeting_id)
     sswsv = check_for_shared_screen_with_speaker_view(meeting_id)
@@ -142,6 +151,10 @@ def get_list_of_recordings_from_email_list(group_list):
         print('Checking for recordings for user:', email)
         recording_list = zoom_api.list_user_recordings(email)
         for meetings in recording_list['meetings']:
+            meeting_type = meetings['type']
+            print(meeting_type)
+            if meeting_type != 3:
+                continue
             uuid_status = check_uuid(meetings['uuid'])
             if not uuid_status:
                 print('Inserting new meeting info for', meetings['topic'])
@@ -449,6 +462,7 @@ def move_active_speaker_to_upload_dir(meeting_id):
 
 def main():
     group_list = get_zoom_group_emails()
+    group_list = get_zoom_rooms_list_convert_to_group_list_type(group_list)
     get_list_of_recordings_from_email_list(group_list)
     check_db_and_download_all()
     update_recording_count(group_list)
