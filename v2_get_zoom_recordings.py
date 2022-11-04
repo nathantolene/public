@@ -42,6 +42,7 @@ slash = '/'
 
 
 def get_zoom_rooms_list_convert_to_group_list_type(group_list):
+    print(group_list)
     z_rooms = zoom_api.list_zoom_rooms()
     for x in z_rooms['result']['data']:
         # print(x['zr_id'])
