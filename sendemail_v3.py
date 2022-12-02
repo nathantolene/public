@@ -32,7 +32,7 @@ parser = '"'
 
 
 def find_files_to_email():
-    # location = "/Users/nathantolene/email"
+    # location = "/Users/nathantolene/email" #add to .env
     for file in os.listdir(location):
         if file.endswith(".yaml"):
             location_file = os.path.join(location, file)
