@@ -46,7 +46,7 @@ def find_files_to_email():
                              ' -t ' + send_to_address + \
                              ' -u ' + parser + subject + parser + \
                              ' -m ' + parser + body + parser + ' -s ' + smtp_server
-                print(send_email)
+                # print(send_email)
                 syslog.syslog(send_email)
                 os.system(send_email)
                 os.remove(location_file)
@@ -161,6 +161,7 @@ def get_video_info_for_email(av_id):
 
 def main():
     check_db_for_ready_videos()
+    find_files_to_email()
 
 
 if __name__ == "__main__":
