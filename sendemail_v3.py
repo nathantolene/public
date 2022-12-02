@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 
 import mysql.connector
+import yaml
 import syslog
 import get_status_of_video_from_avideo_db
 import sys
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 host = os.environ.get('host')
@@ -19,14 +21,35 @@ avideo_database = os.environ.get('avideo_db')
 smtp_server = os.environ.get('smtp_server')
 from_address = os.environ.get('from_address')
 copy_nathan = os.environ.get('copy_nathan')
+location = os.environ.get('location')
 video_name = ''
 class_name = ''
 video_link = ''
 video_duration = ''
 video_description = ''
 cat_id = ''
-
 parser = '"'
+
+
+def find_files_to_email():
+    # location = "/Users/nathantolene/email"
+    for file in os.listdir(location):
+        if file.endswith(".yaml"):
+            location_file = os.path.join(location, file)
+            with open(location_file, 'r') as yaml_file:
+                email = yaml.load(yaml_file, Loader=yaml.FullLoader)
+                # print(email['body'])
+                body = email['body']
+                send_to_address = email['send_to_address']
+                subject = email['subject']
+                send_email = 'sendemail -f ' + from_address + \
+                             ' -t ' + send_to_address + \
+                             ' -u ' + parser + subject + parser + \
+                             ' -m ' + parser + body + parser + ' -s ' + smtp_server
+                print(send_email)
+                syslog.syslog(send_email)
+                os.system(send_email)
+                os.remove(location_file)
 
 
 def sendit(send_to_address, name):
@@ -77,8 +100,8 @@ def check_db_for_email_address(cat_id):
         name_to_email = x['name']
         one_off = x['one_off']
         email_id = x['ID']
-        #print(email_id)
-        #print(one_off)
+        # print(email_id)
+        # print(one_off)
         if check_cat_id == cat_id:
             syslog.syslog('Email Address: ' + address_to_send)
             # print(row[2])
@@ -102,7 +125,7 @@ def check_db_for_ready_videos():
     mycursor.execute(select_sql)
     ready_to_send = mycursor.fetchall()
     for row in ready_to_send:
-        #print(row['av_id'])
+        # print(row['av_id'])
         av_id = row['av_id']
         get_video_info_for_email(av_id)
         get_status_of_video_from_avideo_db.delete_from_utm_videos_if_status_is_a(av_id)
@@ -117,8 +140,8 @@ def get_video_info_for_email(av_id):
     )
     mycursor = mydb.cursor(dictionary=True)
     av_id = str(av_id)
-    #https://dlcontent.utm.edu/v/2129?channelName=Upload
-    #select title, description, duration from videos where id = '2120
+    # https://dlcontent.utm.edu/v/2129?channelName=Upload
+    # select title, description, duration from videos where id = '2120
     select_sql = "select title, description, duration, categories_id from videos where id = '" + av_id + "'"
     mycursor.execute(select_sql)
     info = mycursor.fetchall()
