@@ -340,7 +340,7 @@ def add_email_to_db():
                 cat_id = str(get_cat_id(cat))
                 if cat_id is None:
                     cat_id = get_cat_id(cat)
-                insert_sql = "insert into email (name, email, cat) values ('" + send_to_address + "', '" + send_to_address + "', '" + cat_id + "'"
+                insert_sql = "insert into email (name, email, cat) values ('" + send_to_address + "', '" + send_to_address + "', '" + cat_id + "')"
                 print(insert_sql)
                 thk.mysql_insert_update(insert_sql, utm_host, utm_user, utm_password, utm_database)
 
