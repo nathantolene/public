@@ -5,6 +5,7 @@ import json
 import syslog
 import datetime
 from datetime import datetime
+import yaml
 # import mysql.connector
 # import get_status_of_video_from_avideo_db
 import re
@@ -31,6 +32,7 @@ upload_url = os.environ.get('upload_url')
 moving_total = os.environ.get('moving_total')
 cat_ids = os.environ.get('cat_ids')
 moving_total = int(moving_total)
+location = os.environ.get('db_email_location')
 
 
 def insert_into_utm_db(video_id, cat_id):
@@ -312,7 +314,6 @@ def update_status_of_video_in_utm_db(status, video_id):
     thk.mysql_insert_update(update_sql, utm_host, utm_user, utm_password, utm_database)
 
 
-
 def get_video_id_to_check_status():
     select_sql = 'select * from videos'
     result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
@@ -328,12 +329,26 @@ def delete_from_utm_videos_if_status_is_a(av_id):
     thk.mysql_insert_update(delete_sql, utm_host, utm_user, utm_password, utm_database)
 
 
-# Above was from separate file
+def add_email_to_db():
+    for file in os.listdir(location):
+        if file.endswith(".yaml"):
+            location_file = os.path.join(location, file)
+            with open(location_file, 'r') as yaml_file:
+                email = yaml.load(yaml_file, Loader=yaml.FullLoader)
+                send_to_address = email['send_to_address']
+                cat = email['cat']
+                cat_id = get_cat_id(cat)
+                if cat_id is None:
+                    cat_id = get_cat_id(cat)
+                insert_sql = "insert into email (name, email, cat) values ('" + send_to_address + "', '" + send_to_address + "', '" + cat_id + "'"
+                thk.mysql_insert_update(insert_sql, utm_host, utm_user, utm_password, utm_database)
+
 
 def main():
     list_files_get_cat_id()
     get_video_id_to_check_status()
     move_transcripts()
+    add_email_to_db()
     sendemail_v3.main()
 
 
