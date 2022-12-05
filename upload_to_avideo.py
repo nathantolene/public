@@ -341,8 +341,10 @@ def add_email_to_db():
                 if cat_id is None:
                     cat_id = get_cat_id(cat)
                 insert_sql = "insert into email (name, email, cat) values ('" + send_to_address + "', '" + send_to_address + "', '" + cat_id + "')"
-                print(insert_sql)
+                # print(insert_sql)
                 thk.mysql_insert_update(insert_sql, utm_host, utm_user, utm_password, utm_database)
+                os.remove(location_file)
+
 
 
 def main():
