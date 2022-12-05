@@ -336,8 +336,8 @@ def add_email_to_db():
             with open(location_file, 'r') as yaml_file:
                 email = yaml.load(yaml_file, Loader=yaml.FullLoader)
                 send_to_address = email['send_to_address']
-                cat = str(email['cat'])
-                cat_id = get_cat_id(cat)
+                cat = email['cat']
+                cat_id = str(get_cat_id(cat))
                 if cat_id is None:
                     cat_id = get_cat_id(cat)
                 insert_sql = "insert into email (name, email, cat) values ('" + send_to_address + "', '" + send_to_address + "', '" + cat_id + "'"
