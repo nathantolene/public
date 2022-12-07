@@ -1,8 +1,7 @@
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
 import zoom_api_token
-
 
 endpoint_base = 'https://api.zoom.us/v2'
 headers = {'authorization': 'Bearer %s' % zoom_api_token.generate_token(),
@@ -12,25 +11,30 @@ today = datetime.today()
 first = today.replace(day=1)
 last_month = first - timedelta(days=1)
 from_date = last_month.strftime("%Y-%m-%d")
-
-
-def delete_recordings(meetingId):
-    end_point = f'/meetings/{meetingId}/recordings'
-    delete = requests.delete(endpoint_base + end_point, headers=headers)
-    # print(delete.status_code)
-    if delete.status_code == 200 or delete.status_code == 204:
-        print('Meeting:', meetingId, 'Deleted')
-        return True, delete.status_code
-    if delete.status_code == 404:
-        print('ERROR: Meeting recording not found or There is no recording for this meeting.', meetingId)
-        return False, delete.status_code
+alternative_hosts = 'nathant@utm.edu;ajamerso@utm.edu;madams@utm.edu'   # list must have ; between users
 
 
 def list_user_in_group(groupId):
-    end_point = f'/groups/{groupId}/members?page_size=300'
-    req = requests.get(endpoint_base + end_point, headers=headers)
+    endpoint = f'/groups/{groupId}/members?page_size=300'
+    req = requests.get(endpoint_base + endpoint, headers=headers)
     get = json.loads(req.content)
-    return get
+    all_users = pageination(get, endpoint)
+    return all_users
+
+
+def add_zoom_user_to_group(user_id, email, group_id):
+    endpoint = f'/groups/{group_id}/members'
+    data = {
+        "members": [
+            {
+                "email": email,
+                "id": user_id
+            }
+        ]
+    }
+    post = requests.post(endpoint_base + endpoint, headers=headers, data=json.dumps(data))
+    post = json.loads(post.content)
+    return post
 
 
 def list_user_meetings(userId):
@@ -40,19 +44,11 @@ def list_user_meetings(userId):
     return get
 
 
-def end_meeting(zoom_number):
-    # https://api.zoom.us/v2/meetings/{meetingId}/status
-    end_point = f'/meetings/{zoom_number}/status'
-    end = {
-        "action": "end"
-    }
-    put = requests.put(endpoint_base + end_point, headers=headers, data=json.dumps(end))
-    # print(put.status_code)
-    if put.status_code == 204:
-        print("ENDED", zoom_number)
-        return True
-    if put.status_code != 204:
-        return False
+def list_meeting_participants(meeting_id):
+    endpoint = f'/metrics/meetings/{meeting_id}/participants/'
+    get = requests.get(endpoint_base + endpoint, headers=headers)
+    get = json.loads(get.content)
+    return get
 
 
 def list_all_zoom_meetings():
@@ -78,38 +74,8 @@ def list_user_recordings(user_id):
     }
     get = requests.get(endpoint_base + endpoint, headers=headers, params=add_from_date)
     get = json.loads(get.content)
-    return get
-
-
-def get_users():
-    endpoint = "/users/"
-    get = requests.get(endpoint_base + endpoint, headers=headers)
-    get = json.loads(get.content)
-    return get
-
-
-def get_invitation(meeting_id):
-    endpoint = f'/meetings/{meeting_id}/invitation'
-    get = requests.get(endpoint_base + endpoint, headers=headers)
-    get = json.loads(get.content)
-    return get
-
-
-def zoom_room_join(meeting_id, password, room_id):
-    endpoint = f'/rooms/{room_id}/meetings'
-    join = {
-        "jsonrpc": "2.0",
-        "method": "join",
-        "params": {
-            "meeting_number": meeting_id,
-            "password": password,
-            "force_accept": False,
-            # "callback_url": "https://api.test.zoom.us/callback?token=123"
-        }
-    }
-    post = requests.post(endpoint_base + endpoint, headers=headers, data=json.dumps(join))
-    post = json.loads(post.content)
-    return post
+    all_recordings = pageination(get, endpoint)
+    return all_recordings
 
 
 def list_zoom_rooms():
@@ -123,6 +89,21 @@ def list_zoom_rooms():
     return post
 
 
+def get_users():
+    endpoint = "/users/"
+    get = requests.get(endpoint_base + endpoint, headers=headers)
+    get = json.loads(get.content)
+    all_users = pageination(get, endpoint)
+    return all_users
+
+
+def get_invitation(meeting_id):
+    endpoint = f'/meetings/{meeting_id}/invitation'
+    get = requests.get(endpoint_base + endpoint, headers=headers)
+    get = json.loads(get.content)
+    return get
+
+
 def get_meeting(meeting_id):
     endpoint = f'/meetings/{meeting_id}/'
     get = requests.get(endpoint_base + endpoint, headers=headers)
@@ -131,12 +112,12 @@ def get_meeting(meeting_id):
 
 
 def get_meeting_report(user_id):
-    endpoint  = f'/report/users/{user_id}/meetings/'
+    endpoint = f'/report/users/{user_id}/meetings/'
     # from = yyyy-mm-dd
     # to = yyyy-mm-dd
     from_input = input('Please enter year, month, day as yyyy-mm-dd from which to start')
     to_input = input('Please enter year, month, day as yyyy-mm-dd from which to end')
-    parms  = {
+    parms = {
         'from': from_input,
         'to': to_input
     }
@@ -192,14 +173,6 @@ def get_cloud_recording_usage_report():
     return get
 
 
-def list_meeting_participants(meeting_id):
-    # https://api.zoom.us/v2/metrics/meetings/{meetingId}/participants
-    endpoint = f'/metrics/meetings/{meeting_id}/participants/'
-    get = requests.get(endpoint_base + endpoint, headers=headers)
-    get = json.loads(get.content)
-    return get
-
-
 def get_sharing_and_recording_details(meeting_id):
     endpoint = f'/metrics/meetings/{meeting_id}/participants/sharing'
     get = requests.get(endpoint_base + endpoint, headers=headers)
@@ -239,9 +212,91 @@ def get_zoom_room_settings(room_id):
     return get
 
 
-def main():
-    pass
+def delete_recordings(meetingId):
+    end_point = f'/meetings/{meetingId}/recordings'
+    delete = requests.delete(endpoint_base + end_point, headers=headers)
+    # print(delete.status_code)
+    if delete.status_code == 200 or delete.status_code == 204:
+        print('Meeting:', meetingId, 'Deleted')
+        return True, delete.status_code
+    if delete.status_code == 404:
+        print('ERROR: Meeting recording not found or There is no recording for this meeting.', meetingId)
+        return False, delete.status_code
 
 
-if __name__ == "__main__":
-    main()
+def end_meeting(zoom_number):
+    # https://api.zoom.us/v2/meetings/{meetingId}/status
+    end_point = f'/meetings/{zoom_number}/status'
+    end = {
+        "action": "end"
+    }
+    put = requests.put(endpoint_base + end_point, headers=headers, data=json.dumps(end))
+    # print(put.status_code)
+    if put.status_code == 204:
+        print("ENDED", zoom_number)
+        return True
+    if put.status_code != 204:
+        return False
+
+
+def zoom_room_join(meeting_id, password, room_id):
+    endpoint = f'/rooms/{room_id}/meetings'
+    join = {
+        "jsonrpc": "2.0",
+        "method": "join",
+        "params": {
+            "meeting_number": meeting_id,
+            "password": password,
+            "force_accept": False,
+            # "callback_url": "https://api.test.zoom.us/callback?token=123"
+        }
+    }
+    post = requests.post(endpoint_base + endpoint, headers=headers, data=json.dumps(join))
+    post = json.loads(post.content)
+    return post
+
+
+def pageination(get, endpoint):
+    all_info = [get]
+    try:
+        next_page = get['next_page_token']
+        while next_page != '':
+            params = {
+                'next_page_token': next_page
+            }
+            next_get = requests.get(endpoint_base + endpoint, headers=headers, params=params)
+            next_get = json.loads(next_get.content)
+            next_page = next_get['next_page_token']
+            # print(next_get)
+            all_info.append(next_get)
+    except KeyError:
+        return False
+    return all_info
+
+
+def create_zoom_meeting(host_id, topic, zoom_passcode):
+    userId = host_id
+    endpoint = f'/users/{userId}/meetings'
+    post = {'user_id': host_id,
+            'topic': topic,
+            'duration': 60,
+            'password': zoom_passcode,
+            # 'start_time': date.today(),
+            'type': 3,
+            'settings': {"use_pmi": 'false', 'alternative_hosts': alternative_hosts},
+            }
+    post = requests.post(endpoint_base + endpoint, headers=headers, data=json.dumps(post))
+    post = json.loads(post.content)
+    return post
+
+
+def get_room_usage_report(userId, from_date, to_date):
+    endpoint = f'/report/users/{userId}/meetings'
+    params = {
+        'from': from_date, #2022-01-01
+        'to': to_date,
+        'page_size': 300
+    }
+    get = requests.get(endpoint_base + endpoint, headers=headers, params=params)
+    get = json.loads(get.content)
+    return get
