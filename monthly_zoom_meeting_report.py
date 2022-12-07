@@ -1,8 +1,6 @@
 import database_maker
 import zoom_api
 import arrow
-import schedule
-import time
 
 parser = "', '"
 
@@ -30,9 +28,9 @@ def get_monthly_zoom_meetings():
             database_maker.mysql_insert(insert_meeting_info)
 
 
-if arrow.utcnow().date().day == 1:
-    schedule.every().day.at("02:00").do(get_monthly_zoom_meetings())
+def main():
+    get_monthly_zoom_meetings()
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+
+if __name__ == "__main__":
+    main()
