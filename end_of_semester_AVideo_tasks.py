@@ -66,8 +66,8 @@ def get_list_of_videos_by_instru_name():
     i_name = input('Instructor Name: ')
     select_videos = "select id from videos where title like '%" + i_name + "%';"
     print(select_videos)
-    # result = mysql_runner(select_videos, 's')
-    # return result
+    result = mysql_runner(select_videos, 's')
+    return result
 
 
 def main():
