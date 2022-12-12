@@ -54,6 +54,22 @@ def add_video_to_off_group(list_of_video_ids, off_group):
         print(response)
 
 
+def turn_on_list_of_videos(list_of_video_ids):
+    for x in list_of_video_ids:
+        video_id = str(x['id'])
+        update_video_to_on = "update videos_group_view set users_group_id = 1 where videos_id = '" + video_id + "'"
+        print(update_video_to_on)
+        # result = mysql_runner(update_video_to_on, 'u')
+
+
+def get_list_of_videos_by_instru_name():
+    i_name = input('Instructor Name: ')
+    select_videos = "select id from videos where title like '%" + i_name + "%';"
+    print(select_videos)
+    # result = mysql_runner(select_videos, 's')
+    # return result
+
+
 def main():
     # not_this_cat_id = input("What Cat ID should I exclude? ")
     list_of_video_ids = get_list_of_video_ids()
