@@ -30,9 +30,11 @@ def mysql_runner(sql, sql_type):
     return response
 
 
-def get_list_of_video_ids(not_this_cat_id):
-    select_sql = "select id from videos where categories_id != " + not_this_cat_id
-    response = mysql_runner(select_sql, 's')
+def get_list_of_video_ids():
+    select_sql_w_exclude = "select id from videos where categories_id != 269 and categories_id != 110 and " \
+                           "categories_id != 293;" # add more cat_ids to exclude
+    # select_sql = "select id from videos where categories_id != " + not_this_cat_id
+    response = mysql_runner(select_sql_w_exclude, 's')
     return response
 
 
@@ -53,8 +55,8 @@ def add_video_to_off_group(list_of_video_ids, off_group):
 
 
 def main():
-    not_this_cat_id = input("What Cat ID should I exclude? ")
-    list_of_video_ids = get_list_of_video_ids(not_this_cat_id)
+    # not_this_cat_id = input("What Cat ID should I exclude? ")
+    list_of_video_ids = get_list_of_video_ids()
     new_cat_id = input("What Cat ID are we changing to? ")
     change_cat_id_to_new_cat_id(new_cat_id, list_of_video_ids)
     off_group = input("What group should I add the videos to? ")
