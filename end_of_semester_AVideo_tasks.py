@@ -59,7 +59,7 @@ def turn_on_list_of_videos(list_of_video_ids):
         video_id = str(x['id'])
         update_video_to_on = "update videos_group_view set users_group_id = 1 where videos_id = '" + video_id + "'"
         print(update_video_to_on)
-        # result = mysql_runner(update_video_to_on, 'u')
+        result = mysql_runner(update_video_to_on, 'u')
 
 
 def get_list_of_videos_by_instru_name():
