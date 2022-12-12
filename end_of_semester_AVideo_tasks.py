@@ -57,7 +57,7 @@ def add_video_to_off_group(list_of_video_ids, off_group):
 def turn_on_list_of_videos(list_of_video_ids):
     for x in list_of_video_ids:
         video_id = str(x['id'])
-        update_video_to_on = "update videos_group_view set users_group_id = 1 where videos_id = '" + video_id + "'"
+        update_video_to_on = "update videos_group_view set users_groups_id = 1 where videos_id = '" + video_id + "'"
         print(update_video_to_on)
         result = mysql_runner(update_video_to_on, 'u')
 
