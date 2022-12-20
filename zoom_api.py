@@ -11,7 +11,7 @@ today = datetime.today()
 first = today.replace(day=1)
 last_month = first - timedelta(days=1)
 from_date = last_month.strftime("%Y-%m-%d")
-alternative_hosts = 'nathant@utm.edu;ajamerso@utm.edu;madams@utm.edu'   # list must have ; between users
+alternative_hosts = 'nathant@utm.edu;ajamerso@utm.edu;madams@utm.edu'  # list must have ; between users
 
 
 def list_user_in_group(groupId):
@@ -293,10 +293,49 @@ def create_zoom_meeting(host_id, topic, zoom_passcode):
 def get_room_usage_report(userId, from_date, to_date):
     endpoint = f'/report/users/{userId}/meetings'
     params = {
-        'from': from_date, #2022-01-01
+        'from': from_date,  # 2022-01-01
         'to': to_date,
         'page_size': 300
     }
     get = requests.get(endpoint_base + endpoint, headers=headers, params=params)
     get = json.loads(get.content)
     return get
+
+
+def delete_meeting(meetingId):
+    end_point = f'/meetings/{meetingId}'
+    delete = requests.delete(endpoint_base + end_point, headers=headers)
+    # print(delete.status_code)
+    if delete.status_code == 200 or delete.status_code == 204:
+        print('Meeting:', meetingId, 'Deleted')
+        return True, delete.status_code
+    if delete.status_code == 404:
+        print('ERROR: Meeting  not found or There is no meeting.', meetingId)
+        return False, delete.status_code
+
+
+def zoom_room_account_profile():
+    endpoint = '/rooms/account_profile'
+    get = requests.get(endpoint_base + endpoint, headers=headers)
+    get = json.loads(get.content)
+    return get
+
+
+def zoom_room_account_settings():
+    endpoint = '/rooms/account_settings'
+    get = requests.get(endpoint_base + endpoint, headers=headers)
+    get = json.loads(get.content)
+    return get
+
+
+def patch_zoom_room_account_setting(code_to_exit, passcode, support_email, support_phone):
+    endpoint = '/rooms/account_profile'
+    params = {
+        'required_code_to_ext': code_to_exit, # boolean
+        'room_passcode': passcode,
+        'support_email': support_email,
+        'support_phone': support_phone
+    }
+    patch = requests.patch(endpoint_base + endpoint, headers=headers, params=params)
+    patch = json.loads(patch.content)
+    return patch
