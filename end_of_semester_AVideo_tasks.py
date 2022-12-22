@@ -33,6 +33,9 @@ def mysql_runner(sql, sql_type):
 def get_list_of_video_ids():
     select_sql_w_exclude = "select id from videos where categories_id != 269 and categories_id != 110 and " \
                            "categories_id != 293;" # add more cat_ids to exclude
+    # Fall 2022 - 359
+    # Off group - 3
+    # Ldap group - 1
     # select_sql = "select id from videos where categories_id != " + not_this_cat_id
     response = mysql_runner(select_sql_w_exclude, 's')
     return response
@@ -68,6 +71,15 @@ def get_list_of_videos_by_instru_name():
     print(select_videos)
     result = mysql_runner(select_videos, 's')
     return result
+
+
+def get_list_of_filenames_for_list_of_videos(list):
+    filename_list = []
+    for x in list:
+        select_sql = "select filename from videos where id = '" + x + "'"
+        filename = mysql_runner(select_sql, 's')
+        filename_list.append(filename)
+    print(filename_list)
 
 
 def main():
