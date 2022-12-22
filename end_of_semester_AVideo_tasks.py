@@ -75,7 +75,7 @@ def get_list_of_videos_by_instru_name():
 
 def get_list_of_filenames_for_list_of_videos(list):
     filename_list = []
-    for x in list:
+    for x in list['id']:
         select_sql = "select filename from videos where id = '" + x + "'"
         filename = mysql_runner(select_sql, 's')
         filename_list.append(filename)
