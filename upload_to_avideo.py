@@ -39,18 +39,9 @@ def insert_into_utm_db(video_id, cat_id):
     nt_date = str(datetime.today().replace(microsecond=0))
     video_id = str(video_id)
     cat_id = str(cat_id)
-    # mydb = mysql.connector.connect(
-    #     host=utm_host,
-    #     user=utm_user,
-    #     password=utm_password,
-    #     database=utm_database
-    # )
-    # mycursor = mydb.cursor(dictionary=True)
     insert_sql = 'INSERT INTO videos (av_id, created, categories_id) VALUES (' + \
                  video_id + ", '" + nt_date + "', " + cat_id + ')'
     thk.mysql_insert_update(insert_sql, utm_host, utm_user, utm_password, utm_database)
-    # mycursor.execute(select_sql)
-    # mydb.commit()
 
 
 def upload(pass_file_name, cat_id, cat_des, cat_title):
@@ -74,17 +65,8 @@ def upload(pass_file_name, cat_id, cat_des, cat_title):
 
 
 def get_cat_id(cat_name):
-    # mydb = mysql.connector.connect(
-    #     host=host,
-    #     user=user,
-    #     password=password,
-    #     database=database
-    # )
-    # mycursor = mydb.cursor(dictionary=True)
     select_sql = 'SELECT id, name FROM categories'
     result = thk.mysql_select(select_sql, host, user, password, database)
-    # mycursor.execute(select_sql)
-    # myresult = mycursor.fetchall()
     for x in result:
         if x['name'] == cat_name:
             cat_id = x['id']
@@ -99,11 +81,9 @@ def list_files_get_cat_id():
         if moving <= moving_total:
             full_path = mydir + file
             upload_path = upload_folder + file
-            # print(file)
             if file.endswith(".mp4"):
                 print(file)
                 cat_name = file.split(" ")[0] + " " + file.split()[1] + " " + file.split()[2]
-                # print(cat_name)
                 key = get_cat_id(cat_name)
                 print(key)
                 if key is None:
@@ -121,56 +101,34 @@ def list_files_get_cat_id():
 
 def get_cat_number(cat_name):
     cat_dick = get_cat_id(cat_name)
-    # try:
     for key, value in cat_dick.items():
         if cat_name == value:
             print(key)
             return key
     insert_cat_into_avideo_db(cat_name)
 
-    # except IndexError:
-    #    print("Filename is not correct")
-    #    return 1
-
 
 def get_cat_des(file):
-    # print(file)
     cat_des = file.split(" ", 3)[3]
-    # print("Des: " + cat_des)
     try:
         view = cat_des.split("_", 4)[3]
-        # print(view)
         if view == "speaker":
-            # print(view)
             return cat_des
         else:
-            # print("gallery")
             return "gallery"
     except IndexError:
-        # print("gallery2")
         return "gallery"
 
 
 def get_cat_title(file, cat_name):
     print('filename:', file)
-    # convert_title = file.split(" ")[3]
-    # print('convert title: ', convert_title)
-    # convert_month = convert_title.split("T")[0]
-    # print('convert month: ', convert_month)
-    # day_num = convert_month.split("-")[2]
-    # year_num = convert_month.split("-")[0]
-    # print(convert_month)
     match = re.search(r'\d{4}-\d{2}-\d{2}', file)
     dt = datetime.strptime(match.group(), '%Y-%m-%d').date()
-    # dt = convert_month
-    # year, month, day = (int(x) for x in dt.split('-'))
-    # ans = datetime.date(year, month, day)
     day_word = dt.strftime("%a")
     month_word = dt.strftime("%b")
     year = dt.strftime("%Y")
     day_num = dt.strftime('%d')
     end = day_word + " " + month_word + " " + day_num + " " + year
-    # print(day_word + " " + month_word + " " + day_num + " " + year)
     cat_title = cat_name + " " + end
     print("Title: " + cat_title)
     return cat_title
@@ -234,51 +192,26 @@ def check_for_special(file, upload_path, full_path):
 
 
 def insert_cat_into_avideo_db(name):
-    # mydb = mysql.connector.connect(
-    #     host=host,
-    #     user=user,
-    #     password=password,
-    #     database=database,
-    #     autocommit=True
-    # )
     clean_name = name.replace(" ", "_")
     clean_name = clean_name.lower()
     timestamp = str(datetime.today().replace(microsecond=0))
     parser = '"'
-    # mycursor = mydb.cursor()
     insert_sql = 'INSERT INTO categories (name, clean_name, created, modified) values (' \
                  + parser + name + parser + ', ' + parser + clean_name + parser + ',' + parser + timestamp + parser + ', ' \
                  + parser + timestamp + parser + ')'
-    # print(insert_sql)
     thk.mysql_insert_update(insert_sql, host, user, password, database)
     syslog.syslog('Updated: ' + database + ' with: ' + insert_sql)
-    # mycursor.execute(insert_sql)
-    # mydb.commit()
-    # mycursor.execute(commit)
 
 
 def move_transcripts():
     files = os.listdir(t_dir)
     for file in files:
         full_path = t_dir + file
-        # print(file)
         if file.endswith(".vtt"):
-            # print(file)
             cat_name = file.split(" ", 2)[0] + " " + file.split()[1] + " " + file.split()[2]
-            # print(cat_name)
             cat_title = get_cat_title(file, cat_name)
-            # mydb = mysql.connector.connect(
-            #     host=host,
-            #     user=user,
-            #     password=password,
-            #     database=database,
-            #     autocommit=True
-            # )
-            # mycursor = mydb.cursor(dictionary=True)
             select_sql = "select status, filename from videos where title = '" + cat_title + "'"
             result = thk.mysql_select(select_sql, host, user, password, database)
-            # mycursor.execute(select_sql)
-            # myresult = mycursor.fetchall()
             for x in result:
                 if x['status'] == 'a':
                     trans_sub_path = x['filename']
@@ -286,9 +219,6 @@ def move_transcripts():
                     add_to_name = '.en_US'
                     upload_path = avideo_path + trans_sub_path + "/" + trans_sub_path + add_to_name + ".vtt"
                     shutil.move(full_path, upload_path)
-
-
-# below was moved from separate file ****
 
 
 def get_status_of_video_from_avideo_db(video_id):
@@ -304,17 +234,13 @@ def update_status_of_video_in_utm_db(status, video_id):
     status = str(status)
     video_id = str(video_id)
     update_sql = "update videos set status = '" + status + "' where av_id = '" + video_id + "'"
-    # print(update_sql)
     thk.mysql_insert_update(update_sql, utm_host, utm_user, utm_password, utm_database)
 
 
 def get_video_id_to_check_status():
     select_ids_from_utm_db = "select av_id from videos"
     av_ids = thk.mysql_select(select_ids_from_utm_db, utm_host, utm_user, utm_password, utm_database)
-    # select_sql = 'select * from videos'
-    # result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
     for x in av_ids:
-        # print(x['av_id'])
         status = get_status_of_video_from_avideo_db(x['av_id'])
         update_status_of_video_in_utm_db(status, x['av_id'])
 
@@ -344,14 +270,13 @@ def add_email_to_db():
                 if cat_id is None:
                     cat_id = get_cat_id(cat)
                 insert_sql = "insert into email (name, email, cat) values ('" + send_to_address + "', '" + send_to_address + "', '" + cat_id + "')"
-                # print(insert_sql)
                 thk.mysql_insert_update(insert_sql, utm_host, utm_user, utm_password, utm_database)
                 os.remove(location_file)
 
 
 def add_video_to_off_group(video_id):
     off_group = '3'
-    # video_id = str(x['id'])
+    video_id = str(video_id)
     insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + video_id + ")"
     response = thk.mysql_insert_update(insert_sql, host, user, password, database)
     print(response)
