@@ -1,20 +1,25 @@
 #!/usr/bin/python3
 
-import json
+# import json
 import sys
 import requests
-import urllib.parse
+# import urllib.parse
 # from zoomus import ZoomClient
 from datetime import date, datetime
 import os
 from os.path import exists
-import zoom_api
+import tool_box
+# import zoom_api
 import mysql.connector
 import zoom_auto_delete
 from dotenv import load_dotenv
 
 load_dotenv()
 
+za = tool_box.ZoomApi()
+zm = tool_box.ZoomMeetings
+zr = tool_box.ZoomRecordings
+rf = tool_box.RecordingFiles
 api_key = os.environ.get('zoom_api_key')
 api_sec = os.environ.get('zoom_api_sec')
 home_path = os.environ.get('home_path')
@@ -42,9 +47,10 @@ slash = '/'
 
 
 def get_zoom_rooms_list_convert_to_group_list_type(group_list):
-    # print(group_list[0])
-    z_rooms = zoom_api.list_zoom_rooms()
-    for x in z_rooms['result']['data']:
+    # print(group_list)
+    # z_rooms = zoom_api.list_zoom_rooms()
+    z_rooms = za.list_zoom_rooms()
+    for x in z_rooms:
         # print(x['zr_id'])
         email = x['zr_id']
         group_list['members'].append({'email': email})
@@ -92,87 +98,98 @@ def mysql_select(select_sql):
 
 
 def get_zoom_group_emails():
-    group_list = zoom_api.list_user_in_group(group_id)
+    # group_list = zoom_api.list_user_in_group(group_id)
+    group_list = za.list_user_in_group(group_id)
     print('Getting Zoom Group List')
     return group_list
 
 
-def update_recording_count(group_list):
-    for x in group_list['members']:
-        email = x['email']
-        # recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
-        recording_list = zoom_api.list_user_recordings(email)
-        # recording_list = json.loads(recording_list_response.content)
-        for meetings in recording_list['meetings']:
-            recording_count = meetings['recording_count']
-            if recording_count == 0:
+def update_recording_count(recording_list):
+    for x in recording_list:
+        for meetings in x['meetings']:
+            meeting = zr(meetings)
+            # recording_count = meetings['recording_count']
+            if meeting.recording_count == 0:
                 continue
-            zoom_meeting_id = meetings['id']
-            meeting_id = meetings['uuid']  # key to meeting id
-            select_sql = "select recording_count, topic from meetings where meeting_id ='" + meeting_id + "'"
+            # zoom_meeting_id = meetings['id']
+            # meeting_id = meetings['uuid']  # key to meeting id
+            # select_sql = "select recording_count, topic from meetings where meeting_id ='" + meeting_id + "'"
+            print(meeting.uuid)
+            print(meeting.id)
+            select_sql = "select recording_count, topic from meetings where meeting_id ='" + str(meeting.uuid) + "'"
             result = mysql_select(select_sql)
             topic = ''
             for y in result:
                 topic = y['topic']
-                if not str(y['recording_count']) == recording_count:
+                if not str(y['recording_count']) == meeting.recording_count:
                     update_sql = "update meetings set recording_count ='" \
-                                 + str(recording_count) + "' where meeting_id ='" + meeting_id + "'"
+                                 + str(meeting.recording_count) + "' where meeting_id ='" + meeting.uuid + "'"
                     mysql_insert_update(update_sql)
-            select_sql = "select downloaded from recordings where meeting_id = '" + meeting_id + "'"
+            select_sql = "select downloaded from recordings where meeting_id = '" + meeting.uuid + "'"
             result = mysql_select(select_sql)
             full_download = 0
             for y in result:
                 if y['downloaded'] is None:
                     continue
                 full_download = full_download + y['downloaded']
-            if full_download == recording_count:
+            if full_download == meeting.recording_count:
                 print('Full Downloaded: ' + str(full_download))
-                print('Recording Count: ' + str(recording_count))
-                if '/' in meeting_id:
-                    encoded = urllib.parse.quote(meeting_id, safe='')
-                    meeting_id = urllib.parse.quote(encoded, safe='')
+                print('Recording Count: ' + str(meeting.recording_count))
+                # if '/' in meeting.uuid:
+                #     encoded = urllib.parse.quote(meeting.uuid, safe='')
+                #     meeting_id = urllib.parse.quote(encoded, safe='')
                 # check = client.recording.delete(meeting_id=zoom_meeting_id)
-                get_active_speaker_if_needed(meeting_id, topic)
-                check = zoom_api.delete_recordings(zoom_meeting_id)
+                get_active_speaker_if_needed(meeting.uuid, topic)
+                # check = zoom_api.delete_recordings(meeting.id)
+                check = za.delete_recordings(meeting.id)
                 print('Check Status Code: ' + str(check))
-                if check[1] == '204':
+                if check[1] == 204:
                     print("Status Code is 204 marking as downloaded")
-                    update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
+                    update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting.uuid + "'"
                     mysql_insert_update(update_sql)
-                if check[1] == '404':
+                if check[1] == 404:
                     print("Status code is 404 marking as downloaded")
-                    update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting_id + "'"
+                    update_sql = "update meetings set downloaded = 1 where meeting_id = '" + meeting.uuid + "'"
                     mysql_insert_update(update_sql)
 
 
 def get_list_of_recordings_from_email_list(group_list):
     # Purpose of this function is to insert recording info into zdl_database db for later processing
+    recordings_lists = []
     for x in group_list['members']:
         email = x['email']
         print('Checking for recordings for user:', email)
-        recording_list = zoom_api.list_user_recordings(email)
+        # recording_list = zoom_api.list_user_recordings(email)
+        recording_list = za.list_user_recordings(email)
+        recordings_lists.append(recording_list)
         for meetings in recording_list['meetings']:
-            meeting_type = meetings['type']
-            print(meeting_type)
-            if meeting_type != 3:
+            # print(meetings)
+            meeting = zr(meetings)
+            # meeting_type = meetings['type']
+            # print(meeting.type)
+            if meeting.type != 3:
                 continue
-            uuid_status = check_uuid(meetings['uuid'])
+            uuid_status = check_uuid(meeting.uuid)
             if not uuid_status:
-                print('Inserting new meeting info for', meetings['topic'])
-                insert_new_meeting_info(meetings)
+                print('Inserting new meeting info for', meeting.topic)
+                insert_new_meeting_info(meeting)
             try:
                 for recordings in meetings['recording_files']:
-                    status = recordings['status']
+                    recording = rf(recordings)
+                    # status = recordings['status']
+                    status = recording.status
                     if status == 'processing':
-                        print('Recording still processing on Zoom', meetings['topic'])
+                        print('Recording still processing on Zoom', meeting.topic)
                         continue
-                    recording_id = recordings['id']
-                    new_recording = check_for_recording_id(recording_id)
+                    # recording_id = recordings['id']
+                    new_recording = check_for_recording_id(recording.id)
                     if not new_recording:
-                        print('Inserting new recording info for', meetings['topic'])
+                        print('Inserting new recording info for', meeting.topic)
                         insert_new_recording_info(recordings)
             except KeyError:
                 continue
+        # print(recordings_lists)
+    return recordings_lists
 
 
 def check_uuid(uuid):
@@ -185,47 +202,56 @@ def check_uuid(uuid):
 
 
 def insert_new_meeting_info(meetings):
-    start_time = meetings['start_time']
-    sql_time = start_time
+    # meetings = zr(meetings)
+    # start_time = meetings['start_time']
+    # start_time = meetings.start_time
+    sql_time = meetings.start_time
     sql_time = datetime.fromisoformat(sql_time[:-1])
     sql_time = sql_time.strftime('%Y-%m-%d %H:%M:%S')
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
-    meetings_id = meetings['uuid']  # key to meeting id
-    meetings_zoom_number = str(meetings['id'])
-    account_id = str(meetings['account_id'])
-    host_id = str(meetings['host_id'])
-    topic = str(meetings['topic'])
-    topic = topic.replace("'", "_")
-    meetings_type = str(meetings['type'])
-    timezone = str(meetings['timezone'])
-    duration = str(meetings['duration'])
-    recording_count = str(meetings['recording_count'])
-    share_url = str(meetings['share_url'])
+    # meetings_id = meetings['uuid']  # key to meeting id
+    # meetings_id = meetings.uuid
+    # # meetings_zoom_number = str(meetings['id'])
+    # meetings_zoom_number = str(meetings.id)
+    # # account_id = str(meetings['account_id'])
+    # account_id = str(meetings.account_id)
+    # # host_id = str(meetings['host_id'])
+    # host_id = str(meetings.host_id)
+    # # topic = str(meetings['topic'])
+    # topic = str(meetings.topic)
+    # topic = topic.replace("'", "_")
+    # # meetings_type = str(meetings['type'])
+    # meetings_type = str(meetings.type)
+    # timezone = str(meetings['timezone'])
+    # duration = str(meetings['duration'])
+    # recording_count = str(meetings['recording_count'])
+    # share_url = str(meetings['share_url'])
     insert_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
                  "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
-                 + meetings_id + cm + meetings_zoom_number + cm + account_id + \
-                 cm + host_id + cm + topic + cm + meetings_type + \
-                 cm + sql_time + cm + timezone + cm + duration + \
-                 cm + recording_count + cm + share_url + cm + timestamp + "')"
+                 + str(meetings.uuid) + cm + str(meetings.id) + cm + str(meetings.account_id) + \
+                 cm + str(meetings.host_id) + cm + str(meetings.topic) + cm + str(meetings.type) + \
+                 cm + sql_time + cm + str(meetings.timezone) + cm + str(meetings.duration) + \
+                 cm + str(meetings.recording_count) + cm + str(meetings.share_url) + cm + timestamp + "')"
     mysql_insert_update(insert_sql)
 
 
 def insert_new_recording_info(recordings):
-    status = str(recordings['status'])
-    recording_id = str(recordings['id'])
-    meeting_id = str(recordings['meeting_id'])
+    rec = rf(recordings)
+    # status = str(recordings['status'])
+    # recording_id = str(recordings['id'])
+    # meeting_id = str(recordings['meeting_id'])
     recording_start = str(recordings['recording_start'])
     recording_end = str(recordings['recording_end'])
-    file_type = str(recordings['file_type'])
-    file_extension = str(recordings['file_extension'])
-    file_size = str(recordings['file_size'])
-    try:
-        play_url = recordings['play_url']
-    except KeyError:
-        play_url = 'TRANSCRIPT'
-    download_url = str(recordings['download_url'])
-    recording_type = str(recordings['recording_type'])
+    # file_type = str(recordings['file_type'])
+    # file_extension = str(recordings['file_extension'])
+    # file_size = str(recordings['file_size'])
+    # try:
+    #     play_url = recordings['play_url']
+    # except KeyError:
+    #     play_url = 'TRANSCRIPT'
+    # download_url = str(recordings['download_url'])
+    # recording_type = str(recordings['recording_type'])
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
     sql_time = recording_start
@@ -236,9 +262,10 @@ def insert_new_recording_info(recordings):
     end_time = end_time.strftime('%Y-%m-%d %H:%M:%S')
     insert_sql = "insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
                  " file_type, file_extension, file_size, play_url, download_url, recording_type, modified) " \
-                 "values ( '" + status + cm + recording_id + cm + meeting_id + cm + \
-                 start_time + cm + end_time + cm + file_type + cm + file_extension + cm + \
-                 file_size + cm + play_url + cm + download_url + cm + recording_type + cm + timestamp + "')"
+                 "values ( '" + str(rec.status) + cm + str(rec.id) + cm + str(rec.meeting_id) + cm + \
+                 start_time + cm + end_time + cm + str(rec.file_type) + cm + str(rec.file_extension) + cm + \
+                 str(rec.file_size) + cm + str(rec.play_url) + cm + str(rec.download_url) + cm + \
+                 str(rec.recording_type) + cm + timestamp + "')"
     mysql_insert_update(insert_sql)
 
 
@@ -374,25 +401,29 @@ def update_to_downloaded(r_id):
     mysql_insert_update(update_sql)
 
 
-def delete_recordings_from_zoom(group_list):
-    for x in group_list['members']:
-        email = x['email']
-        recording_list = zoom_api.list_user_recordings(email)
+def delete_recordings_from_zoom(recordings_list):
+    for x in recordings_list:
+        # email = x['email']
+        # # recording_list = zoom_api.list_user_recordings(email)
+        # recording_list = za.list_user_recordings(email)
         # recording_list_response = client.recording.list(user_id=email, page_size=50, start=convert_time)
         # recording_list = json.loads(recording_list_response.content)
         # print(recording_list)
-        for meetings in recording_list['meetings']:
-            meeting_id = meetings['uuid']
+        for meetings in x['meetings']:
+            meeting = zr(meetings)
+            # meeting_id = meetings['uuid']
+            # meeting_id = meeting.uuid
             # print(meeting_id)
-            select_sql = "select downloaded from meetings where meeting_id = '" + meeting_id + "'"
+            select_sql = "select downloaded from meetings where meeting_id = '" + str(meeting.id) + "'"
             result = mysql_select(select_sql)
             for y in result:
                 # print(y)
                 if str(y['downloaded']) == '1':
-                    if '/' in meeting_id:
-                        encoded = urllib.parse.quote(meeting_id, safe='')
-                        meeting_id = urllib.parse.quote(encoded, safe='')
-                    check = zoom_api.delete_recordings(meeting_id)
+                    # if '/' in str(meeting.uuid):
+                    #     encoded = urllib.parse.quote(meeting_id, safe='')
+                    #     meeting_id = urllib.parse.quote(encoded, safe='')
+                    # check = zoom_api.delete_recordings(meeting_id)
+                    check = za.delete_recordings(str(meeting.uuid))
                     if check is False:
                         print('ERROR!!!')
                     # check = client.recording.delete(meeting_id=meeting_id)
@@ -424,9 +455,9 @@ def check_time_diff(r_id):
 
 def check_for_shared_screen_with_speaker_view(meeting_id):
     select_sql = "select recording_type from recordings where meeting_id = '" + meeting_id + "';"
-    #print(select_sql)
+    # print(select_sql)
     result = mysql_select(select_sql)
-    #print(result)
+    # print(result)
     for x in result:
         if x['recording_type'] == 'shared_screen_with_speaker_view':
             return True
@@ -437,9 +468,9 @@ def check_for_shared_screen_with_speaker_view(meeting_id):
 
 def move_active_speaker_to_upload_dir(meeting_id):
     select_sql = "select topic from meetings where meeting_id = '" + meeting_id + "'"
-    #print(select_sql)
+    # print(select_sql)
     result = mysql_select(select_sql)
-    #print(result)
+    # print(result)
     select_sql2 = "select recording_start from recordings where meeting_id = '" + meeting_id + "'"
     result2 = mysql_select(select_sql2)
     start_time = ''
@@ -448,10 +479,10 @@ def move_active_speaker_to_upload_dir(meeting_id):
     for x in result:
         topic = x['topic']
         # start_time = str(x['start_time'])
-        recording = topic + space + start_time + '.mp4' #+ space + 'active_speaker.mp4'
+        recording = topic + space + start_time + '.mp4'  # + space + 'active_speaker.mp4'
         path = home_path + 'active_speaker/' + recording
         path = str(path)
-        #print(path)
+        # print(path)
         check = exists(path)
         if check is True:
             move_to = home_path + 'shared_screen_with_speaker_view/' + recording
@@ -464,10 +495,13 @@ def move_active_speaker_to_upload_dir(meeting_id):
 def main():
     group_list = get_zoom_group_emails()
     group_list = get_zoom_rooms_list_convert_to_group_list_type(group_list)
-    get_list_of_recordings_from_email_list(group_list)
+    recordings_list = get_list_of_recordings_from_email_list(group_list)
+    print("Starting Downloads from list in DB")
     check_db_and_download_all()
-    update_recording_count(group_list)
-    delete_recordings_from_zoom(group_list)
+    print('updating recording count')
+    update_recording_count(recordings_list)
+    print('deleting recordings from DB')
+    delete_recordings_from_zoom(recordings_list)
     zoom_auto_delete.main()
 
 
