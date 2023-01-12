@@ -13,8 +13,8 @@ import shutil
 import sendemail_v3
 import thk
 from dotenv import load_dotenv
-load_dotenv()
 
+load_dotenv()
 
 host = os.environ.get('avideo_host')
 user = os.environ.get('avideo_dbuser')
@@ -99,11 +99,11 @@ def list_files_get_cat_id():
         if moving <= moving_total:
             full_path = mydir + file
             upload_path = upload_folder + file
-            #print(file)
+            # print(file)
             if file.endswith(".mp4"):
                 print(file)
                 cat_name = file.split(" ")[0] + " " + file.split()[1] + " " + file.split()[2]
-                #print(cat_name)
+                # print(cat_name)
                 key = get_cat_id(cat_name)
                 print(key)
                 if key is None:
@@ -121,14 +121,14 @@ def list_files_get_cat_id():
 
 def get_cat_number(cat_name):
     cat_dick = get_cat_id(cat_name)
-    #try:
+    # try:
     for key, value in cat_dick.items():
         if cat_name == value:
             print(key)
             return key
     insert_cat_into_avideo_db(cat_name)
 
-    #except IndexError:
+    # except IndexError:
     #    print("Filename is not correct")
     #    return 1
 
@@ -161,18 +161,18 @@ def get_cat_title_LF(file, cat_name):
 
 def get_cat_title(file, cat_name):
     print('filename:', file)
-    #convert_title = file.split(" ")[3]
-    #print('convert title: ', convert_title)
-    #convert_month = convert_title.split("T")[0]
-    #print('convert month: ', convert_month)
-    #day_num = convert_month.split("-")[2]
-    #year_num = convert_month.split("-")[0]
+    # convert_title = file.split(" ")[3]
+    # print('convert title: ', convert_title)
+    # convert_month = convert_title.split("T")[0]
+    # print('convert month: ', convert_month)
+    # day_num = convert_month.split("-")[2]
+    # year_num = convert_month.split("-")[0]
     # print(convert_month)
     match = re.search(r'\d{4}-\d{2}-\d{2}', file)
     dt = datetime.strptime(match.group(), '%Y-%m-%d').date()
-    #dt = convert_month
-    #year, month, day = (int(x) for x in dt.split('-'))
-    #ans = datetime.date(year, month, day)
+    # dt = convert_month
+    # year, month, day = (int(x) for x in dt.split('-'))
+    # ans = datetime.date(year, month, day)
     day_word = dt.strftime("%a")
     month_word = dt.strftime("%b")
     year = dt.strftime("%Y")
@@ -190,36 +190,36 @@ def move_file(upload_path, full_path):
 
 
 def check_for_special(file, upload_path, full_path):
-    #if file.split(" ")[0] == "Sean":
-        #key = "109"
-        #cat_title = "MGT 350 Walker " + file.split(" ")[2] + " " + file.split(" ")[3]
-        #cat_des = file.split("+")[1]
-        #if cat_des != "active_speaker":
-        #    move_file(upload_path, full_path)
-        #else:
-        #    upload(file, key, cat_des, cat_title)
-        #    move_file(upload_path, full_path)
-        #return "True"
-    #if file.split(" ")[0] == "Louis":
-        #key = "108"
-        #day = file.replace(" ", "_")
-        #day = day.replace("_", "+")
-        #day = day.split("+")[8]
-        #cat_des = file.split("_")[3]
-        #if cat_des != "speaker":
-        #    move_file(upload_path, full_path)
-        #else:
-        #    if day == "Fri":
-        #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
-        #        upload(file, key, cat_des, cat_title)
-        #        move_file(upload_path, full_path)
-        #    if day == "Mon":
-        #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
-        #        upload(file, key, cat_des, cat_title)
-        #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
-        #        upload(file, key, cat_des, cat_title)
-        #        move_file(upload_path, full_path)
-        #return "True"
+    # if file.split(" ")[0] == "Sean":
+    # key = "109"
+    # cat_title = "MGT 350 Walker " + file.split(" ")[2] + " " + file.split(" ")[3]
+    # cat_des = file.split("+")[1]
+    # if cat_des != "active_speaker":
+    #    move_file(upload_path, full_path)
+    # else:
+    #    upload(file, key, cat_des, cat_title)
+    #    move_file(upload_path, full_path)
+    # return "True"
+    # if file.split(" ")[0] == "Louis":
+    # key = "108"
+    # day = file.replace(" ", "_")
+    # day = day.replace("_", "+")
+    # day = day.split("+")[8]
+    # cat_des = file.split("_")[3]
+    # if cat_des != "speaker":
+    #    move_file(upload_path, full_path)
+    # else:
+    #    if day == "Fri":
+    #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
+    #        upload(file, key, cat_des, cat_title)
+    #        move_file(upload_path, full_path)
+    #    if day == "Mon":
+    #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
+    #        upload(file, key, cat_des, cat_title)
+    #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
+    #        upload(file, key, cat_des, cat_title)
+    #        move_file(upload_path, full_path)
+    # return "True"
     if file.split(" ")[0] == "Camden":
         match = re.search(r'\d{4}-\d{2}-\d{2}', file)
         dt = datetime.strptime(match.group(), '%Y-%m-%d').date()
@@ -254,7 +254,7 @@ def insert_cat_into_avideo_db(name):
     parser = '"'
     # mycursor = mydb.cursor()
     insert_sql = 'INSERT INTO categories (name, clean_name, created, modified) values (' \
-        + parser + name + parser + ', ' + parser + clean_name + parser + ',' + parser + timestamp + parser + ', ' \
+                 + parser + name + parser + ', ' + parser + clean_name + parser + ',' + parser + timestamp + parser + ', ' \
                  + parser + timestamp + parser + ')'
     # print(insert_sql)
     thk.mysql_insert_update(insert_sql, host, user, password, database)
@@ -268,11 +268,11 @@ def move_transcripts():
     files = os.listdir(t_dir)
     for file in files:
         full_path = t_dir + file
-        #print(file)
+        # print(file)
         if file.endswith(".vtt"):
-            #print(file)
+            # print(file)
             cat_name = file.split(" ", 2)[0] + " " + file.split()[1] + " " + file.split()[2]
-            #print(cat_name)
+            # print(cat_name)
             cat_title = get_cat_title(file, cat_name)
             # mydb = mysql.connector.connect(
             #     host=host,
@@ -293,6 +293,7 @@ def move_transcripts():
                     add_to_name = '.en_US'
                     upload_path = avideo_path + trans_sub_path + "/" + trans_sub_path + add_to_name + ".vtt"
                     shutil.move(full_path, upload_path)
+
 
 # below was moved from separate file ****
 
@@ -318,13 +319,20 @@ def get_video_id_to_check_status():
     select_sql = 'select * from videos'
     result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
     for x in result:
-        #print(x['av_id'])
+        # print(x['av_id'])
         status = get_status_of_video_from_avideo_db(x['av_id'])
         update_status_of_video_in_utm_db(status, x['av_id'])
 
 
 def delete_from_utm_videos_if_status_is_a(av_id):
     av_id = str(av_id)
+    # this sets the video to the off group if listed in utm_add_on.off_group
+    cat_id = get_cat_id_from_video_id(av_id)
+    cat_name = get_cat_name(cat_id)
+    result = find_off_videos_list(cat_name)
+    if result is True:
+        add_video_to_off_group(av_id)
+    # end of set video to off group
     delete_sql = 'delete from videos where av_id = ' + av_id
     thk.mysql_insert_update(delete_sql, utm_host, utm_user, utm_password, utm_database)
 
@@ -345,6 +353,35 @@ def add_email_to_db():
                 thk.mysql_insert_update(insert_sql, utm_host, utm_user, utm_password, utm_database)
                 os.remove(location_file)
 
+
+def add_video_to_off_group(video_id):
+    off_group = '3'
+    # video_id = str(x['id'])
+    insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + video_id + ")"
+    response = thk.mysql_insert_update(insert_sql, host, user, password, database)
+    print(response)
+
+
+def find_off_videos_list(cat_name, video_id):
+    select_sql = "select * from off_group"
+    result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
+    for x in result:
+        title = x['title']
+        if cat_name == title:
+            return True
+    return False
+
+
+def get_cat_name(cat_id):
+    select_cat_name = "select name from categories where id = '" + str(cat_id) + "'"
+    cat_name = thk.mysql_select(select_cat_name, host, user, password, database)
+    return cat_name
+
+
+def get_cat_id_from_video_id(video_id):
+    select_cat_id = "select categories_id from videos where id = '" + str(video_id) + "'"
+    cat_id = thk.mysql_select(select_cat_id, host, user, password, database)
+    return cat_id
 
 
 def main():
