@@ -151,14 +151,6 @@ def get_cat_des(file):
         return "gallery"
 
 
-def get_cat_title_LF(file, cat_name):
-    try:
-        cat_title = cat_name + " " + file.split(" ")[4] + " " + file.split()[5] + " " + file.split()[6]
-        return cat_title
-    except IndexError:
-        return file
-
-
 def get_cat_title(file, cat_name):
     print('filename:', file)
     # convert_title = file.split(" ")[3]
@@ -190,6 +182,7 @@ def move_file(upload_path, full_path):
 
 
 def check_for_special(file, upload_path, full_path):
+    return False
     # if file.split(" ")[0] == "Sean":
     # key = "109"
     # cat_title = "MGT 350 Walker " + file.split(" ")[2] + " " + file.split(" ")[3]
@@ -220,24 +213,24 @@ def check_for_special(file, upload_path, full_path):
     #        upload(file, key, cat_des, cat_title)
     #        move_file(upload_path, full_path)
     # return "True"
-    if file.split(" ")[0] == "Camden":
-        match = re.search(r'\d{4}-\d{2}-\d{2}', file)
-        dt = datetime.strptime(match.group(), '%Y-%m-%d').date()
-        day = dt.strftime("%a")
-        if day == "Mon" or day == "Wed" or day == "Fri":
-            key = '231'
-            cat_title = get_cat_title(file, 'ENGL 112 Hacker')
-            upload(file, key, 'None', cat_title)
-            move_file(upload_path, full_path)
-            return True
-        if day == "Tue" or day == 'Thu':
-            key = '232'
-            cat_title = get_cat_title(file, "HIST 202 Camper")
-            upload(file, key, 'None', cat_title)
-            move_file(upload_path, full_path)
-            return True
-    else:
-        return
+    # if file.split(" ")[0] == "Camden":
+    #     match = re.search(r'\d{4}-\d{2}-\d{2}', file)
+    #     dt = datetime.strptime(match.group(), '%Y-%m-%d').date()
+    #     day = dt.strftime("%a")
+    #     if day == "Mon" or day == "Wed" or day == "Fri":
+    #         key = '231'
+    #         cat_title = get_cat_title(file, 'ENGL 112 Hacker')
+    #         upload(file, key, 'None', cat_title)
+    #         move_file(upload_path, full_path)
+    #         return True
+    #     if day == "Tue" or day == 'Thu':
+    #         key = '232'
+    #         cat_title = get_cat_title(file, "HIST 202 Camper")
+    #         upload(file, key, 'None', cat_title)
+    #         move_file(upload_path, full_path)
+    #         return True
+    # else:
+    #     return
 
 
 def insert_cat_into_avideo_db(name):
@@ -316,9 +309,11 @@ def update_status_of_video_in_utm_db(status, video_id):
 
 
 def get_video_id_to_check_status():
-    select_sql = 'select * from videos'
-    result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
-    for x in result:
+    select_ids_from_utm_db = "select av_id from videos"
+    av_ids = thk.mysql_select(select_ids_from_utm_db, utm_host, utm_user, utm_password, utm_database)
+    # select_sql = 'select * from videos'
+    # result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
+    for x in av_ids:
         # print(x['av_id'])
         status = get_status_of_video_from_avideo_db(x['av_id'])
         update_status_of_video_in_utm_db(status, x['av_id'])
