@@ -288,6 +288,7 @@ def find_off_videos_list(cat_name, video_id):
     result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
     for x in result:
         title = x['title']
+        print(title)
         if cat_name == title:
             return True
     return False
