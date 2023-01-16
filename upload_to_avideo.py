@@ -16,10 +16,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-host = os.environ.get('avideo_host')
-user = os.environ.get('avideo_dbuser')
-password = os.environ.get('avideo_dbpass')
-database = os.environ.get('avideo_db')
+# host = os.environ.get('avideo_host')
+avideo_host = os.environ.get('avideo_host')
+# user = os.environ.get('avideo_dbuser')
+avideo_user = os.environ.get('avideo_dbuser')
+# password = os.environ.get('avideo_dbpass')
+avideo_password = os.environ.get('avideo_dbpass')
+# database = os.environ.get('avideo_db')
+avideo_database = os.environ.get('avideo_db')
 utm_host = os.environ.get('host')
 utm_user = os.environ.get('dbuser')
 utm_password = os.environ.get('dbpass')
@@ -66,7 +70,7 @@ def upload(pass_file_name, cat_id, cat_des, cat_title):
 
 def get_cat_id(cat_name):
     select_sql = 'SELECT id, name FROM categories'
-    result = thk.mysql_select(select_sql, host, user, password, database)
+    result = thk.mysql_select(select_sql, avideo_host, avideo_user, avideo_password, avideo_database)
     for x in result:
         if x['name'] == cat_name:
             cat_id = x['id']
@@ -199,8 +203,8 @@ def insert_cat_into_avideo_db(name):
     insert_sql = 'INSERT INTO categories (name, clean_name, created, modified) values (' \
                  + parser + name + parser + ', ' + parser + clean_name + parser + ',' + parser + timestamp + parser + ', ' \
                  + parser + timestamp + parser + ')'
-    thk.mysql_insert_update(insert_sql, host, user, password, database)
-    syslog.syslog('Updated: ' + database + ' with: ' + insert_sql)
+    thk.mysql_insert_update(insert_sql, avideo_host, avideo_user, avideo_password, avideo_database)
+    syslog.syslog('Updated: ' + avideo_database + ' with: ' + insert_sql)
 
 
 def move_transcripts():
@@ -211,7 +215,7 @@ def move_transcripts():
             cat_name = file.split(" ", 2)[0] + " " + file.split()[1] + " " + file.split()[2]
             cat_title = get_cat_title(file, cat_name)
             select_sql = "select status, filename from videos where title = '" + cat_title + "'"
-            result = thk.mysql_select(select_sql, host, user, password, database)
+            result = thk.mysql_select(select_sql, avideo_host, avideo_user, avideo_password, avideo_database)
             for x in result:
                 if x['status'] == 'a':
                     trans_sub_path = x['filename']
@@ -224,7 +228,7 @@ def move_transcripts():
 def get_status_of_video_from_avideo_db(video_id):
     video_id = str(video_id)
     select_sql = 'select status from videos where id = ' + video_id
-    result = thk.mysql_select(select_sql, host, user, password, database)
+    result = thk.mysql_select(select_sql, avideo_host, avideo_user, avideo_password, avideo_database)
     for x in result:
         status = x['status']
         return status
@@ -250,7 +254,7 @@ def delete_from_utm_videos_if_status_is_a(av_id):
     # this sets the video to the off group if listed in utm_add_on.off_group
     cat_id = get_cat_id_from_video_id(av_id)
     cat_name = get_cat_name(cat_id)
-    result = find_off_videos_list(cat_name, av_id)
+    result = find_off_videos_list(cat_name)
     print(result)
     if result is True:
         add_video_to_off_group(av_id)
@@ -279,13 +283,13 @@ def add_video_to_off_group(video_id):
     off_group = '3'
     video_id = str(video_id)
     insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + video_id + ")"
-    response = thk.mysql_insert_update(insert_sql, host, user, password, database)
+    response = thk.mysql_insert_update(insert_sql, avideo_host, avideo_user, avideo_password, avideo_database)
     print(response)
 
 
-def find_off_videos_list(cat_name, video_id):
+def find_off_videos_list(cat_name):
     print(cat_name)
-    cat_name = cat_name[0]['name']
+    # cat_name = cat_name[0]['name']
     select_sql = "select * from off_group"
     result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
     for x in result:
@@ -297,17 +301,19 @@ def find_off_videos_list(cat_name, video_id):
 
 
 def get_cat_name(cat_id):
-    cat_id = cat_id[0]['categories_id']
+    # cat_id = cat_id[0]['categories_id']
     select_cat_name = "select name from categories where id = '" + str(cat_id) + "'"
     print(select_cat_name)
-    cat_name = thk.mysql_select(select_cat_name, host, user, password, database)
+    cat_name = thk.mysql_select(select_cat_name, avideo_host, avideo_user, avideo_password, avideo_database)
+    cat_name = str(cat_name[0]['name'])
     return cat_name
 
 
 def get_cat_id_from_video_id(video_id):
     select_cat_id = "select categories_id from videos where id = '" + str(video_id) + "'"
     print(select_cat_id)
-    cat_id = thk.mysql_select(select_cat_id, host, user, password, database)
+    cat_id = thk.mysql_select(select_cat_id, avideo_host, avideo_user, avideo_password, avideo_database)
+    cat_id = str(cat_id[0]['categories_id'])
     return cat_id
 
 
