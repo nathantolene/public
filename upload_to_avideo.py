@@ -300,6 +300,7 @@ def get_cat_name(cat_id):
 
 def get_cat_id_from_video_id(video_id):
     select_cat_id = "select categories_id from videos where id = '" + str(video_id) + "'"
+    print(select_cat_id)
     cat_id = thk.mysql_select(select_cat_id, host, user, password, database)
     return cat_id
 
