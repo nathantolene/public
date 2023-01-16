@@ -285,6 +285,7 @@ def add_video_to_off_group(video_id):
 
 def find_off_videos_list(cat_name, video_id):
     print(cat_name)
+    cat_name = cat_name[0]['name']
     select_sql = "select * from off_group"
     result = thk.mysql_select(select_sql, utm_host, utm_user, utm_password, utm_database)
     for x in result:
