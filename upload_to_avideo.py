@@ -293,6 +293,7 @@ def find_off_videos_list(cat_name, video_id):
 
 
 def get_cat_name(cat_id):
+    cat_id = cat_id['categories_id']
     select_cat_name = "select name from categories where id = '" + str(cat_id) + "'"
     print(select_cat_name)
     cat_name = thk.mysql_select(select_cat_name, host, user, password, database)
