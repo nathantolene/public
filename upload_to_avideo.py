@@ -251,6 +251,7 @@ def delete_from_utm_videos_if_status_is_a(av_id):
     cat_id = get_cat_id_from_video_id(av_id)
     cat_name = get_cat_name(cat_id)
     result = find_off_videos_list(cat_name, av_id)
+    print(result)
     if result is True:
         add_video_to_off_group(av_id)
     # end of set video to off group
