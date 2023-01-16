@@ -3,7 +3,10 @@
 import mysql.connector
 import yaml
 import syslog
-import get_status_of_video_from_avideo_db
+# import get_status_of_video_from_avideo_db
+# from upload_to_avideo import get_status_of_video_from_avideo_db
+from upload_to_avideo import delete_from_utm_videos_if_status_is_a
+from upload_to_avideo import get_video_id_to_check_status
 import sys
 import os
 from dotenv import load_dotenv
@@ -113,7 +116,7 @@ def check_db_for_email_address(cat_id):
 
 
 def check_db_for_ready_videos():
-    get_status_of_video_from_avideo_db.get_video_id_to_check_status()
+    get_video_id_to_check_status()
     mydb = mysql.connector.connect(
         host=host,
         user=user,
@@ -128,7 +131,7 @@ def check_db_for_ready_videos():
         # print(row['av_id'])
         av_id = row['av_id']
         get_video_info_for_email(av_id)
-        get_status_of_video_from_avideo_db.delete_from_utm_videos_if_status_is_a(av_id)
+        delete_from_utm_videos_if_status_is_a(av_id)
 
 
 def get_video_info_for_email(av_id):
