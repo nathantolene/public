@@ -168,6 +168,9 @@ def get_list_of_recordings_from_email_list(group_list):
             meeting = zr(meetings)
             # meeting_type = meetings['type']
             # print(meeting.type)
+            if meeting.id == '2538404901':  #Expand to it's own def
+                meeting.type = 3
+                meeting.topic = 'BIO 130 Vanhoose' # expand see above
             if meeting.type != 3:
                 continue
             uuid_status = check_uuid(meeting.uuid)
