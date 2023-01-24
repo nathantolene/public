@@ -308,6 +308,7 @@ def insert_new_recording_info(recordings):
                  f"values ('{str(rec.status)}', '{str(rec.id)}', '{str(rec.meeting_id)}', '{start_time}', " \
                  f"'{end_time}', '{str(rec.file_type)}', '{str(rec.file_extension)}', '{str(rec.file_size)}', " \
                  f"'{str(rec.play_url)}', '{str(rec.download_url)}', '{str(rec.recording_type)}', '{timestamp}'"
+    print(insert_sql)
     mysql_insert_update(insert_sql)
 
 
