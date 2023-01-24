@@ -416,13 +416,13 @@ def check_time_diff(r_id):
         # start = str(x['recording_start'])
         # end = str(x['recording_end'])
         date_format_str = '%Y-%m-%d %H:%M:%S'
-        start_time = datetime.strptime(r.recording_start, date_format_str)
-        end_time = datetime.strptime(r.recording_end, date_format_str)
+        start_time = datetime.strptime(str(r.recording_start), date_format_str)
+        end_time = datetime.strptime(str(r.recording_end), date_format_str)
         diff = end_time - start_time
         diff_in_minutes = diff.total_seconds() / 60
         if diff_in_minutes < 10:
-            update_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
-            # update_sql = f"update recordings set downloaded = 1 where id = '{r_id}'"
+            # update_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
+            update_sql = f"update recordings set downloaded = 1 where id = '{r_id}'"
             mysql_insert_update(update_sql)
             return True
         return False
