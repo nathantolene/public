@@ -274,18 +274,18 @@ def insert_new_meeting_info(meetings):
     sql_time = sql_time.strftime('%Y-%m-%d %H:%M:%S')
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
-    insert_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
-                 "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
-                 + str(meetings.uuid) + cm + str(meetings.id) + cm + str(meetings.account_id) + \
-                 cm + str(meetings.host_id) + cm + str(meetings.topic) + cm + str(meetings.type) + \
-                 cm + sql_time + cm + str(meetings.timezone) + cm + str(meetings.duration) + \
-                 cm + str(meetings.recording_count) + cm + str(meetings.share_url) + cm + timestamp + "')"
-    # insert_sql = f"insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
-    #              f"start_time, timezone, duration, recording_count, share_url, modified) values (" \
-    #              f"'{str(meetings.uuid)}', '{str(meetings.id)}', '{str(meetings.account_id)}', " \
-    #              f"'{str(meetings.host_id)}', '{str(meetings.topic)}', '{str(meetings.type)}', " \
-    #              f"'{sql_time}', '{str(meetings.timezone)}', '{str(meetings.duration)}', " \
-    #              f"'{str(meetings.recording_count)}', '{str(meetings.share_url)}', '{timestamp}'"
+    # insert_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
+    #              "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
+    #              + str(meetings.uuid) + cm + str(meetings.id) + cm + str(meetings.account_id) + \
+    #              cm + str(meetings.host_id) + cm + str(meetings.topic) + cm + str(meetings.type) + \
+    #              cm + sql_time + cm + str(meetings.timezone) + cm + str(meetings.duration) + \
+    #              cm + str(meetings.recording_count) + cm + str(meetings.share_url) + cm + timestamp + "')"
+    insert_sql = f"insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
+                 f"start_time, timezone, duration, recording_count, share_url, modified) values (" \
+                 f"'{str(meetings.uuid)}', '{str(meetings.id)}', '{str(meetings.account_id)}', " \
+                 f"'{str(meetings.host_id)}', '{str(meetings.topic)}', '{str(meetings.type)}', " \
+                 f"'{sql_time}', '{str(meetings.timezone)}', '{str(meetings.duration)}', " \
+                 f"'{str(meetings.recording_count)}', '{str(meetings.share_url)}', '{timestamp}')"
     mysql_insert_update(insert_sql)
 
 
@@ -301,17 +301,17 @@ def insert_new_recording_info(recordings):
     end_time = recording_end
     end_time = datetime.fromisoformat(end_time[:-1])
     end_time = end_time.strftime('%Y-%m-%d %H:%M:%S')
-    insert_sql = "insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
-                 " file_type, file_extension, file_size, play_url, download_url, recording_type, modified) " \
-                 "values ( '" + str(rec.status) + cm + str(rec.id) + cm + str(rec.meeting_id) + cm + \
-                 start_time + cm + end_time + cm + str(rec.file_type) + cm + str(rec.file_extension) + cm + \
-                 str(rec.file_size) + cm + str(rec.play_url) + cm + str(rec.download_url) + cm + \
-                 str(rec.recording_type) + cm + timestamp + "')"
-    # insert_sql = f"insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
-    #              f" file_type, file_extension, file_size, play_url, download_url, recording_type, modified) " \
-    #              f"values ('{str(rec.status)}', '{str(rec.id)}', '{str(rec.meeting_id)}', '{start_time}', " \
-    #              f"'{end_time}', '{str(rec.file_type)}', '{str(rec.file_extension)}', '{str(rec.file_size)}', " \
-    #              f"'{str(rec.play_url)}', '{str(rec.download_url)}', '{str(rec.recording_type)}', '{timestamp}';"
+    # insert_sql = "insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
+    #              " file_type, file_extension, file_size, play_url, download_url, recording_type, modified) " \
+    #              "values ( '" + str(rec.status) + cm + str(rec.id) + cm + str(rec.meeting_id) + cm + \
+    #              start_time + cm + end_time + cm + str(rec.file_type) + cm + str(rec.file_extension) + cm + \
+    #              str(rec.file_size) + cm + str(rec.play_url) + cm + str(rec.download_url) + cm + \
+    #              str(rec.recording_type) + cm + timestamp + "')"
+    insert_sql = f"insert into recordings (status, recording_id, meeting_id, recording_start, recording_end," \
+                 f" file_type, file_extension, file_size, play_url, download_url, recording_type, modified) " \
+                 f"values ('{str(rec.status)}', '{str(rec.id)}', '{str(rec.meeting_id)}', '{start_time}', " \
+                 f"'{end_time}', '{str(rec.file_type)}', '{str(rec.file_extension)}', '{str(rec.file_size)}', " \
+                 f"'{str(rec.play_url)}', '{str(rec.download_url)}', '{str(rec.recording_type)}', '{timestamp}')"
     print(insert_sql)
     mysql_insert_update(insert_sql)
 
