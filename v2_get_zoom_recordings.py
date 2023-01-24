@@ -377,8 +377,8 @@ def check_db_and_download_all():
             m = Meetings(y)
             # topic = y['topic']
             if not check_time_diff(r.id):
-                # print(topic)
-                # print(r_type)
+                print(m.topic)
+                print(r.recording_type)
                 # zoom_name = topic + space + start_time + dot + file_type.lower()
                 zoom_name = f"{m.topic} {m.start_time}.{r.file_type.lower()}"
                 check = download_recording(zoom_name, r.download_url, r.recording_type)
