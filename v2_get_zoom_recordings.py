@@ -421,8 +421,8 @@ def check_time_diff(r_id):
         diff = end_time - start_time
         diff_in_minutes = diff.total_seconds() / 60
         if diff_in_minutes < 10:
-            # update_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
-            update_sql = f"update recordings set downloaded = 1 where id = '{r_id}'"
+            update_sql = "update recordings set downloaded = 1 where id = '" + r_id + "'"
+            # update_sql = f"update recordings set downloaded = 1 where id = '{r_id}'"
             mysql_insert_update(update_sql)
             return True
         return False
