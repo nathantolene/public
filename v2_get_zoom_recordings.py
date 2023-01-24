@@ -72,23 +72,23 @@ class Meetings:
 class Recordings:
     def __init__(self, recording):
         self.id = recording['id']
-        try:
-            self.timestamp = recording['timestamp']
-            self.recording_id = recording['recording_id']
-            self.meeting_id = recording['meeting_id']
-            self.recording_start = recording['recording_start']
-            self.recording_end = recording['recording_end']
-            self.file_type = recording['file_type']
-            self.file_extension = recording['extension']
-            self.file_size = recording['file_size']
-            self.play_url = recording['play_url']
-            self.download_url = recording['download_url']
-            self.recording_type = recording['recording_type']
-            self.status = recording['status']
-            self.modified = recording['modified']
-            self.downloaded = recording['downloaded']
-        except:
-            pass
+        # try:
+        self.timestamp = recording['timestamp']
+        self.recording_id = recording['recording_id']
+        self.meeting_id = recording['meeting_id']
+        self.recording_start = recording['recording_start']
+        self.recording_end = recording['recording_end']
+        self.file_type = recording['file_type']
+        self.file_extension = recording['extension']
+        self.file_size = recording['file_size']
+        self.play_url = recording['play_url']
+        self.download_url = recording['download_url']
+        self.recording_type = recording['recording_type']
+        self.status = recording['status']
+        self.modified = recording['modified']
+        self.downloaded = recording['downloaded']
+        # except:
+        #     pass
 
 
 def check_if_special(meeting):
