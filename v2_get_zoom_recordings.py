@@ -79,7 +79,10 @@ class Recordings:
         self.recording_start = recording['recording_start']
         self.recording_end = recording['recording_end']
         self.file_type = recording['file_type']
-        self.file_extension = recording['extension']
+        try:
+            self.file_extension = recording['extension']
+        except:
+            pass
         self.file_size = recording['file_size']
         self.play_url = recording['play_url']
         self.download_url = recording['download_url']
