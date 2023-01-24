@@ -274,18 +274,18 @@ def insert_new_meeting_info(meetings):
     sql_time = sql_time.strftime('%Y-%m-%d %H:%M:%S')
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S')
-    # insert_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
-    #              "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
-    #              + str(meetings.uuid) + cm + str(meetings.id) + cm + str(meetings.account_id) + \
-    #              cm + str(meetings.host_id) + cm + str(meetings.topic) + cm + str(meetings.type) + \
-    #              cm + sql_time + cm + str(meetings.timezone) + cm + str(meetings.duration) + \
-    #              cm + str(meetings.recording_count) + cm + str(meetings.share_url) + cm + timestamp + "')"
-    insert_sql = f"insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
-                 f"start_time, timezone, duration, recording_count, share_url, modified) values (" \
-                 f"'{str(meetings.uuid)}', '{str(meetings.id)}', '{str(meetings.account_id)}', " \
-                 f"'{str(meetings.host_id)}', '{str(meetings.topic)}', '{str(meetings.type)}', " \
-                 f"'{sql_time}', '{str(meetings.timezone)}', '{str(meetings.duration)}', " \
-                 f"'{str(meetings.recording_count)}', '{str(meetings.share_url)}', '{timestamp}'"
+    insert_sql = "insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
+                 "start_time, timezone, duration, recording_count, share_url, modified) values ('" \
+                 + str(meetings.uuid) + cm + str(meetings.id) + cm + str(meetings.account_id) + \
+                 cm + str(meetings.host_id) + cm + str(meetings.topic) + cm + str(meetings.type) + \
+                 cm + sql_time + cm + str(meetings.timezone) + cm + str(meetings.duration) + \
+                 cm + str(meetings.recording_count) + cm + str(meetings.share_url) + cm + timestamp + "')"
+    # insert_sql = f"insert into meetings (meeting_id, meetings_zoom_number, account_id, host_id, topic, meeting_type, " \
+    #              f"start_time, timezone, duration, recording_count, share_url, modified) values (" \
+    #              f"'{str(meetings.uuid)}', '{str(meetings.id)}', '{str(meetings.account_id)}', " \
+    #              f"'{str(meetings.host_id)}', '{str(meetings.topic)}', '{str(meetings.type)}', " \
+    #              f"'{sql_time}', '{str(meetings.timezone)}', '{str(meetings.duration)}', " \
+    #              f"'{str(meetings.recording_count)}', '{str(meetings.share_url)}', '{timestamp}'"
     mysql_insert_update(insert_sql)
 
 
