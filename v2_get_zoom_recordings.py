@@ -103,13 +103,13 @@ def check_if_special(meeting):
     if meeting.id == 2538404901:
         meeting.topic = 'BIO 130 Vanhoose'
         meeting.type = 3
-    if meeting.id == 9645631645:
-        start_day = meeting.start_time.srtftime('%a')
-        if (start_day == 'Mon') or (start_day == 'Wed') or (start_day == 'Fri'):
-            meeting.topic = 'ENGL 112 Glass'
-        if (start_day == 'Tue') or (start_day == 'Thu'):
-            meeting.topic = 'HIST 202 Jones'
-        meeting.type = 3
+    # if meeting.id == 9645631645:
+    #     start_day = meeting.start_time.srtftime('%a')
+    #     if (start_day == 'Mon') or (start_day == 'Wed') or (start_day == 'Fri'):
+    #         meeting.topic = 'ENGL 112 Glass'
+    #     if (start_day == 'Tue') or (start_day == 'Thu'):
+    #         meeting.topic = 'HIST 202 Jones'
+    #     meeting.type = 3
     return meeting
 
 
