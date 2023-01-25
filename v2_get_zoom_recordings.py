@@ -101,11 +101,15 @@ def check_if_special(meeting):
             meeting.topic = 'BIO 130 Vanhoose'  add the topic to the meeting
     '''
     if meeting.id == 2538404901:
-        meeting.type = 3
         meeting.topic = 'BIO 130 Vanhoose'
-    if meeting.id == 9645631645:
         meeting.type = 3
-        meeting.topic = 'HIST 202 Jones'
+    if meeting.id == 9645631645:
+        start_day = meeting.start_time.srtftime('%a')
+        if (start_day == 'Mon') or (start_day == 'Wed') or (start_day == 'Fri'):
+            meeting.topic = 'ENGL 112 Glass'
+        if (start_day == 'Tue') or (start_day == 'Thu'):
+            meeting.topic = 'HIST 202 Jones'
+        meeting.type = 3
     return meeting
 
 
@@ -360,34 +364,34 @@ def download_recording(zoom_name, download_url, r_type):
 
 
 def check_db_and_download_all():
-    # select_sql = "select id, meeting_id, download_url, recording_start, recording_type," \
-    #              " file_type from recordings where downloaded is null;"
-    select_sql = "select * from recordings where downloaded is null"
+    select_sql = "select id, meeting_id, download_url, recording_start, recording_type," \
+                 " file_type from recordings where downloaded is null;"
+    # select_sql = "select * from recordings where downloaded is null"
     result = mysql_select(select_sql)
     # print(result)
     for x in result:
-        r = Recordings(x)
-        # r_id = str(x['id'])
-        # print(r_id)
-        # m_id = str(x['meeting_id'])
-        # r_type = x['recording_type']
-        # download_url = str(x['download_url'])
-        # start_time = str(x['recording_start'])
-        # file_type = str(x['file_type'])
-        # select_sql2 = "select topic from meetings where meeting_id ='" + m_id + "'"
-        select_sql2 = f"select * from meetings where meeting_id ='{r.meeting_id}'"
+        # r = Recordings(x)
+        r_id = str(x['id'])
+        print(r_id)
+        m_id = str(x['meeting_id'])
+        r_type = x['recording_type']
+        download_url = str(x['download_url'])
+        start_time = str(x['recording_start'])
+        file_type = str(x['file_type'])
+        select_sql2 = "select topic from meetings where meeting_id ='" + m_id + "'"
+        # select_sql2 = f"select * from meetings where meeting_id ='{r.meeting_id}'"
         result2 = mysql_select(select_sql2)
         for y in result2:
-            m = Meetings(y)
-            # topic = y['topic']
+            # m = Meetings(y)
+            topic = y['topic']
             if not check_time_diff(r.id):
-                print(m.topic)
-                print(r.recording_type)
-                # zoom_name = topic + space + start_time + dot + file_type.lower()
-                zoom_name = f"{m.topic} {m.start_time}.{r.file_type.lower()}"
-                check = download_recording(zoom_name, r.download_url, r.recording_type)
+                print(topic)
+                print(r_type)
+                zoom_name = topic + space + start_time + dot + file_type.lower()
+                # zoom_name = f"{m.topic} {m.start_time}.{r.file_type.lower()}"
+                check = download_recording(zoom_name, download_url, r_type)
                 if check is True:
-                    update_to_downloaded(r.id)
+                    update_to_downloaded(r_id)
 
 
 def update_to_downloaded(r_id):
