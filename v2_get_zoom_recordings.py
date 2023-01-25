@@ -384,7 +384,7 @@ def check_db_and_download_all():
         for y in result2:
             # m = Meetings(y)
             topic = y['topic']
-            if not check_time_diff(r.id):
+            if not check_time_diff(r_id):
                 print(topic)
                 print(r_type)
                 zoom_name = topic + space + start_time + dot + file_type.lower()
