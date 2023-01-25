@@ -413,6 +413,8 @@ def delete_recordings_from_zoom(recordings_list):
                     if check is False:
                         print(f"ERROR!!! deleting {str(meeting.id)}")
                         syslog(f"ERROR!!! deleting {str(meeting.id)}")
+                    else:
+                        print(f"Deleted meeting: {meeting.id}, {meeting.topic}")
 
 
 def check_time_diff(r_id):
