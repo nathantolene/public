@@ -409,10 +409,10 @@ def delete_recordings_from_zoom(recordings_list):
             result = mysql_select(select_sql)
             for y in result:
                 if str(y['downloaded']) == '1':
-                    check = za.delete_recordings(str(meeting.uuid))
+                    check = za.delete_recordings(str(meeting.id))
                     if check is False:
-                        print(f"ERROR!!! deleting {str(meeting.uuid)}")
-                        syslog(f"ERROR!!! deleting {str(meeting.uuid)}")
+                        print(f"ERROR!!! deleting {str(meeting.id)}")
+                        syslog(f"ERROR!!! deleting {str(meeting.id)}")
 
 
 def check_time_diff(r_id):
