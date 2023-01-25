@@ -404,8 +404,8 @@ def delete_recordings_from_zoom(recordings_list):
     for x in recordings_list:
         for meetings in x['meetings']:
             meeting = zr(meetings)
-            # select_sql = "select downloaded from meetings where meeting_id = '" + str(meeting.id) + "'"
-            select_sql = f"select downloaded from meetings where meeting_id = '{str(meeting.id)}'"
+            select_sql = "select downloaded from meetings where meeting_id = '" + str(meeting.id) + "'"
+            # select_sql = f"select downloaded from meetings where meeting_id = '{str(meeting.id)}'"
             result = mysql_select(select_sql)
             for y in result:
                 if str(y['downloaded']) == '1':
