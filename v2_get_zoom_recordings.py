@@ -493,6 +493,7 @@ def main():
     print('updating recording count')
     update_recording_count(recordings_list)
     print('deleting recordings from DB')
+    print(f"recordings list: {recordings_list}")
     delete_recordings_from_zoom(recordings_list)
     zoom_auto_delete.main()
 
