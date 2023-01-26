@@ -47,6 +47,20 @@ changer = 0
 slash = '/'
 
 
+def check_if_special(meeting):
+    if meeting.id == 2538404901:  # Expand to it's own def
+        meeting.type = 3
+        meeting.topic = 'BIO 130 Vanhoose'  # expand see above
+    if meeting.id == 9645631645:
+        start_day = meeting.start_time.srtftime('%a')
+        if (start_day == 'Mon') or (start_day == 'Wed') or (start_day == 'Fri'):
+            meeting.topic = 'ENGL 112 Glass'
+        if (start_day == 'Tue') or (start_day == 'Thu'):
+            meeting.topic = 'HIST 202 Jones'
+        meeting.type = 3
+    return meeting
+
+
 def get_zoom_rooms_list_convert_to_group_list_type(group_list):
     # print(group_list)
     # z_rooms = zoom_api.list_zoom_rooms()
@@ -166,11 +180,12 @@ def get_list_of_recordings_from_email_list(group_list):
         for meetings in recording_list['meetings']:
             # print(meetings)
             meeting = zr(meetings)
+            meeting = check_if_special(meeting)
             # meeting_type = meetings['type']
             # print(meeting.type)
-            if meeting.id == 2538404901:  #Expand to it's own def
-                meeting.type = 3
-                meeting.topic = 'BIO 130 Vanhoose' # expand see above
+            # if meeting.id == 2538404901:  #Expand to it's own def
+            #     meeting.type = 3
+            #     meeting.topic = 'BIO 130 Vanhoose' # expand see above
             if meeting.type != 3:
                 continue
             uuid_status = check_uuid(meeting.uuid)
