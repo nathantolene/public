@@ -55,10 +55,14 @@ def check_if_special(meeting):
         # '2023-01-26T21:27:38Z'
         start_time = datetime.strptime(meeting.start_time, '%Y-%m-%dT%H:%M:%SZ')
         start_day = datetime.strftime(start_time, '%a')
+        print(start_day)
         if (start_day == 'Mon') or (start_day == 'Wed') or (start_day == 'Fri'):
             meeting.topic = 'ENGL 112 Glass'
         if (start_day == 'Tue') or (start_day == 'Thu'):
             meeting.topic = 'HIST 202 Jones'
+        meeting.type = 3
+    if meeting.id == 6485187465:
+        meeting.topic = "ENGL 112 Dierks"
         meeting.type = 3
     return meeting
 
