@@ -68,10 +68,10 @@ def check_if_special(meeting):
         meeting.topic = "Math 210 Hamilton"
         meeting.type = 3
     if meeting.id == 2096427308:
-        meeting.topic = "Math Gatewood"
+        meeting.topic = "Math 210 Gatewood_Camden"
         meeting.type = 3
     if meeting.id == 3612598652:
-        meeting.topic = "Math 210 Gatewood"
+        meeting.topic = "Math 210 Gatewood_Covington"
         meeting.id = 3
     return meeting
 
