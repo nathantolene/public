@@ -48,32 +48,54 @@ slash = '/'
 
 
 def check_if_special(meeting):
-    if meeting.id == 2538404901:  # Expand to it's own def
-        meeting.type = 3
-        meeting.topic = 'BIO 130 Vanhoose'  # expand see above
-    if meeting.id == 9645631645:
-        # '2023-01-26T21:27:38Z'
-        start_time = datetime.strptime(meeting.start_time, '%Y-%m-%dT%H:%M:%SZ')
-        start_day = datetime.strftime(start_time, '%a')
-        print(start_day)
-        if (start_day == 'Mon') or (start_day == 'Wed') or (start_day == 'Fri'):
-            meeting.topic = 'ENGL 112 Glass'
-        if (start_day == 'Tue') or (start_day == 'Thu'):
-            meeting.topic = 'HIST 202 Jones'
-        meeting.type = 3
-    if meeting.id == 6485187465:
-        meeting.topic = "ENGL 112 Dierks"
-        meeting.type = 3
-    if meeting.id == 9984425689:
-        meeting.topic = "Math 210 Hamilton"
-        meeting.type = 3
-    if meeting.id == 2096427308:
-        meeting.topic = "Math 210 Gatewood_Camden"
-        meeting.type = 3
-    if meeting.id == 3612598652:
-        meeting.topic = "Math 210 Gatewood_Covington"
+    class Specials:
+        def __init__(self, x):
+            self.id = x['id']
+            self.meeting_id = x['meeting_id']
+            self.meeting_topic = x['meeting_topic']
+            self.days = x['days']
+
+    start_time = datetime.strptime(meeting.start_time, '%Y-%m-%dT%H:%M:%SZ')
+    start_day = datetime.strftime(start_time, '%a')
+    select_sql = f"select * from specials where meeting_id ='{meeting.id}'"
+    result = mysql_select(select_sql)
+    for x in result:
+        special = Specials(x)
+        if special.days != '':
+            if start_day in special.days:
+                meeting.topic = special.meeting_topic
+            else:
+                continue
+        else:
+            meeting.topic = special.meeting_topic
         meeting.type = 3
     return meeting
+    # if meeting.id == 2538404901:  # Expand to it's own def
+    #     meeting.type = 3
+    #     meeting.topic = 'BIO 130 Vanhoose'  # expand see above
+    # if meeting.id == 9645631645:
+    #     # '2023-01-26T21:27:38Z'
+    #     start_time = datetime.strptime(meeting.start_time, '%Y-%m-%dT%H:%M:%SZ')
+    #     start_day = datetime.strftime(start_time, '%a')
+    #     print(start_day)
+    #     if (start_day == 'Mon') or (start_day == 'Wed') or (start_day == 'Fri'):
+    #         meeting.topic = 'ENGL 112 Glass'
+    #     if (start_day == 'Tue') or (start_day == 'Thu'):
+    #         meeting.topic = 'HIST 202 Jones'
+    #     meeting.type = 3
+    # if meeting.id == 6485187465:
+    #     meeting.topic = "ENGL 112 Dierks"
+    #     meeting.type = 3
+    # if meeting.id == 9984425689:
+    #     meeting.topic = "Math 210 Hamilton"
+    #     meeting.type = 3
+    # if meeting.id == 2096427308:
+    #     meeting.topic = "Math 210 Gatewood_Camden"
+    #     meeting.type = 3
+    # if meeting.id == 3612598652:
+    #     meeting.topic = "Math 210 Gatewood_Covington"
+    #     meeting.type = 3
+    # return meeting
 
 
 def get_zoom_rooms_list_convert_to_group_list_type(group_list):
