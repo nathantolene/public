@@ -34,40 +34,6 @@ cat_id = ''
 parser = '"'
 
 
-def email_from_db():
-    class SendEmail:
-        def __init__(self, x):
-            self.id = x['id']
-            self.send_to = x['send_to']
-            self.subject = x['subject']
-            self.body = x['body']
-
-    mydb = mysql.connector.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=database
-    )
-    mycursor = mydb.cursor()
-    select_sql = "select * from send_email"
-    mycursor.execute(select_sql)
-    result = mycursor.fetchall()
-    for x in result:
-        email = SendEmail(x)
-        send_email = f'sendemail ' \
-                     f'-f {from_address} ' \
-                     f'-t {email.send_to} ' \
-                     f'-u "{email.subject}" ' \
-                     f'-m "{email.body}" ' \
-                     f'-s {smtp_server}'
-        syslog.syslog(send_email)
-        os.system(send_email)
-        select_sql = f"delete from send_email where id = '{str(email.id)}'"
-        mycursor.execute(select_sql)
-        mydb.commit()
-        mydb.close()
-
-
 def find_files_to_email():
     # location = "/Users/nathantolene/email" #add to .env
     for file in os.listdir(location):
@@ -198,7 +164,6 @@ def get_video_info_for_email(av_id):
 
 def main():
     check_db_for_ready_videos()
-    email_from_db()
     find_files_to_email()
 
 
