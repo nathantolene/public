@@ -102,7 +102,7 @@ def email_from_db():
         password=password,
         database=database
     )
-    mycursor = mydb.cursor()
+    mycursor = mydb.cursor(dictionary=True)
     select_sql = "select * from send_email"
     mycursor.execute(select_sql)
     result = mycursor.fetchall()
