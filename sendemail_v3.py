@@ -34,6 +34,60 @@ cat_id = ''
 parser = '"'
 
 
+def mysql_insert_update_utm(select_sql):
+    db = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(select_sql)
+    db.commit()
+    db.close()
+
+
+def mysql_select_utm(select_sql):
+    db = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(select_sql)
+    result = cursor.fetchall()
+    db.close()
+    return result
+
+
+def mysql_insert_update_avideo(select_sql):
+    db = mysql.connector.connect(
+        host=avideo_host,
+        user=avideo_user,
+        password=avideo_pass,
+        database=avideo_database
+    )
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(select_sql)
+    db.commit()
+    db.close()
+
+
+def mysql_select_avideo(select_sql):
+    db = mysql.connector.connect(
+        host=avideo_host,
+        user=avideo_user,
+        password=avideo_pass,
+        database=avideo_database
+    )
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(select_sql)
+    result = cursor.fetchall()
+    db.close()
+    return result
+
+
 def email_from_db():
     class SendEmail:
         def __init__(self, x):
@@ -194,6 +248,86 @@ def get_video_info_for_email(av_id):
         video_link = domain + av_id + channel
         cat_id = row['categories_id']
         check_db_for_email_address(cat_id)
+
+
+def delete_from_utm_videos_if_status_is_a(av_id):
+    av_id = str(av_id)
+    set_video_to_off_group(av_id)
+    delete_sql = f"delete from videos where av_id = '{av_id}'"
+    mysql_insert_update_utm(delete_sql)
+
+
+def get_video_id_to_check_status():
+    select_ids_from_utm_db = "select av_id from videos"
+    av_ids = mysql_select_utm(select_ids_from_utm_db)
+    for x in av_ids:
+        status = get_status_of_video_from_avideo_db(x['av_id'])
+        update_status_of_video_in_utm_db(status, x['av_id'])
+
+
+def get_status_of_video_from_avideo_db(video_id):
+    video_id = str(video_id)
+    # select_sql = 'select status from videos where id = ' + video_id
+    select_sql = f"select status from videos where id = '{video_id}'"
+    result = mysql_select_avideo(select_sql)
+    return result[0]['status']
+
+
+def update_status_of_video_in_utm_db(status, video_id):
+    status = str(status)
+    video_id = str(video_id)
+    update_sql = f"update videos set status = '{status}' where av_id = '{video_id}'"
+    mysql_insert_update_utm(update_sql)
+
+
+def set_video_to_off_group(av_id):
+    cat_id = get_cat_id_from_video_id(av_id)
+    cat_name = get_cat_name(cat_id)
+    result = find_off_videos_list(cat_name)
+    # syslog(f"set to off_group {result}")
+    if result is True:
+        add_video_to_off_group(av_id)
+
+
+def get_cat_id_from_video_id(video_id):
+    # select_cat_id = "select categories_id from videos where id = '" + str(video_id) + "'"
+    select_cat_id = f"select categories_id from videos where id = '{str(video_id)}'"
+    # syslog(select_cat_id)
+    cat_id = mysql_select_avideo(select_cat_id)
+    cat_id = str(cat_id[0]['categories_id'])
+    return cat_id
+
+
+def get_cat_name(cat_id):
+    # cat_id = cat_id[0]['categories_id']
+    # select_cat_name = "select name from categories where id = '" + str(cat_id) + "'"
+    select_cat_name = f"select name from categories where id = '{str(cat_id)}'"
+    # syslog(select_cat_name)
+    cat_name = mysql_select_avideo(select_cat_name)
+    cat_name = str(cat_name[0]['name'])
+    return cat_name
+
+
+def find_off_videos_list(cat_name):
+    print(cat_name)
+    # cat_name = cat_name[0]['name']
+    select_sql = "select * from off_group"
+    result = mysql_select_utm(select_sql)
+    for x in result:
+        title = x['title']
+        print(title)
+        if cat_name == title:
+            return True
+    return False
+
+
+def add_video_to_off_group(video_id):
+    off_group = '3'
+    video_id = str(video_id)
+    # insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + video_id + ")"
+    insert_sql = f"insert into videos_group_view (users_group_id, videos_id) values ('{off_group}', '{video_id}')"
+    mysql_insert_update_avideo(insert_sql)
+    # syslog(response)
 
 
 def main():
