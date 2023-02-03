@@ -129,7 +129,7 @@ def list_files_get_cat_id():
 
 
 def get_cat_title(file, cat_name):
-    print('filename:', file)
+    # print('filename:', file)
     match = re_search(r'\d{4}-\d{2}-\d{2}', file)
     dt = datetime.strptime(match.group(), '%Y-%m-%d').date()
     day_word = dt.strftime("%a")
@@ -138,7 +138,7 @@ def get_cat_title(file, cat_name):
     day_num = dt.strftime('%d')
     end = day_word + " " + month_word + " " + day_num + " " + year
     cat_title = cat_name + " " + end
-    print("Title: " + cat_title)
+    # print("Title: " + cat_title)
     return cat_title
 
 
@@ -304,13 +304,13 @@ def add_video_to_off_group(video_id):
 
 
 def find_off_videos_list(cat_name):
-    print(cat_name)
+    # print(cat_name)
     # cat_name = cat_name[0]['name']
     select_sql = "select * from off_group"
     result = thk.mysql_select(select_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
     for x in result:
         title = x['title']
-        print(title)
+        # print(title)
         if cat_name == title:
             return True
     return False
