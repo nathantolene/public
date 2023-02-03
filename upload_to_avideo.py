@@ -239,6 +239,7 @@ def get_status_of_video_from_avideo_db(video_id):
     # select_sql = 'select status from videos where id = ' + video_id
     select_sql = f"select status from videos where id = '{video_id}'"
     result = thk.mysql_select(select_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
+    print(result)
     return result[0]['status']
     # for x in result:
     #     status = x['status']
