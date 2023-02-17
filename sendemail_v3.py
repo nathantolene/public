@@ -345,7 +345,8 @@ def get_status_of_video_from_avideo_db(video_id):
     # select_sql = 'select status from videos where id = ' + video_id
     select_sql = f"select status from videos where id = '{video_id}'"
     result = mysql_select_avideo(select_sql)
-    print(result)
+    if not result:
+        return 'e'
     return result[0]['status']
 
 
