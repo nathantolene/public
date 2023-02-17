@@ -25,6 +25,8 @@ SMTP_SERVER = os.environ.get('smtp_server')
 FROM_ADDRESS = os.environ.get('from_address')
 COPY_ADMIN = os.environ.get('copy_nathan')
 LOCATION = os.environ.get('location')
+
+
 # video_name = ''
 # class_name = ''
 # video_link = ''
@@ -343,6 +345,8 @@ def get_status_of_video_from_avideo_db(video_id):
     # select_sql = 'select status from videos where id = ' + video_id
     select_sql = f"select status from videos where id = '{video_id}'"
     result = mysql_select_avideo(select_sql)
+    if result is None:
+        return False
     return result[0]['status']
 
 
