@@ -256,6 +256,7 @@ def check_db_for_email_address(video):
         # print(email_id)
         # print(one_off)
         # if check_cat_id == cat_id:
+        print(email.category, video.categories_id)
         if email.category == video.categories_id:
             syslog.syslog(f'Email Address: {email.email}')
             # print(row[2])
