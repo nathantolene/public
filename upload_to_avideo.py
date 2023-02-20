@@ -48,30 +48,28 @@ def insert_into_utm_db(video_id, cat_id):
     insert_sql = f"insert into videos (av_id, created, categories_id) values ('{video_id}', '{nt_date}', '{cat_id}')"
     # insert_sql = 'INSERT INTO videos (av_id, created, categories_id) VALUES (' + \
     #              video_id + ", '" + nt_date + "', " + cat_id + ')'
-    result = thk.mysql_insert_update(insert_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
-    return result
+    thk.mysql_insert_update(insert_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
 
 
 def upload(pass_file_name, cat_id, cat_des, cat_title):
     upload_file = open(os.path.join(MYDIR, pass_file_name), 'rb')
     upload_response = post(UPLOAD_URL,
-                           files={"upl": upload_file},
-                           params={"categories_id": cat_id,
-                                   "description": cat_des,
-                                   "title": cat_title
-                                   }
-                           )
+                                    files={"upl": upload_file},
+                                    params={"categories_id": cat_id,
+                                            "description": cat_des,
+                                            "title": cat_title
+                                            }
+                            )
     if upload_response.ok:
         # print("Upload completed successfully!")
         # print(upload_response.text)
         get_video_id = json_loads(upload_response.text)
         video_id = get_video_id['videos_id']
         syslog(f"Upload completed successfully!, Video id: {video_id}")
-        result = insert_into_utm_db(video_id, cat_id)
-        return result
+        insert_into_utm_db(video_id, cat_id)
+
     else:
         syslog(f"Something went wrong! {upload_response.text}")
-        return False
 
 
 def get_cat_id(cat_name):
@@ -81,8 +79,7 @@ def get_cat_id(cat_name):
         if x['name'] == cat_name:
             cat_id = x['id']
             return cat_id
-    result = insert_cat_into_avideo_db(cat_name)
-    return result
+    insert_cat_into_avideo_db(cat_name)
 
 
 def list_files_get_cat_id():
@@ -96,10 +93,10 @@ def list_files_get_cat_id():
                 print(file)
                 cat_name = file.split(" ")[0] + " " + file.split()[1] + " " + file.split()[2]
                 key = get_cat_id(cat_name)
-                # print(key)
+                print(key)
                 if key is None:
                     key = get_cat_id(cat_name)
-                # print(key)
+                print(key)
                 cat_des = 'None'
                 cat_title = get_cat_title(file, cat_name)
                 # if check_for_special(file, upload_path, full_path):
@@ -151,6 +148,7 @@ def move_file(upload_path, full_path):
 
 
 def check_for_special(file, upload_path, full_path):
+
     return False
 
     # if file.split(" ")[0] == "Sean":
@@ -212,9 +210,8 @@ def insert_cat_into_avideo_db(name):
     #              + parser + name + parser + ', ' + parser + clean_name + parser + ',' + parser + timestamp + parser + ', ' \
     #              + parser + timestamp + parser + ')'
     insert_sql = f"insert into categories (name, clean_name, created, modified) values ('{name}', '{clean_name}', '{timestamp}', '{timestamp}')"
-    result = thk.mysql_insert_update(insert_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
+    thk.mysql_insert_update(insert_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
     syslog('Updated: ' + AVIDEO_DATABASE + ' with: ' + insert_sql)
-    return result
 
 
 def move_transcripts():
@@ -244,10 +241,6 @@ def get_status_of_video_from_avideo_db(video_id):
     select_sql = f"select status from videos where id = '{video_id}'"
     result = thk.mysql_select(select_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
     # print(result)
-    if not result:
-        delete_sql = f"delete from videos where av_id = '{video_id}'"
-        thk.mysql_insert_update(delete_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
-        return False
     return result[0]['status']
     # for x in result:
     #     status = x['status']
@@ -259,8 +252,7 @@ def update_status_of_video_in_utm_db(status, video_id):
     video_id = str(video_id)
     # update_sql = "update videos set status = '" + status + "' where av_id = '" + video_id + "'"
     update_sql = f"update videos set status = '{status}' where av_id = '{video_id}'"
-    result = thk.mysql_insert_update(update_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
-    return result
+    thk.mysql_insert_update(update_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
 
 
 def get_video_id_to_check_status():
@@ -268,18 +260,14 @@ def get_video_id_to_check_status():
     av_ids = thk.mysql_select(select_ids_from_utm_db, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
     for x in av_ids:
         status = get_status_of_video_from_avideo_db(x['av_id'])
-        if status is False:
-            continue
-        result = update_status_of_video_in_utm_db(status, x['av_id'])
-        # return result
+        update_status_of_video_in_utm_db(status, x['av_id'])
 
 
 def delete_from_utm_videos_if_status_is_a(av_id):
     av_id = str(av_id)
     set_video_to_off_group(av_id)
     delete_sql = f"delete from videos where av_id = '{av_id}'"
-    result = thk.mysql_insert_update(delete_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
-    return result
+    thk.mysql_insert_update(delete_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
 
 
 def set_video_to_off_group(av_id):
@@ -288,8 +276,7 @@ def set_video_to_off_group(av_id):
     result = find_off_videos_list(cat_name)
     syslog(f"set to off_group {result}")
     if result is True:
-        results = add_video_to_off_group(av_id)
-        return results
+        add_video_to_off_group(av_id)
 
 
 def add_email_to_db():
@@ -305,9 +292,8 @@ def add_email_to_db():
                     cat_id = get_cat_id(cat)
                 # insert_sql = "insert into email (name, email, cat) values ('" + send_to_address + "', '" + send_to_address + "', '" + cat_id + "')"
                 insert_sql = f"insert into email (name, email, cat) values ('{send_to_address}', '{send_to_address}', '{cat_id}')"
-                result = thk.mysql_insert_update(insert_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
+                thk.mysql_insert_update(insert_sql, UTM_HOST, UTM_USER, UTM_PASSWORD, UTM_DATABASE)
                 os.remove(location_file)
-                # return result
 
 
 def add_video_to_off_group(video_id):
@@ -315,9 +301,8 @@ def add_video_to_off_group(video_id):
     video_id = str(video_id)
     # insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + video_id + ")"
     insert_sql = f"insert into videos_group_view (users_group_id, videos_id) values ('{off_group}', '{video_id}')"
-    result = thk.mysql_insert_update(insert_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
-    syslog(result)
-    return result
+    response = thk.mysql_insert_update(insert_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
+    syslog(response)
 
 
 def find_off_videos_list(cat_name):
