@@ -49,7 +49,7 @@ class UtmAddOnDB:
             self.id = x['ID']
             self.name = x['name']
             self.email = x['email']
-            self.category = x['cat']
+            self.category = int(x['cat'])
             self.one_off = x['one_off']
 
     class SendEmail:
@@ -72,7 +72,7 @@ class AVideoDB:
             self.name = x['title']
             self.description = x['description']
             self.duration = x['duration']
-            self.categories_id = x['categories_id']
+            self.categories_id = int(x['categories_id'])
             self.class_name = x['title'].split(" ")
             self.class_name = f"{self.class_name[0]} {self.class_name[1]} {self.class_name[2]}"
             self.domain = 'https://dlcontent.utm.edu/v/'
