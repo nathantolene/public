@@ -32,7 +32,8 @@ def mysql_runner(sql, sql_type):
 
 def get_list_of_video_ids():
     select_sql_w_exclude = "select id from videos where categories_id != 269 and categories_id != 110 and " \
-                           "categories_id != 293;" # add more cat_ids to exclude
+                           "categories_id != 293 and categories_id != 470;" # add more cat_ids to exclude
+    # Spring 2023 - 470
     # Fall 2022 - 359
     # Off group - 3
     # Ldap group - 1
@@ -55,6 +56,7 @@ def add_video_to_off_group(list_of_video_ids, off_group):
         insert_sql = "insert into videos_group_view (users_groups_id, videos_id) values (" + off_group + ", " + video_id + ")"
         response = mysql_runner(insert_sql, 'i')
         print(response)
+
 
 
 def turn_on_list_of_videos(list_of_video_ids):
@@ -88,7 +90,7 @@ def main():
     list_of_video_ids = get_list_of_video_ids()
     new_cat_id = input("What Cat ID are we changing to? ")
     change_cat_id_to_new_cat_id(new_cat_id, list_of_video_ids)
-    off_group = input("What group should I add the videos to? ")
+    off_group = input("What group should I add the videos to?{3} ")
     add_video_to_off_group(list_of_video_ids, off_group)
 
 
