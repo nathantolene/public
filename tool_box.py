@@ -205,13 +205,14 @@ class ZoomApi:
         return all_recordings[0]
 
     def list_zoom_rooms(self):
-        end_point = '/rooms/zrlist'
-        data = {
-            "jsonrpc": "2.0",
-            "method": "list",
-        }
-        post = self.post(end_point, data)
-        return post['result']['data']
+        # end_point = '/rooms/zrlist'
+        end_point = '/rooms/'
+        # data = {
+        #     "jsonrpc": "2.0",
+        #     "method": "list",
+        # }
+        get = self.getter(end_point)  # , data)
+        return get
 
     def get_invitation(self, meeting_id):
         endpoint = f'/meetings/{meeting_id}/invitation'
