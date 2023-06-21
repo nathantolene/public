@@ -9,6 +9,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+CA_PATH = os.environ.get('ca_path')
+ACCOUNT_ID = os.environ.get('zoom_account_id')
+CLIENT_ID = os.environ.get('zoom_client_id')
+CLIENT_SECRET = os.environ.get('zoom_client_secret')
+AUTH_SERVER_URL = "https://zoom.us/oauth/token"
 api_key = os.environ.get('zoom_api_key')
 api_sec = os.environ.get('zoom_api_sec')
 today = datetime.today()
@@ -16,6 +22,21 @@ first = today.replace(day=1)
 last_month = first - timedelta(days=31)
 from_date = last_month.strftime("%Y-%m-%d")
 alternative_hosts = 'nathant@utm.edu;ajamerso@utm.edu;madams@utm.edu'  # list must have ; between users
+
+
+def generate_token_s2s_oauth():
+    token_req_payload = {'grant_type': 'account_credentials', 'account_id': ACCOUNT_ID}
+
+    token_response = requests.post(AUTH_SERVER_URL,
+                                   data=token_req_payload, verify=CA_PATH, allow_redirects=False,
+                                   auth=(CLIENT_ID, CLIENT_SECRET))
+
+    if token_response.status_code != 200:
+        print("Failed to obtain token from the Zoom server")
+    else:
+        # print("SuccessfulLy obtained a new token")
+        tokens = json.loads(token_response.text)
+        return tokens['access_token']
 
 
 def generate_token():
@@ -120,7 +141,9 @@ class ZoomMeetings:
 class ZoomApi:
     def __init__(self):
         self.endpoint_base = 'https://api.zoom.us/v2'
-        self.headers = {'authorization': 'Bearer %s' % generate_token(),
+        # self.headers = {'authorization': 'Bearer %s' % generate_token(),
+        #                 'content-type': 'application/json'}
+        self.headers = {'authorization': 'Bearer %s' % generate_token_s2s_oauth(),
                         'content-type': 'application/json'}
 
     def pagination(self, get, end_point):
