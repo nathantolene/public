@@ -147,7 +147,7 @@ def get_zoom_rooms_list_convert_to_group_list_type(group_list):
     z_rooms = za.list_zoom_rooms()
     for x in z_rooms:
         for y in x['rooms']:
-            email = y['room_id']
+            email = y['id']
             group_list['members'].append({'email': email})
     return group_list
 
