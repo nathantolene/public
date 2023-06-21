@@ -146,8 +146,9 @@ def check_if_special(meeting):
 def get_zoom_rooms_list_convert_to_group_list_type(group_list):
     z_rooms = za.list_zoom_rooms()
     for x in z_rooms:
-        email = x['zr_id']
-        group_list['members'].append({'email': email})
+        for y in x['rooms']:
+            email = y['room_id']
+            group_list['members'].append({'email': email})
     return group_list
 
 
@@ -205,10 +206,11 @@ def update_recording_count(recording_list):
             select_sql = f"select * from meetings where meeting_id ='{str(meeting.uuid)}'"
             result = mysql_select(select_sql)
             topic = ''
+            db_meeting = ''
             for y in result:
                 db_meeting = ZoomDownloaderDB.Meetings(y)
                 # topic = y['topic']
-                topic = db_meeting.topic
+                db_meeting = db_meeting
                 # if not str(y['recording_count']) == meeting.recording_count:
                 if not str(db_meeting.recording_count) == meeting.recording_count:
                     # update_sql = "update meetings set recording_count ='" \
@@ -227,7 +229,7 @@ def update_recording_count(recording_list):
             if full_download == meeting.recording_count:
                 print('Full Downloaded: ' + str(full_download))
                 print('Recording Count: ' + str(meeting.recording_count))
-                get_active_speaker_if_needed(meeting.uuid, topic)
+                get_active_speaker_if_needed(meeting.uuid, db_meeting.topic)
                 check = za.delete_recordings(meeting.id)
                 print('Check Status Code: ' + str(check))
                 if check[1] == 204:
@@ -380,7 +382,7 @@ def download_recording(zoom_name, download_url, r_type):
     if not path_exist:
         os.makedirs(path)
     dl_path = os.path.join(path, filename)
-    r = requests.get(dl_url, allow_redirects=True, stream=True)
+    # r = requests.get(dl_url, allow_redirects=True, stream=True)
     with requests.get(dl_url, allow_redirects=True, stream=True) as r, open(dl_path, "wb") as f:
         print("Downloading %s" % filename)
         total_length = r.headers.get('content-length')
