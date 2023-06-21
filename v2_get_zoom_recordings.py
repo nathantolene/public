@@ -248,6 +248,7 @@ def get_list_of_recordings_from_email_list(group_list):
     # Purpose of this function is to insert recording info into zdl_database db for later processing
     recordings_lists = []
     for x in group_list['members']:
+        print(x)
         member = ZoomGroupList.Members(x)
         # email = x['email']
         # print('Checking for recordings for user:', email)
