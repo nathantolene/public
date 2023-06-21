@@ -50,12 +50,15 @@ class ZoomGroupList:
 
     class Members:
         def __init__(self, member):
-            self.id = member['id']
+            try:
+                self.id = member['id']
+                self.first_name = member['first_name']
+                self.last_name = member['last_name']
+                self.type = member['type']
+                self.primary_group = member['primary_group']
+            except KeyError:
+                pass
             self.email = member['email']
-            self.first_name = member['first_name']
-            self.last_name = member['last_name']
-            self.type = member['type']
-            self.primary_group = member['primary_group']
 
 
 class ZoomDownloaderDB:
