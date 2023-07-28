@@ -130,6 +130,7 @@ def check_for_specials_now():
             # i = i+1
             # gen_host_id = "rooms_" + zoom_id + "@utm.edu"
             gen_host_id = f"rooms_{zoom_id}@utm.edu"
+            print(f"Zoom Room: {gen_host_id}")
         # print(gen_host_id)
         #     find_old_recordings(zoom_id)
             find_old_recordings(gen_host_id)
