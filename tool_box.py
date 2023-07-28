@@ -207,11 +207,12 @@ class ZoomApi:
     def list_zoom_rooms(self):
         # end_point = '/rooms/zrlist'
         end_point = '/rooms/'
-        # data = {
-        #     "jsonrpc": "2.0",
-        #     "method": "list",
-        # }
-        get = self.getter(end_point)  # , data)
+        data = {
+            "page_size": "200",
+            # "method": "list",
+        }
+        # get = self.getter(end_point)  # , data)
+        get = self.getter_params(end_point, data)
         return get
 
     def get_invitation(self, meeting_id):
