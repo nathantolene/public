@@ -72,7 +72,7 @@ def find_old_recordings(email):
     recordings_list = za.list_user_recordings(email)
 
     # if debug:
-    # print(recordings_list)
+    print(recordings_list)
     # syslog(recordings_list)
     # for y in recordings_list['meetings']:
     for y in recordings_list['meetings']:
@@ -116,15 +116,23 @@ def find_old_recordings(email):
 
 
 def check_for_specials_now():
-    find_old_recordings('nathant@utm.edu')
-    find_old_recordings('ebell@utm.edu')
+    # find_old_recordings('nathant@utm.edu')
+    # find_old_recordings('ebell@utm.edu')
     room_list = za.list_zoom_rooms()
+    # print(room_list)
+    # i = 0
     for x in room_list:
-        zoom_id = str(x['zr_id'])
-        # gen_host_id = "rooms_" + zoom_id + "@utm.edu"
-        gen_host_id = f"rooms_{zoom_id}@utm.edu"
+        # print(x['rooms'])
+        for y in x['rooms']:
+            # print(y['id'])
+            zoom_id = y['id']
+            # print(i)
+            # i = i+1
+            # gen_host_id = "rooms_" + zoom_id + "@utm.edu"
+            gen_host_id = f"rooms_{zoom_id}@utm.edu"
         # print(gen_host_id)
-        find_old_recordings(gen_host_id)
+        #     find_old_recordings(zoom_id)
+            find_old_recordings(gen_host_id)
 
 
 def main():
