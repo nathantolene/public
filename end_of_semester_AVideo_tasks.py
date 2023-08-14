@@ -32,7 +32,8 @@ def mysql_runner(sql, sql_type):
 
 def get_list_of_video_ids():
     select_sql_w_exclude = "select id from videos where categories_id != 269 and categories_id != 110 and " \
-                           "categories_id != 293 and categories_id != 470;" # add more cat_ids to exclude
+                           "categories_id != 293 and categories_id != 470 and categories_id != 483;" # add more cat_ids to exclude
+    # Summer 2023 - 483
     # Spring 2023 - 470
     # Fall 2022 - 359
     # Off group - 3
