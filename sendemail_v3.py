@@ -182,7 +182,7 @@ def find_files_to_email():
                              f" -t {send_to_address}" \
                              f" -u '{subject}'" \
                              f" -m '{body}'" \
-                             f" -s {SMTP_SERVER}'"
+                             f" -s {SMTP_SERVER}"
                 if COPY_ADMIN == 'True':
                     send_email = f"{send_email} -bcc nathant@utm.edu"
                 syslog.syslog(send_email)
