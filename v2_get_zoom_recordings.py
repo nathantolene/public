@@ -381,7 +381,7 @@ def download_recording(zoom_name, download_url, r_type):
     dl_url = download_url
     sub_path = r_type
     filename = zoom_name
-    filename.replace("/", "_")
+    filename = filename.replace("/", "_")
     path = f"{home_path}{sub_path}/"
     path_exist = os.path.exists(path)
     if not path_exist:
