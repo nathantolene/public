@@ -72,13 +72,13 @@ def upload(pass_file_name, cat_id, cat_des, cat_title):
 
 
 def get_cat_id(cat_name):
-    print(cat_name)
+    print(f'{cat_name} @ 1st get_cat_id')
     select_sql = 'SELECT id, name FROM categories'
     result = thk.mysql_select(select_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
     for x in result:
         if x['name'] == cat_name:
-            print(cat_name)
             cat_id = x['id']
+            print(f'{cat_name} @ get_cat_id {cat_id} cat_id')
             return cat_id
     insert_cat_into_avideo_db(cat_name)
 
@@ -206,10 +206,10 @@ def check_for_special(file, upload_path, full_path):
 
 
 def insert_cat_into_avideo_db(name):
-    print(name)
+    print(f'{name} @ insert')
     clean_name = name.replace(" ", "_")
     clean_name = clean_name.lower()
-    print(clean_name)
+    print(f'{clean_name} @ clean name')
     timestamp = str(datetime.today().replace(microsecond=0))
     # parser = '"'
     # insert_sql = 'INSERT INTO categories (name, clean_name, created, modified) values (' \
