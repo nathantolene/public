@@ -93,6 +93,7 @@ def list_files_get_cat_id():
             if file.endswith(".mp4"):
                 print(file)
                 cat_name = file.split(" ")[0] + " " + file.split()[1] + " " + file.split()[2]
+                print(f'{cat_name} @ make cat name')
                 key = get_cat_id(cat_name)
                 print(key)
                 if key is None:
