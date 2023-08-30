@@ -204,6 +204,7 @@ def check_for_special(file, upload_path, full_path):
 
 
 def insert_cat_into_avideo_db(name):
+    print(name)
     clean_name = name.replace(" ", "_")
     clean_name = clean_name.lower()
     timestamp = str(datetime.today().replace(microsecond=0))
