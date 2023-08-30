@@ -73,14 +73,16 @@ def upload(pass_file_name, cat_id, cat_des, cat_title):
 
 def get_cat_id(cat_name):
     print(f'{cat_name} @ 1st get_cat_id')
-    select_sql = 'SELECT id, name FROM categories'
+    # select_sql = 'SELECT id, name FROM categories'
+    select_sql = f'SELECT id FROM categories where name like "{cat_name}"'
     result = thk.mysql_select(select_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
-    for x in result:
-        if x['name'] == cat_name:
-            cat_id = x['id']
-            print(f'{cat_name} @ get_cat_id {cat_id} cat_id')
-            return cat_id
-    insert_cat_into_avideo_db(cat_name)
+    # for x in result:
+    #     if x['name'] == cat_name:
+    #         cat_id = x['id']
+    #         print(f'{cat_name} @ get_cat_id {cat_id} cat_id')
+    #         return cat_id
+    print(result)
+    # insert_cat_into_avideo_db(cat_name)
 
 
 def list_files_get_cat_id():
