@@ -76,6 +76,7 @@ def get_cat_id(cat_name):
     result = thk.mysql_select(select_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
     for x in result:
         if x['name'] == cat_name:
+            print(cat_name)
             cat_id = x['id']
             return cat_id
     insert_cat_into_avideo_db(cat_name)
