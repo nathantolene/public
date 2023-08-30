@@ -72,6 +72,7 @@ def upload(pass_file_name, cat_id, cat_des, cat_title):
 
 
 def get_cat_id(cat_name):
+    print(cat_name)
     select_sql = 'SELECT id, name FROM categories'
     result = thk.mysql_select(select_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
     for x in result:
