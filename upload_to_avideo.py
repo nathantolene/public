@@ -82,7 +82,10 @@ def get_cat_id(cat_name):
     #         print(f'{cat_name} @ get_cat_id {cat_id} cat_id')
     #         return cat_id
     print(result)
-    # insert_cat_into_avideo_db(cat_name)
+    if result['id'] is None:
+        insert_cat_into_avideo_db(cat_name)
+    else:
+        return result['id']
 
 
 def list_files_get_cat_id():
