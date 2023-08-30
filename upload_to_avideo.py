@@ -82,10 +82,12 @@ def get_cat_id(cat_name):
     #         print(f'{cat_name} @ get_cat_id {cat_id} cat_id')
     #         return cat_id
     # print(result)
-    if result[0]['id'] is None:
+    try:
+        result = result[0]['id']
+    except IndexError:
         insert_cat_into_avideo_db(cat_name)
     else:
-        return result[0]['id']
+        return result
 
 
 def list_files_get_cat_id():
