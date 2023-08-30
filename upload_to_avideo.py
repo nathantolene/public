@@ -67,7 +67,6 @@ def upload(pass_file_name, cat_id, cat_des, cat_title):
         video_id = get_video_id['videos_id']
         syslog(f"Upload completed successfully!, Video id: {video_id}")
         insert_into_utm_db(video_id, cat_id)
-
     else:
         syslog(f"Something went wrong! {upload_response.text}")
 
@@ -143,6 +142,9 @@ def get_cat_title(file, cat_name):
 
 
 def move_file(upload_path, full_path):
+    if os.path.exists(full_path + upload_path) is True:
+        os.rename(full_path, 'dup')
+        return
     syslog("Moving " + full_path + " to " + upload_path)
     os.rename(full_path, upload_path)
 
@@ -240,8 +242,10 @@ def get_status_of_video_from_avideo_db(video_id):
     # select_sql = 'select status from videos where id = ' + video_id
     select_sql = f"select status from videos where id = '{video_id}'"
     result = thk.mysql_select(select_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
-    # print(result)
-    return result[0]['status']
+    try:
+        return result[0]['status']
+    except IndexError:
+        return 'e'
     # for x in result:
     #     status = x['status']
     #     return status
