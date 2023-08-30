@@ -72,7 +72,7 @@ def upload(pass_file_name, cat_id, cat_des, cat_title):
 
 
 def get_cat_id(cat_name):
-    print(f'{cat_name} @ 1st get_cat_id')
+    # print(f'{cat_name} @ 1st get_cat_id')
     # select_sql = 'SELECT id, name FROM categories'
     select_sql = f'SELECT id FROM categories where name like "{cat_name}"'
     result = thk.mysql_select(select_sql, AVIDEO_HOST, AVIDEO_USER, AVIDEO_PASSWORD, AVIDEO_DATABASE)
@@ -81,7 +81,7 @@ def get_cat_id(cat_name):
     #         cat_id = x['id']
     #         print(f'{cat_name} @ get_cat_id {cat_id} cat_id')
     #         return cat_id
-    print(result)
+    # print(result)
     if result[0]['id'] is None:
         insert_cat_into_avideo_db(cat_name)
     else:
@@ -98,12 +98,12 @@ def list_files_get_cat_id():
             if file.endswith(".mp4"):
                 print(file)
                 cat_name = file.split(" ")[0] + " " + file.split()[1] + " " + file.split()[2]
-                print(f'{cat_name} @ make cat name')
+                # print(f'{cat_name} @ make cat name')
                 key = get_cat_id(cat_name)
-                print(key)
+                # print(key)
                 if key is None:
                     key = get_cat_id(cat_name)
-                print(key)
+                # print(key)
                 cat_des = 'None'
                 cat_title = get_cat_title(file, cat_name)
                 # if check_for_special(file, upload_path, full_path):
