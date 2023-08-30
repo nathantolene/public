@@ -207,6 +207,7 @@ def insert_cat_into_avideo_db(name):
     print(name)
     clean_name = name.replace(" ", "_")
     clean_name = clean_name.lower()
+    print(clean_name)
     timestamp = str(datetime.today().replace(microsecond=0))
     # parser = '"'
     # insert_sql = 'INSERT INTO categories (name, clean_name, created, modified) values (' \
