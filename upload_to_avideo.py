@@ -289,15 +289,15 @@ def get_cat_id_from_video_id(video_id):
 def check_encoders():
     select_sql = f'select id from encoder_queue'
     hosts = ENCODER_HOST.split(',')
-    ids = 0
+    num_of_queued_recordings = 0
     for host in hosts:
         # print(host, ids)
         from_host_ids = thk.mysql_select(select_sql, host, ENCODER_USER, ENCODER_PASS, ENCODER_DB)
         # print(from_host_ids)
-        ids = ids + len(from_host_ids)
-    if ids <= 5:
+        num_of_queued_recordings = num_of_queued_recordings + len(from_host_ids)
+    if num_of_queued_recordings <= 5:
         # print('Add video')
-        return ids
+        return num_of_queued_recordings
     else:
         # print('Do not add video')
         return False
