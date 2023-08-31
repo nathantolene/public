@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 # import requests
+import json
+
 from requests import post
 import os
 # import json
@@ -285,10 +287,12 @@ def get_cat_id_from_video_id(video_id):
 
 
 def check_encoders():
-    select_sql = f'select * from encoder_queue'
-    ids = thk.mysql_select(select_sql, ENCODER_HOST, ENCODER_USER, ENCODER_PASS, ENCODER_DB)
-    # print(ids)
-    # print(len(ids))
+    select_sql = f'select id from encoder_queue'
+    hosts = ENCODER_HOST.split(',')
+    ids = 0
+    for host in hosts:
+        # print(host, ids)
+        ids = thk.mysql_select(select_sql, host, ENCODER_USER, ENCODER_PASS, ENCODER_DB)
     if len(ids) <= 5:
         # print('Add video')
         return len(ids)
