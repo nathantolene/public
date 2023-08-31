@@ -291,7 +291,7 @@ def check_encoders():
     hosts = ENCODER_HOST.split(',')
     ids = 0
     for host in hosts:
-        # print(host, ids)
+        print(host, ids)
         ids = thk.mysql_select(select_sql, host, ENCODER_USER, ENCODER_PASS, ENCODER_DB)
     if len(ids) <= 5:
         # print('Add video')
