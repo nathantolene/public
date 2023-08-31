@@ -323,6 +323,8 @@ def main():
             while queue_length <= 5:
                 get_a_file_to_upload()
                 queue_length += 1
+    else:
+        syslog('No files to upload')
     get_video_id_to_check_status()
     move_transcripts()
     add_email_to_db()
