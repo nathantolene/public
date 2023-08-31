@@ -39,6 +39,10 @@ MOVING_TOTAL = os.environ.get('moving_total')
 MOVING_TOTAL = int(MOVING_TOTAL)
 # cat_ids = os.environ.get('cat_ids')
 LOCATION = os.environ.get('db_email_location')
+ENCODER_USER = os.environ.get('encoder_user')
+ENCODER_PASS = os.environ.get('encoder_pass')
+ENCODER_DB = os.environ.get('encoder_db')
+ENCODER_HOST = os.environ.get('encoder_host')
 
 
 def insert_into_utm_db(video_id, cat_id):
@@ -90,6 +94,11 @@ def get_cat_id(cat_name):
         return result
 
 
+def get_number_of_files_in_upload_dir():
+    files = os.listdir(MYDIR)
+    return len(files)
+
+
 def list_files_get_cat_id():
     moving = 1
     files = os.listdir(MYDIR)
@@ -108,33 +117,9 @@ def list_files_get_cat_id():
                 # print(key)
                 cat_des = 'None'
                 cat_title = get_cat_title(file, cat_name)
-                # if check_for_special(file, upload_path, full_path):
-                #     moving += moving
-                #     continue
                 upload(file, key, cat_des, cat_title)
                 move_file(upload_path, full_path)
                 moving += moving
-
-
-# def get_cat_number(cat_name):
-#     cat_dick = get_cat_id(cat_name)
-#     for key, value in cat_dick.items():
-#         if cat_name == value:
-#             print(key)
-#             return key
-#     insert_cat_into_avideo_db(cat_name)
-
-
-# def get_cat_des(file):
-#     cat_des = file.split(" ", 3)[3]
-#     try:
-#         view = cat_des.split("_", 4)[3]
-#         if view == "speaker":
-#             return cat_des
-#         else:
-#             return "gallery"
-#     except IndexError:
-#         return "gallery"
 
 
 def get_cat_title(file, cat_name):
@@ -159,65 +144,11 @@ def move_file(upload_path, full_path):
     os.rename(full_path, upload_path)
 
 
-def check_for_special(file, upload_path, full_path):
-
-    return False
-
-    # if file.split(" ")[0] == "Sean":
-    # key = "109"
-    # cat_title = "MGT 350 Walker " + file.split(" ")[2] + " " + file.split(" ")[3]
-    # cat_des = file.split("+")[1]
-    # if cat_des != "active_speaker":
-    #    move_file(upload_path, full_path)
-    # else:
-    #    upload(file, key, cat_des, cat_title)
-    #    move_file(upload_path, full_path)
-    # return "True"
-    # if file.split(" ")[0] == "Louis":
-    # key = "108"
-    # day = file.replace(" ", "_")
-    # day = day.replace("_", "+")
-    # day = day.split("+")[8]
-    # cat_des = file.split("_")[3]
-    # if cat_des != "speaker":
-    #    move_file(upload_path, full_path)
-    # else:
-    #    if day == "Fri":
-    #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
-    #        upload(file, key, cat_des, cat_title)
-    #        move_file(upload_path, full_path)
-    #    if day == "Mon":
-    #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
-    #        upload(file, key, cat_des, cat_title)
-    #        cat_title = "PSYC 340 Gamble " + file.split(" ")[2] + " " + file.split(" ")[3]
-    #        upload(file, key, cat_des, cat_title)
-    #        move_file(upload_path, full_path)
-    # return "True"
-    # if file.split(" ")[0] == "Camden":
-    #     match = re.search(r'\d{4}-\d{2}-\d{2}', file)
-    #     dt = datetime.strptime(match.group(), '%Y-%m-%d').date()
-    #     day = dt.strftime("%a")
-    #     if day == "Mon" or day == "Wed" or day == "Fri":
-    #         key = '231'
-    #         cat_title = get_cat_title(file, 'ENGL 112 Hacker')
-    #         upload(file, key, 'None', cat_title)
-    #         move_file(upload_path, full_path)
-    #         return True
-    #     if day == "Tue" or day == 'Thu':
-    #         key = '232'
-    #         cat_title = get_cat_title(file, "HIST 202 Camper")
-    #         upload(file, key, 'None', cat_title)
-    #         move_file(upload_path, full_path)
-    #         return True
-    # else:
-    #     return
-
-
 def insert_cat_into_avideo_db(name):
-    print(f'{name} @ insert')
+    # print(f'{name} @ insert')
     clean_name = name.replace(" ", "_")
     clean_name = clean_name.lower()
-    print(f'{clean_name} @ clean name')
+    # print(f'{clean_name} @ clean name')
     timestamp = str(datetime.today().replace(microsecond=0))
     # parser = '"'
     # insert_sql = 'INSERT INTO categories (name, clean_name, created, modified) values (' \
@@ -353,8 +284,45 @@ def get_cat_id_from_video_id(video_id):
     return cat_id
 
 
+def check_encoders():
+    select_sql = f'select * from encoder_queue'
+    ids = thk.mysql_select(select_sql, ENCODER_HOST, ENCODER_USER, ENCODER_PASS, ENCODER_DB)
+    # print(ids)
+    # print(len(ids))
+    if len(ids) <= 5:
+        # print('Add video')
+        return len(ids)
+    else:
+        # print('Do not add video')
+        return False
+
+
+def get_a_file_to_upload():
+    files = os.listdir(MYDIR)
+    for file in files:
+        if file.endswith('.mp4'):
+            full_path = MYDIR + file
+            upload_path = UPLOAD_FOLDER + file
+            cat_name = file.split(" ")[0] + " " + file.split()[1] + " " + file.split()[2]
+            key = get_cat_id(cat_name)
+            if key is None:
+                key = get_cat_id(cat_name)
+            cat_des = 'None'
+            cat_title = get_cat_title(file, cat_name)
+            upload(file, key, cat_des, cat_title)
+            move_file(upload_path, full_path)
+            return
+
+
 def main():
-    list_files_get_cat_id()
+    queue_length = check_encoders()
+    number_of_files_to_upload = get_number_of_files_in_upload_dir()
+    if number_of_files_to_upload > 0:
+        if queue_length is not False:
+            # list_files_get_cat_id()
+            while queue_length <= 5:
+                get_a_file_to_upload()
+                queue_length += 1
     get_video_id_to_check_status()
     move_transcripts()
     add_email_to_db()
