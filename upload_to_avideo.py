@@ -327,6 +327,7 @@ def main():
         if queue_length is not False:
             # list_files_get_cat_id()
             while queue_length <= 5:
+                syslog(f'Current Queue size: {queue_length}')
                 get_a_file_to_upload()
                 queue_length += 1
     else:
