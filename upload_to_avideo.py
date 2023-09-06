@@ -334,7 +334,7 @@ def main():
                 number_of_files_to_upload = get_number_of_files_in_upload_dir()
                 if number_of_files_to_upload == 0:
                     queue_length = 6
-                    syslog('No move files to upload')
+                    syslog('No more files to upload')
                 else:
                     queue_length += 1
     else:
