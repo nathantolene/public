@@ -324,12 +324,19 @@ def main():
     queue_length = check_encoders()
     number_of_files_to_upload = get_number_of_files_in_upload_dir()
     if number_of_files_to_upload > 0:
+        if queue_length is False:
+            syslog('Queue is Full!')
         if queue_length is not False:
             # list_files_get_cat_id()
             while queue_length <= 5:
                 syslog(f'Current Queue size: {queue_length}')
                 get_a_file_to_upload()
-                queue_length += 1
+                number_of_files_to_upload = get_number_of_files_in_upload_dir()
+                if number_of_files_to_upload == 0:
+                    queue_length = 6
+                    syslog('No move files to upload')
+                else:
+                    queue_length += 1
     else:
         syslog('No files to upload')
     get_video_id_to_check_status()
