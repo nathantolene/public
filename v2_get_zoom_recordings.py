@@ -262,6 +262,8 @@ def get_list_of_recordings_from_email_list(group_list):
         for meetings in recording_list['meetings']:
             # print(meetings)
             meeting = zr(meetings)
+            if meeting.total_size == 0:
+                continue
             meeting = check_if_special(meeting)
             if meeting.type != 3:
                 continue

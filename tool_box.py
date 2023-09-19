@@ -89,7 +89,10 @@ class ZoomRecordings:
         self.total_size = recording_info['total_size']
         self.recording_count = recording_info['recording_count']
         self.share_url = recording_info['share_url']
-        self.recordings = recording_info['recording_files']
+        try:
+            self.recordings = recording_info['recording_files']
+        except KeyError:
+            self.recordings = ''
         if '/' in self.uuid:
             encoded = urllib.parse.quote(self.uuid, safe='')
             self.uuid = urllib.parse.quote(encoded, safe='')
