@@ -49,7 +49,7 @@ class UtmAddOnDB:
             self.id = x['ID']
             self.name = x['name']
             self.email = x['email']
-            self.category = int(x['cat'])
+            self.category = int(x['cat_name_id'])
             self.one_off = x['one_off']
 
     class SendEmail:
