@@ -242,7 +242,7 @@ def check_db_for_email_address(video):
     #     database=database
     # )
     # mycursor = mydb.cursor(dictionary=True)
-    select_sql = f"select * from email where cat = '{video.categories_id}'"
+    select_sql = f"select * from email where cat_name_id = '{video.categories_id}'"
     email_address = mysql_select_utm(select_sql)
     # mycursor.execute("select * from email where cat = '" + cat_id + "'")
     # email_address = mycursor.fetchall()
