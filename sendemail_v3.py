@@ -263,6 +263,7 @@ def check_db_for_email_address(video):
             # print(row[2])
             sendit(email, video)
             if email.one_off == '1':
+                print(email.one_off)
                 delete_one_off(email.id)
     # if copy_nathan == 'True':
     #     sendit('nathant@utm.edu', 'Automater')
