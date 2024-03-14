@@ -248,6 +248,7 @@ def check_db_for_email_address(video):
     # email_address = mycursor.fetchall()
     for x in email_address:
         email = UtmAddOnDB.Email(x)
+        print(email.one_off)
         # check_cat_id = x['cat']
         # address_to_send = x['email']
         # name_to_email = x['name']
@@ -262,7 +263,6 @@ def check_db_for_email_address(video):
             #print(f"Email address sent: {email.email}")
             # print(row[2])
             sendit(email, video)
-            print(email.one_off)
             if email.one_off == '1':
                 delete_one_off(email.id)
     # if copy_nathan == 'True':
