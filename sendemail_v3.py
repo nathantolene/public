@@ -262,8 +262,8 @@ def check_db_for_email_address(video):
             #print(f"Email address sent: {email.email}")
             # print(row[2])
             sendit(email, video)
+            print(email.one_off)
             if email.one_off == '1':
-                print(email.one_off)
                 delete_one_off(email.id)
     # if copy_nathan == 'True':
     #     sendit('nathant@utm.edu', 'Automater')
