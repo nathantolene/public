@@ -3,6 +3,7 @@
 import mysql.connector
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 host = os.environ.get('avideo_host')
 user = os.environ.get('avideo_dbuser')
@@ -31,9 +32,11 @@ def mysql_runner(sql, sql_type):
 
 
 def get_list_of_video_ids():
-    list_already_off = ['110', '269', '293', '359', '470', '483']
+    list_already_off = ['110', '269', '293', '359', '470', '483', '834']
     select_sql_w_exclude = "select id from videos where categories_id != 269 and categories_id != 110 and " \
-                           "categories_id != 293 and categories_id != 470 and categories_id != 483 and categories_id != 359;" # add more cat_ids to exclude
+                           "categories_id != 293 and categories_id != 470 and categories_id != 483 " \
+                           "and categories_id != 359 and categories_id != 834;"  # add more cat_ids to exclude
+    # Spring 24 - 882
     # Fall 2023 - 834
     # Summer 2023 - 483
     # Spring 2023 - 470
