@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 # import json
 import sys
 import requests
@@ -213,7 +212,7 @@ def update_recording_count(recording_list):
             for y in result:
                 db_meeting = ZoomDownloaderDB.Meetings(y)
                 # topic = y['topic']
-                db_meeting = db_meeting
+                # db_meeting = db_meeting
                 # if not str(y['recording_count']) == meeting.recording_count:
                 if not str(db_meeting.recording_count) == meeting.recording_count:
                     # update_sql = "update meetings set recording_count ='" \
@@ -379,12 +378,13 @@ def check_for_recording_id(recording_id):
     return False
 
 
-def download_recording(zoom_name, download_url, r_type):
+def download_recording(zoom_name, download_url, r_type, meeting_topic):
     dl_url = download_url
     sub_path = r_type
+    class_name = f"{meeting_topic}/"
     filename = zoom_name
     filename = filename.replace("/", "_")
-    path = f"{home_path}{sub_path}/"
+    path = f"{home_path}{sub_path}{class_name}/"
     path_exist = os.path.exists(path)
     if not path_exist:
         os.makedirs(path)
@@ -435,7 +435,7 @@ def check_db_and_download_all():
                 print(meeting.topic)
                 print(recording.recording_type)
                 zoom_name = f"{meeting.topic} {recording.recording_start}.{recording.file_type.lower()}"
-                check = download_recording(zoom_name, recording.download_url, recording.recording_type)
+                check = download_recording(zoom_name, recording.download_url, recording.recording_type, meeting.topic)
                 if check is True:
                     update_to_downloaded(recording.id)
 
