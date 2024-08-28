@@ -83,6 +83,8 @@ class ZoomDownloaderDB:
             self.account_id = meeting['account_id']
             self.host_id = meeting['host_id']
             self.topic = meeting['topic']
+            if "'" in self.topic:
+                self.topic = self.topic.replace("'", '')
             self.meeting_type = meeting['meeting_type']
             self.start_time = meeting['start_time']
             self.timezone = meeting['timezone']
