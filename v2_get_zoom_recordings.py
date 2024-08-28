@@ -385,6 +385,7 @@ def download_recording(zoom_name, download_url, r_type, meeting_topic):
     filename = zoom_name
     filename = filename.replace("/", "_")
     filename = filename.replace(":", "_")
+    filename = filename.replace("'", "")
     path = f"{home_path}{sub_path}/{class_name}/"
     path_exist = os.path.exists(path)
     if not path_exist:
