@@ -390,7 +390,7 @@ def download_recording(zoom_name, download_url, r_type, meeting_topic):
     filename = filename.replace("/", "_")
     filename = filename.replace(":", "_")
     filename = filename.replace("'", "")
-    filename = filename.replace(" ", "")
+    # filename = filename.replace(" ", "")
     path = f"{home_path}{sub_path}/{class_name}/"
     if 'SWRK' in filename:
         path = f"{home_path}{sub_path}/SWRK/{class_name}"
