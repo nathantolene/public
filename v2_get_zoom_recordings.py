@@ -84,9 +84,9 @@ class ZoomDownloaderDB:
             self.host_id = meeting['host_id']
             self.topic = meeting['topic']
             if "'" in self.topic:
-                print(self.topic)
+                # print(self.topic)
                 self.topic = self.topic.replace("'", '')
-                print(self.topic)
+                # print(self.topic)
             self.meeting_type = meeting['meeting_type']
             self.start_time = meeting['start_time']
             self.timezone = meeting['timezone']
@@ -536,12 +536,12 @@ def move_active_speaker_to_upload_dir(meeting_id):
         # topic = x['topic']
         # start_time = str(x['start_time'])
         recording_name = f"{meeting.topic} {start_time}.mp4"
-        path = f"{home_path}active_speaker/{recording_name}"
+        path = f"{home_path}active_speaker/{meeting.topic}/{recording_name}"
         path = str(path)
         # print(path)
         check = exists(path)
         if check is True:
-            move_to = f"{home_path}shared_screen_with_speaker_view/{recording_name}"
+            move_to = f"{home_path}shared_screen_with_speaker_view/{meeting.topic}/{recording_name}"
             print(f"Moving Active Speaker to upload dir {meeting.topic}")
             os.rename(path, move_to)
             return True
