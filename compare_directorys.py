@@ -9,7 +9,10 @@ def compare_files():
     shared_list = list_under_directory(path1)
     active_list = list_under_directory(path2)
     compare_lists = list(set(shared_list) & set(active_list))
+    compare_lists2 = list(set(active_list) & set(shared_list))
     print(compare_lists)
+    print('***')
+    print(compare_lists2)
 
 
 def list_under_directory(directory_path):
