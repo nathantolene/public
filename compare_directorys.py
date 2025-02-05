@@ -27,13 +27,13 @@ def main():
         needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
         needs_moved = remove_old_files(needs_moved)
         print(needs_moved)
-        # for x in needs_moved:
-        #     print(x)
-        #     active_speaker_path = active_speaker_path_set
-        #     active_speaker_path = f'{active_speaker_path}/{x}'
-        #     shared_screen_path = shared_screen_path_set
-        #     shared_screen_path = f'{shared_screen_path}/{x}'
-        #     shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
+        for x in needs_moved:
+            print(x)
+            active_speaker_path = active_speaker_path_set
+            active_speaker_path = f'{active_speaker_path}/{x}'
+            shared_screen_path = shared_screen_path_set
+            shared_screen_path = f'{shared_screen_path}/{x}'
+            shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
 
 
 def remove_old_files(needs_moved):
