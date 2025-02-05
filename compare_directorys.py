@@ -18,7 +18,7 @@ def missing():
 
 
 def main():
-    missing = missing()
+    missed = missing()
     shared_screen_path_set = path1
     active_speaker_path_set = path2
     shared_screen_files = os.listdir(shared_screen_path_set)
