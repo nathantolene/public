@@ -1,9 +1,13 @@
 import os
 
+path1 = '/smb/Zoom/downloads/shared_screen_with_speaker_view/ACCT 305 Hatch'
+path2 = '/smb/Zoom/downloads/active_speaker/ACCT 305 Hatch'
 
 def main():
-    shared_screen_path = input('Path to shared_screen')
-    active_speaker_path = input('Path to active speaker')
+    # shared_screen_path = input('Path to shared_screen')
+    shared_screen_path = path1
+    # active_speaker_path = input('Path to active speaker')
+    active_speaker_path = path2
     print(shared_screen_path)
     print(active_speaker_path)
     shared_screen_files = os.listdir(shared_screen_path)
@@ -15,7 +19,8 @@ def main():
         print(x)
         print(f'{active_speaker_path}/{x}')
         print(f'{shared_screen_path}/{x}')
-        os.system(f'cp {active_speaker_path}/{x} {shared_screen_path}')
+        print(f'cp {active_speaker_path}/{x} {shared_screen_path}')
+        # os.system(f'cp {active_speaker_path}/{x} {shared_screen_path}')
         break
 
 
