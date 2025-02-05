@@ -1,4 +1,6 @@
 import os
+import shutil
+
 
 path1 = '/smb/Zoom/downloads/shared_screen_with_speaker_view/ACCT 305 Hatch'
 path2 = '/smb/Zoom/downloads/active_speaker/ACCT 305 Hatch'
@@ -18,12 +20,14 @@ def main():
     for x in needs_moved:
         print(x)
         active_speaker_path = active_speaker_path.replace(" ", "\\ ")
+        active_speaker_path = f'{active_speaker_path}/{x}/'
         shared_screen_path = shared_screen_path.replace(" ", "\\ ")
         print(f'{active_speaker_path}/{x}')
         print(f'{shared_screen_path}/')
-        print(f'cp "{active_speaker_path}/{x}" "{shared_screen_path}/"')
-        os.system(f'cp "{active_speaker_path}/{x}" "{shared_screen_path}/"')
+        print(f'cp "{active_speaker_path}" "{shared_screen_path}/"')
+        # os.system(f'cp "{active_speaker_path}/{x}" "{shared_screen_path}/"')
         # os.system(f'cp {active_speaker_path}/{x} {shared_screen_path}')
+        shutil.copyfile(active_speaker_path, shared_screen_path)
         break
 
 
