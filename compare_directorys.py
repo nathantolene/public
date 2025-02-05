@@ -7,7 +7,9 @@ path2 = '/smb/Zoom/downloads/active_speaker/'
 
 def list_under_directory():
     shared_screen_list = os.listdir(path2)
-    print(shared_screen_list)
+    for x in shared_screen_list:
+        print(x)
+    # print(shared_screen_list)
     return shared_screen_list
 
 
