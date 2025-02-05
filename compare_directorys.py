@@ -1,8 +1,7 @@
 import os
 
 
-
-def list_contents_of_directory():
+def main():
     shared_screen_path = input('Path to shared_screen')
     active_speaker_path = input('Path to active speaker')
     print(shared_screen_path)
@@ -16,3 +15,7 @@ def list_contents_of_directory():
         print(x)
         os.system(f'sudo cp {active_speaker_path}{x} {shared_screen_path}')
         break
+
+
+if __name__ == '__main__':
+    main()
