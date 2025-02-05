@@ -5,36 +5,32 @@ path1 = '/smb/Zoom/downloads/shared_screen_with_speaker_view/ACCT 305 Hatch'
 path2 = '/smb/Zoom/downloads/active_speaker/ACCT 305 Hatch'
 
 
-def main():
+def missing():
+    returner = []
     with open('missing.txt', 'r') as file:
-        content = file.read()
-    print(content)
-    # shared_screen_path = input('Path to shared_screen')
+        for line in file:
+            new_line = line.split(" ")
+            remove_new_line = new_line[18]
+            remove_new_line = remove_new_line.replace("\n", "")
+            folder_name = f'{new_line[16]} {new_line[17]} {remove_new_line}'
+            returner.append(folder_name)
+    return returner
+
+
+def main():
+    missing = missing()
     shared_screen_path_set = path1
-    # active_speaker_path = input('Path to active speaker')
     active_speaker_path_set = path2
-    # print(shared_screen_path)
-    # print(active_speaker_path)
     shared_screen_files = os.listdir(shared_screen_path_set)
     active_speaker_files = os.listdir(active_speaker_path_set)
-    # print(shared_screen_files)
-    # print(active_speaker_files)
     needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
     for x in needs_moved:
         print(x)
         active_speaker_path = active_speaker_path_set
-        # active_speaker_path = active_speaker_path.replace(" ", "\\ ")
         active_speaker_path = f'{active_speaker_path}/{x}'
-        # shared_screen_path = shared_screen_path.replace(" ", "\ ")
         shared_screen_path = shared_screen_path_set
         shared_screen_path = f'{shared_screen_path}/{x}'
-        print(f'{active_speaker_path}')
-        print(f'{shared_screen_path}')
-        # print(f'cp "{active_speaker_path}" "{shared_screen_path}/"')
-        # os.system(f'cp "{active_speaker_path}/{x}" "{shared_screen_path}/"')
-        # os.system(f'cp {active_speaker_path}/{x} {shared_screen_path}')
         shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
-        # break
 
 
 if __name__ == '__main__':
