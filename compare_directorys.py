@@ -36,11 +36,12 @@ def main():
         #     shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
 
 
-
 def remove_old_files(needs_moved):
+    returner = []
     for x in needs_moved:
         if '2024' not in x:
-            print(x)
+            returner.append(x)
+    return returner
 
 
 if __name__ == '__main__':
