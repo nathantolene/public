@@ -11,6 +11,7 @@ import tool_box
 # import zoom_api
 import mysql.connector
 import zoom_auto_delete
+import compare_directorys
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -560,6 +561,7 @@ def main():
     print('deleting recordings from DB')
     delete_recordings_from_zoom(recordings_list)
     zoom_auto_delete.main()
+    compare_directorys.main()
 
 
 if __name__ == "__main__":
