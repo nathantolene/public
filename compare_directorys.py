@@ -29,7 +29,7 @@ def main():
         # os.system(f'cp "{active_speaker_path}/{x}" "{shared_screen_path}/"')
         # os.system(f'cp {active_speaker_path}/{x} {shared_screen_path}')
         shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
-        break
+        # break
 
 
 if __name__ == '__main__':
