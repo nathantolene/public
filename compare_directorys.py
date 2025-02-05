@@ -25,10 +25,10 @@ def main():
         shared_screen_path = f'{shared_screen_path}/{x}'
         print(f'{active_speaker_path}')
         print(f'{shared_screen_path}')
-        print(f'cp "{active_speaker_path}" "{shared_screen_path}/"')
+        # print(f'cp "{active_speaker_path}" "{shared_screen_path}/"')
         # os.system(f'cp "{active_speaker_path}/{x}" "{shared_screen_path}/"')
         # os.system(f'cp {active_speaker_path}/{x} {shared_screen_path}')
-        shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}/')
+        shutil.copyfile(f'"{active_speaker_path}"', f'{shared_screen_path}')
         break
 
 
