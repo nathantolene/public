@@ -27,7 +27,6 @@ def main():
         needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
         needs_moved = remove_old_files(needs_moved)
         print(needs_moved)
-        break
         # for x in needs_moved:
         #     print(x)
         #     active_speaker_path = active_speaker_path_set
