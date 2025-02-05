@@ -49,6 +49,8 @@ def main():
             needs_moved = remove_old_files(needs_moved)
             # print(needs_moved)
             for x in needs_moved:
+                if x.is_dir():
+                    continue
                 print(x)
                 active_speaker_path = active_speaker_path_set
                 active_speaker_path = f'{active_speaker_path}/{x}'
