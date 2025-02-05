@@ -19,9 +19,9 @@ def main():
     needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
     for x in needs_moved:
         print(x)
-        active_speaker_path = active_speaker_path.replace(" ", "\ ")
+        # active_speaker_path = active_speaker_path.replace(" ", "\ ")
         active_speaker_path = f'{active_speaker_path}/{x}/'
-        shared_screen_path = shared_screen_path.replace(" ", "\ ")
+        # shared_screen_path = shared_screen_path.replace(" ", "\ ")
         print(f'{active_speaker_path}/{x}')
         print(f'{shared_screen_path}/')
         print(f'cp "{active_speaker_path}" "{shared_screen_path}/"')
