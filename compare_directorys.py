@@ -39,23 +39,22 @@ def missing():
 
 def main():
     shared_list = list_under_directory(path1)
-    active_list = list_under_directory(path2)
-    compare_lists = list(set(shared_list) - set(active_list))
-    print(compare_lists)
-    shared_screen_path_set = path1 #+ shared_list
-    active_speaker_path_set = path2 #+ active_list
-    shared_screen_files = os.listdir(shared_screen_path_set)
-    active_speaker_files = os.listdir(active_speaker_path_set)
-    needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
-    needs_moved = remove_old_files(needs_moved)
-    # print(needs_moved)
-    for x in needs_moved:
-        print(x)
-        active_speaker_path = active_speaker_path_set
-        active_speaker_path = f'{active_speaker_path}/{x}'
-        shared_screen_path = shared_screen_path_set
-        shared_screen_path = f'{shared_screen_path}/{x}'
-        shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
+    for y in shared_list:
+        shared_screen_path_set = path1 + y
+        active_speaker_path_set = path2 + y
+        if os.path.exists(active_speaker_path_set):
+            shared_screen_files = os.listdir(shared_screen_path_set)
+            active_speaker_files = os.listdir(active_speaker_path_set)
+            needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
+            needs_moved = remove_old_files(needs_moved)
+            # print(needs_moved)
+            for x in needs_moved:
+                print(x)
+                active_speaker_path = active_speaker_path_set
+                active_speaker_path = f'{active_speaker_path}/{x}'
+                shared_screen_path = shared_screen_path_set
+                shared_screen_path = f'{shared_screen_path}/{x}'
+                # shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
 
 
 def remove_old_files(needs_moved):
