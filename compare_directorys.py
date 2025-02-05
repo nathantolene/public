@@ -8,8 +8,8 @@ path2 = '/smb/Zoom/downloads/active_speaker/'
 def compare_files():
     shared_list = list_under_directory(path1)
     active_list = list_under_directory(path2)
-    compare_lists = list(set(shared_list) & set(active_list))
-    compare_lists2 = list(set(active_list) & set(shared_list))
+    compare_lists = list(set(shared_list) - set(active_list))
+    compare_lists2 = list(set(active_list) - set(shared_list))
     print(compare_lists)
     print('***')
     print(compare_lists2)
@@ -39,7 +39,7 @@ def missing():
 def main():
     shared_list = list_under_directory(path1)
     active_list = list_under_directory(path2)
-    compare_lists = list(set(shared_list) & set(active_list))
+    compare_lists = list(set(shared_list) - set(active_list))
     print(compare_lists)
     shared_screen_path_set = path1 #+ shared_list
     active_speaker_path_set = path2 #+ active_list
