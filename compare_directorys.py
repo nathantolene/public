@@ -6,11 +6,14 @@ path2 = '/smb/Zoom/downloads/active_speaker/'
 
 
 def list_under_directory():
-    shared_screen_list = os.listdir(path1)
+    returner = []
+    shared_screen_list = os.scandir(path1)
     for x in shared_screen_list:
-        print(x)
+        if x.is_dir():
+            returner.append(x)
+            print(x)
     # print(shared_screen_list)
-    return shared_screen_list
+    return returner
 
 
 def missing():
