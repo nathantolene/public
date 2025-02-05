@@ -5,15 +5,19 @@ path1 = '/smb/Zoom/downloads/shared_screen_with_speaker_view/'
 path2 = '/smb/Zoom/downloads/active_speaker/'
 
 
-def list_under_directory():
+def compare_files():
+    shared_list = list_under_directory(path1)
+    active_list = list_under_directory(path2)
+    compare_lists = list(set(shared_list) & set(active_list))
+    print(compare_lists)
+
+
+def list_under_directory(directory_path):
     returner = []
-    shared_screen_list = os.scandir(path1)
+    shared_screen_list = os.scandir(directory_path)
     for x in shared_screen_list:
-        print(x.name)
         if x.is_dir():
-            returner.append(x)
-            print(x)
-    # print(shared_screen_list)
+            returner.append(x.name)
     return returner
 
 
@@ -30,9 +34,12 @@ def missing():
 
 
 def main():
-    shared_list = list_under_directory()
-    shared_screen_path_set = path1 # + y
-    active_speaker_path_set = path2 # + y
+    shared_list = list_under_directory(path1)
+    active_list = list_under_directory(path2)
+    compare_lists = list(set(shared_list) & set(active_list))
+    print(compare_lists)
+    shared_screen_path_set = path1 #+ shared_list
+    active_speaker_path_set = path2 #+ active_list
     shared_screen_files = os.listdir(shared_screen_path_set)
     active_speaker_files = os.listdir(active_speaker_path_set)
     needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
