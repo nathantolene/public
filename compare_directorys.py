@@ -1,11 +1,14 @@
 import os
 import shutil
 
-
 path1 = '/smb/Zoom/downloads/shared_screen_with_speaker_view/ACCT 305 Hatch'
 path2 = '/smb/Zoom/downloads/active_speaker/ACCT 305 Hatch'
+with open('missing.txt', 'r') as file:
+    content = file.read()
+
 
 def main():
+    print(file)
     # shared_screen_path = input('Path to shared_screen')
     shared_screen_path_set = path1
     # active_speaker_path = input('Path to active speaker')
