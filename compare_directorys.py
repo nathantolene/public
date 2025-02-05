@@ -21,7 +21,7 @@ def main():
         shared_screen_path = shared_screen_path.replace(" ", " \\")
         print(f'{active_speaker_path}/{x}')
         print(f'{shared_screen_path}/{x}')
-        print(f'"cp {active_speaker_path}/{x}" "{shared_screen_path}/"')
+        print(f'cp "{active_speaker_path}/{x}" "{shared_screen_path}/"')
         # os.system(f'cp {active_speaker_path}/{x} {shared_screen_path}')
         break
 
