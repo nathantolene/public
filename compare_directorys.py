@@ -13,9 +13,9 @@ def main():
     needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
     for x in needs_moved:
         print(x)
-        print(active_speaker_path, x)
-        print(shared_screen_path, x)
-        os.system(f'sudo cp {active_speaker_path}{x} {shared_screen_path}')
+        print(f'{active_speaker_path}/{x}')
+        print(f'{shared_screen_path}/{x}')
+        os.system(f'cp {active_speaker_path}/{x} {shared_screen_path}')
         break
 
 
