@@ -49,7 +49,7 @@ def main():
             needs_moved = remove_old_files(needs_moved)
             # print(needs_moved)
             for x in needs_moved:
-                if x.is_dir():
+                if 'uploaded' in x or 'SWRK' in x:
                     continue
                 print(x)
                 active_speaker_path = active_speaker_path_set
