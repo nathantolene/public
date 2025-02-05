@@ -39,9 +39,8 @@ def main():
 
 def remove_old_files(needs_moved):
     for x in needs_moved:
-        print(x)
-        # if '2024' in x:
-
+        if '2024' not in x:
+            print(x)
 
 
 if __name__ == '__main__':
