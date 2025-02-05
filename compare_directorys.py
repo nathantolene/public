@@ -1,7 +1,7 @@
 import os
 
-path1 = '/smb/Zoom/downloads/shared_screen_with_speaker_view/ACCT 305 HACTH'
-path2 = '/smb/Zoom/downloads/active_speaker/ACCT 305 HATCH'
+path1 = '/smb/Zoom/downloads/shared_screen_with_speaker_view/ACCT 305 Hatch'
+path2 = '/smb/Zoom/downloads/active_speaker/ACCT 305 Hatch'
 
 def main():
     # shared_screen_path = input('Path to shared_screen')
