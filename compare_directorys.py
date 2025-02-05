@@ -9,6 +9,7 @@ def list_under_directory():
     returner = []
     shared_screen_list = os.scandir(path1)
     for x in shared_screen_list:
+        print(x.name)
         if x.is_dir():
             returner.append(x)
             print(x)
