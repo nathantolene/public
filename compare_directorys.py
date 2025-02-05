@@ -19,19 +19,29 @@ def missing():
 
 def main():
     missed = missing()
-    for x in missed:
-        shared_screen_path_set = path1 + x
-        active_speaker_path_set = path2 + x
+    for y in missed:
+        shared_screen_path_set = path1 + y
+        active_speaker_path_set = path2 + y
         shared_screen_files = os.listdir(shared_screen_path_set)
         active_speaker_files = os.listdir(active_speaker_path_set)
         needs_moved = list(set(active_speaker_files) - set(shared_screen_files))
-        for x in needs_moved:
-            print(x)
-            active_speaker_path = active_speaker_path_set
-            active_speaker_path = f'{active_speaker_path}/{x}'
-            shared_screen_path = shared_screen_path_set
-            shared_screen_path = f'{shared_screen_path}/{x}'
-            shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
+        needs_moved = remove_old_files(needs_moved)
+        break
+        # for x in needs_moved:
+        #     print(x)
+        #     active_speaker_path = active_speaker_path_set
+        #     active_speaker_path = f'{active_speaker_path}/{x}'
+        #     shared_screen_path = shared_screen_path_set
+        #     shared_screen_path = f'{shared_screen_path}/{x}'
+        #     shutil.copyfile(f'{active_speaker_path}', f'{shared_screen_path}')
+
+
+
+def remove_old_files(needs_moved):
+    for x in needs_moved:
+        print(x)
+        # if '2024' in x:
+
 
 
 if __name__ == '__main__':
